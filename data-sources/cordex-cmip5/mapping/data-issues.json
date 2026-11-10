@@ -438,9 +438,17 @@
                 ]
             },
             "facet_metadata": true
+        },
+        {
+            "match": {
+                "master_id": [
+                    "cordex.output.ANT-44.DMI.ICHEC-EC-EARTH.historical.r3i1p1.HIRHAM5.v1.mon.snd"
+                ]
+            },
+            "facet_metadata": false
         }
     ],
-    "variables_from_id_reason": "The facet variable of some datasets does not list the variable of the dataset, which is the variable of their id (its last component): the RU-CORE RegCM4-3 datasets (SEA-22) of sfcWind (9) list only crs (the grid mapping), and those of mrsol (9) only crs, soil_bounds and soil_layer (coordinates), with their metadata; the UCAN WRF341I datasets (SAM-44) of the variables at a single pressure level (hus200, ta500, zg850, ..., 27) list the variable of all the levels (hus, ta, zg, ...), with the metadata of the dataset. The datasets matching a rule get the variable of the id in place of the facet variable, before the other rules are applied; facet_metadata tells whether the metadata of the facets (variable_units, cf_standard_name, variable_long_name) are those of the variable of the dataset (if not, they are dropped).",
+    "variables_from_id_reason": "The facet variable of some datasets does not list the variable of the dataset, which is the variable of their id (its last component): the RU-CORE RegCM4-3 datasets (SEA-22) of sfcWind (9) list only crs (the grid mapping), and those of mrsol (9) only crs, soil_bounds and soil_layer (coordinates), with their metadata; the UCAN WRF341I datasets (SAM-44) of the variables at a single pressure level (hus200, ta500, zg850, ..., 27) list the variable of all the levels (hus, ta, zg, ...), with the metadata of the dataset; a DMI HIRHAM5 dataset (ANT-44) of snd lists snd and snw, with the metadata of both, while a dataset holds one variable (the snw dataset of the same run is published on its own). The datasets matching a rule get the variable of the id in place of the facet variable, before the other rules are applied; facet_metadata tells whether the metadata of the facets (variable_units, cf_standard_name, variable_long_name) are those of the variable of the dataset (if not, they are dropped).",
     "evaluation_runs": [
         {
             "match": {

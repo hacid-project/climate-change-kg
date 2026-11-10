@@ -14,7 +14,7 @@ INSERT {
     }
 }
 WHERE {
-    VALUES ?var_collection {vars:mip vars:CF}.
+    VALUES ?var_collection {vars:mip vars:cf}.
     ?var top:isMemberOf ?var_collection
 };
 

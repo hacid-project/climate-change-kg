@@ -47,6 +47,14 @@ applied.
   without a description (16) no comment, as in the former RML mapping. One of
   them, `volume_fraction_of_oxygen_in_sea_floor_sediment_pore_water`, is a
   volume fraction, so presumably `1`: left as in the table.
+- **Alias of several entries.** `surface_carbon_dioxide_mole_flux` is the
+  alias of two entries, `surface_downward_mole_flux_of_carbon_dioxide` and
+  `surface_upward_mole_flux_of_carbon_dioxide`: the name is deprecated because
+  it does not tell the direction of the flux, so it is the same as neither. It
+  is kept as alternative label of both, without `owl:sameAs` (before, the two
+  names were taken as one, giving a variable with a malformed IRI and no type,
+  found by the validation, `shape:Resource`). A variable with this standard
+  name would be linked to a CF variable that is not described: none has it.
 - **Class.** The variables are `data:DeterministicVariable`s, as those of the
   CMOR tables.
 

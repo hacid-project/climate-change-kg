@@ -27,7 +27,8 @@ import "./mapping/jsonld" as JSONLD;
             resolution: "data:hasResolution",
             exact_bounding_region: "data:hasExactBoundingRegion",
             pole: "data:hasReferencePoint",
-            point_of: "data:isPointOf"
+            point_of: "data:isPointOf",
+            region_of: "data:isRegionOf"
         },
         "geo:wktLiteral": {
             wkt: "geo:asWKT"
@@ -190,7 +191,10 @@ import "./mapping/jsonld" as JSONLD;
             exact_bounding_region: {
                 "@id": "georef:OSGB36/coverage",
                 "@type": "data:GeodeticRegion",
-                label: "Region covered by the Ordnance Survey of Great Britain (OSGB)"
+                region_of: "georef:OSGB36",
+                label: "Region covered by the Ordnance Survey of Great Britain (OSGB)",
+                comment: "Area of use of the OSGB36 / British National Grid coordinate reference system (EPSG:27700): Great Britain and the UK continental shelf between 49.75°N and 61.01°N, 9.01°W and 2.01°E, as a rectangle in WGS84 longitude and latitude.",
+                wkt: "POLYGON((-9.01 49.75,-9.01 61.01,2.01 61.01,2.01 49.75,-9.01 49.75))"
             }
         },
         ($grids | map(del(.resolution_id) | del(.for_domain)))

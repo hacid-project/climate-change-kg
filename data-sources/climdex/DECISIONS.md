@@ -29,6 +29,13 @@ kept in the repository as source, with the online sources they come from:
   the time grids of 3 and 6 months, used by the mapping and defined nowhere
   else in the KG.
 
+## Mapping (`mapping/climdex.jq`)
+
+- **Time aggregations.** The aggregation of an index is a
+  `data:AggregationSpecification`, the class of the data ontology that is the
+  range of `data:definesAggregation` (it was `data:Aggregation`, which no
+  ontology declares, found by the validation, `shape:Class`).
+
 ## Validation
 
 The Snakemake rules give byte-identical outputs to the JSON-LD previously kept

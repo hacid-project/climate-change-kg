@@ -227,6 +227,8 @@ def dataset_to_rcm_simulation:
             has_output: {
                 "@id": @uri "https://w3id.org/hacid/data/cs/ukcp18/land-rcm/datasets/\(.scenario)/output",
                 "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+                label: "ukcp18.regional.\(.scenario)",
+                scenario: (.scenario | scenario_uri),
                 dependent_variable: VARIABLES::variable_iri,
                 sub_dataset: ($output | JSONLD::id)
             }

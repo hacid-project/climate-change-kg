@@ -255,7 +255,7 @@ def convert_parameter:
         dependsOnVariable: ["dimension:geodetic", "dimension:time", if .parameters then (.parameters | .[] | convert_parameter) else empty end],
         definesAggregation: {
             "@id": @uri "aggregation:\(.shortName)",
-            "@type": "data:Aggregation",
+            "@type": "data:AggregationSpecification",
             aggregatesVariable: "dimension:time",
             suggestedQuantization: [ .timeScales | convert_timescales | .[] | "temporalgrid:\(.)" ]
         },
