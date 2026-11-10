@@ -1,0 +1,173 @@
+# Shapes of the datasets: the projections (outputs of the simulations and of
+# their transformations) of CMIP5, CORDEX-CMIP5 and UKCP18, from the datasets
+# of a single variable to the outputs of ensembles, experiments and projects
+# composed of them (top:hasComponent).
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix data:  <https://w3id.org/hacid/onto/data/> .
+@prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+
+shape:Dataset a sh:NodeShape ;
+    rdfs:label "Dataset"@en ;
+    rdfs:comment """Any dataset (data:Dataset, with the projections): its components are datasets, the variables it
+holds or specializes are variables, the dimensions it depends on are dimensional spaces (its spatial and temporal
+grids), and it is the output, the component or the rescaled version of something (it is not left unattached)."""@en ;
+    sh:targetClass data:Dataset ;
+    sh:property
+        shape:Dataset-component ,
+        shape:Dataset-variable ,
+        shape:Dataset-heldVariable ,
+        shape:Dataset-dimension ,
+        shape:Dataset-specialization ,
+        shape:Dataset-rescaledVersion ;
+    sh:or (
+        [ sh:path [ sh:inversePath top:hasComponent ] ; sh:minCount 1 ]
+        [ sh:path [ sh:inversePath data:hasOutput ] ; sh:minCount 1 ]
+        [ sh:path [ sh:inversePath data:hasRescaledVersion ] ; sh:minCount 1 ]
+    ) ;
+    sh:message "The dataset is unattached: neither a component, nor an output, nor a rescaled version of anything."@en .
+
+shape:Dataset-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:class data:Dataset ;
+    sh:message "The components of a dataset are datasets."@en .
+
+shape:Dataset-variable a sh:PropertyShape ;
+    sh:path data:isSpecializationOfVariable ;
+    sh:maxCount 1 ;
+    sh:class data:Variable ;
+    sh:message "A dataset is the specialization of at most one variable, a data:Variable."@en .
+
+shape:Dataset-heldVariable a sh:PropertyShape ;
+    sh:path data:holdsSpecializationOfVariable ;
+    sh:class data:Variable ;
+    sh:message "A dataset holds specializations of variables."@en .
+
+shape:Dataset-dimension a sh:PropertyShape ;
+    sh:path data:dependsOnVariable ;
+    sh:class data:DimensionalSpace ;
+    sh:message "A dataset depends on dimensional spaces (its grids)."@en .
+
+shape:Dataset-specialization a sh:PropertyShape ;
+    sh:path data:isSpecializedAccordingTo ;
+    sh:class data:VariableSpecialization ;
+    sh:message "A dataset is specialized according to variable specializations."@en .
+
+shape:Dataset-rescaledVersion a sh:PropertyShape ;
+    sh:path data:hasRescaledVersion ;
+    sh:class data:Dataset ;
+    sh:message "The rescaled version of a dataset is a dataset."@en .
+
+
+shape:Projection a sh:NodeShape ;
+    rdfs:label "Projection"@en ;
+    rdfs:comment """A projection (single, ensemble, probabilistic, scenario based) has exactly one label, refers to at
+most one emission scenario and one global warming level, and is either single or ensemble, not both."""@en ;
+    sh:targetClass ccso:Projection ;
+    sh:property
+        shape:Projection-label ,
+        shape:Projection-scenario ,
+        shape:Projection-gwl ;
+    sh:not [ sh:and ( [ sh:class ccso:SingleProjection ] [ sh:class ccso:EnsembleProjection ] ) ] ;
+    sh:message "A projection is not both a single and an ensemble projection."@en .
+
+shape:Projection-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A projection has exactly one label."@en .
+
+shape:Projection-scenario a sh:PropertyShape ;
+    sh:path ccso:refersToScenario ;
+    sh:maxCount 1 ;
+    sh:class ccso:EmissionScenario ;
+    sh:message "A projection refers to at most one scenario, a ccso:EmissionScenario."@en .
+
+shape:Projection-gwl a sh:PropertyShape ;
+    sh:path ccso:refersToGlobalWarmingLevel ;
+    sh:maxCount 1 ;
+    sh:class ccso:GlobalWarmingLevel ;
+    sh:message "A projection refers to at most one global warming level, a ccso:GlobalWarmingLevel."@en .
+
+
+shape:ScenarioReference a sh:NodeShape ;
+    rdfs:label "Projection referring to a scenario"@en ;
+    rdfs:comment "A projection that refers to an emission scenario is a ccso:ScenarioBasedProjection."@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this ccso:refersToScenario ?scenario ; rdf:type/rdfs:subClassOf* ccso:Projection
+            }""" ;
+    ] ;
+    sh:class ccso:ScenarioBasedProjection ;
+    sh:severity sh:Warning ;
+    sh:message "The projection refers to a scenario but is not a ccso:ScenarioBasedProjection."@en .
+
+
+shape:VariableDataset a sh:NodeShape ;
+    rdfs:label "Dataset of a variable"@en ;
+    rdfs:comment """A projection with the values of one variable (data:isSpecializationOfVariable) is a single or
+probabilistic projection and depends on at least a dimensional space: its spatial or temporal grid."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this data:isSpecializationOfVariable ?variable ; rdf:type/rdfs:subClassOf* ccso:Projection
+            }""" ;
+    ] ;
+    sh:property shape:VariableDataset-dimension ;
+    sh:or ( [ sh:class ccso:SingleProjection ] [ sh:class ccso:ProbabilisticProjection ] ) ;
+    sh:message "The dataset of a variable is neither a single nor a probabilistic projection."@en .
+
+shape:VariableDataset-dimension a sh:PropertyShape ;
+    sh:path data:dependsOnVariable ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The dataset of a variable has no grid (it depends on no dimensional space)."@en .
+
+
+shape:EnsembleProjection a sh:NodeShape ;
+    rdfs:label "Ensemble projection"@en ;
+    rdfs:comment "An ensemble projection is composed of other projections."@en ;
+    sh:targetClass ccso:EnsembleProjection ;
+    sh:property shape:EnsembleProjection-component .
+
+shape:EnsembleProjection-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The ensemble projection has no component."@en .
+
+
+shape:DistributionDataset a sh:NodeShape ;
+    rdfs:label "Probabilistic projection of a variable"@en ;
+    rdfs:comment """The dataset of a probabilistic projection has the same kind of distribution representation
+(data:ProbabilityDensityFunction, data:QuantileFunction, data:Sample) as its variable."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type ccso:ProbabilisticProjection ; data:isSpecializationOfVariable ?variable
+            }""" ;
+    ] ;
+    sh:sparql [
+        sh:prefixes shape:prefixes ;
+        sh:message "The dataset is not a {?representation} as its variable {?value}."@en ;
+        sh:select """
+            SELECT $this ?value ?representation WHERE {
+                $this data:isSpecializationOfVariable ?value .
+                ?value rdf:type ?representation .
+                ?representation rdfs:subClassOf data:DistributionRepresentation .
+                FILTER NOT EXISTS { $this rdf:type ?representation }
+            }""" ;
+    ] .

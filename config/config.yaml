@@ -95,6 +95,23 @@ consolidate:
   # Options of the JVM of the Jena command-line tools (JVM_ARGS)
   jvm_args: -Xmx16G
 
+validate:
+  # Severities of the results of the SHACL validation (Violation, Warning,
+  # Info) that make the rule validate fail. The report and the metadata of the
+  # KG are produced in any case
+  fail_on:
+    - Violation
+
+metadata:
+  # Named graph of the metadata of the KG: also the IRI of the KG as a dataset
+  # in metadata/kg.ttl and in the queries leaving its graph out
+  # (metadata/statistics.rq, shapes/queries/data.rq)
+  graph: https://w3id.org/hacid/data/cs/kg
+  # URL of the public SPARQL endpoint of the KG (void:sparqlEndpoint) and of
+  # its published N-Quads dump (void:dataDump, dcat:downloadURL), if any
+  sparql_endpoint: ""
+  download_url: ""
+
 ukcp18:
   # Number of nodes of each JSON-LD document of the UKCP18 datasets
   # (rdf/datasets/datasets-NNNN.jsonld), framed from the output of the mapping,

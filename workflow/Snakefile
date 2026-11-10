@@ -4,7 +4,9 @@
 #   snakemake --cores 1                       # mapping (default)
 #   snakemake --cores 1 mapping               # all the mappings to the KG
 #   snakemake --cores 1 sources_analysis      # all the analyses of the sources (not in the KG)
-#   snakemake --cores 1 consolidate           # the KG loaded, consolidated and exported (kg/)
+#   snakemake --cores 1 consolidate           # the KG loaded, consolidated, described and exported (kg/)
+#   snakemake --cores 1 validate              # the consolidated KG validated with its SHACL shapes (shapes/)
+#   snakemake --cores 1 metadata              # the metadata of the KG (VoID, DCAT, PROV), loaded in it
 #   snakemake --cores 1 ontologies            # HACID ontologies (top-level, data, ccso)
 #   snakemake --cores 1 gwls                  # global warming levels
 #   snakemake --cores 1 cf_standard_names     # variables of the CF standard name table
@@ -20,6 +22,7 @@
 #   snakemake --cores 1 cmor_tables_analysis  # analysis of all the CMOR tables editions
 
 import csv
+import glob
 import json
 import os
 
@@ -115,3 +118,11 @@ rule sources_analysis:
 
 # Consolidation of the KG (after the mappings)
 include: "rules/consolidate.smk"
+
+
+# Validation of the consolidated KG with its SHACL shapes
+include: "rules/validate.smk"
+
+
+# Metadata of the KG (statistics, provenance, results of the validation)
+include: "rules/metadata.smk"

@@ -1,0 +1,11 @@
+# The data graph of the validation: the union of the named graphs of the KG,
+# so that the shapes see each resource with what every source says about it,
+# and the ontologies with it (classes, properties and their hierarchies). The
+# graph of the metadata of the KG is left out: it is validated on its own
+# (metadata/shapes.ttl).
+
+CONSTRUCT { ?s ?p ?o }
+WHERE {
+    GRAPH ?graph { ?s ?p ?o }
+    FILTER (?graph != <https://w3id.org/hacid/data/cs/kg>)
+}

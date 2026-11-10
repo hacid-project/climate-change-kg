@@ -1,0 +1,216 @@
+# Shapes of the variables: the variables of the catalogues (CF standard names,
+# MIP variables of the CMOR tables, local variables of CMIP5, CORDEX and
+# UKCP18, climate indices), their units of measure and their collections.
+#
+# In the data ontology the datasets and the dimensional spaces are variables
+# too (data:Dataset and data:DimensionalSpace are subclasses of
+# data:DeterministicVariable): the shapes of this file target only the
+# variables that are neither, through a SPARQL-based target.
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix data:  <https://w3id.org/hacid/onto/data/> .
+@prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+
+shape:Variable a sh:NodeShape ;
+    rdfs:label "Variable of a catalogue"@en ;
+    rdfs:comment """A variable that is neither a dataset nor a dimensional space: a CF standard name, a MIP variable, a
+local variable of a source, a climate index. It has a label (one per language), at most one unit of measure (which
+is also the space of its values), and it belongs to a collection. Its links to other variables point to variables.
+The parameters of the indices (data:IndependentVariable) belong to no collection."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* data:Variable .
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:Dataset }
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:DimensionalSpace }
+            }""" ;
+    ] ;
+    sh:property
+        shape:Variable-label ,
+        shape:Variable-uniqueLabel ,
+        shape:Variable-unit ,
+        shape:Variable-unitRequired ,
+        shape:Variable-valuesOn ,
+        shape:Variable-specialization ,
+        shape:Variable-derivation ,
+        shape:Variable-linearTransformation ,
+        shape:Variable-equivalent ,
+        shape:Variable-dependsOn ;
+    sh:or (
+        [ sh:path top:isMemberOf ; sh:minCount 1 ]
+        [ sh:path [ sh:inversePath top:hasMember ] ; sh:minCount 1 ]
+        [ sh:class data:IndependentVariable ]
+    ) ;
+    sh:severity sh:Warning ;
+    sh:message "The variable belongs to no collection (neither top:isMemberOf nor top:hasMember)."@en .
+
+shape:Variable-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:or ( [ sh:datatype xsd:string ] [ sh:datatype rdf:langString ] ) ;
+    sh:message "A variable has a label, a string."@en .
+
+shape:Variable-uniqueLabel a sh:PropertyShape ;
+    rdfs:comment "More than one label in a language: usually definitions of the same variable that differ between tables or sources."@en ;
+    sh:path rdfs:label ;
+    sh:uniqueLang true ;
+    sh:severity sh:Warning ;
+    sh:message "The variable has more than one label in a language."@en .
+
+shape:Variable-unit a sh:PropertyShape ;
+    sh:path top:hasUnitOfMeasure ;
+    sh:maxCount 1 ;
+    sh:class top:UnitOfMeasure ;
+    sh:message "A variable has at most one unit of measure, a top:UnitOfMeasure."@en .
+
+shape:Variable-unitRequired a sh:PropertyShape ;
+    sh:path top:hasUnitOfMeasure ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The variable has no unit of measure."@en .
+
+shape:Variable-valuesOn a sh:PropertyShape ;
+    rdfs:comment "The values of a variable are in the space of its unit of measure: data:hasValuesOn is the unit."@en ;
+    sh:path data:hasValuesOn ;
+    sh:maxCount 1 ;
+    sh:equals top:hasUnitOfMeasure ;
+    sh:severity sh:Warning ;
+    sh:message "data:hasValuesOn of the variable is not its unit of measure (it is missing or different)."@en .
+
+shape:Variable-specialization a sh:PropertyShape ;
+    sh:path data:isSpecializationOfVariable ;
+    sh:maxCount 1 ;
+    sh:class data:Variable ;
+    sh:message "A variable is the specialization of at most one variable."@en .
+
+shape:Variable-derivation a sh:PropertyShape ;
+    sh:path data:derivedFromVariable ;
+    sh:class data:Variable ;
+    sh:message "A variable is derived from variables."@en .
+
+shape:Variable-linearTransformation a sh:PropertyShape ;
+    sh:path data:isLinearTransformationOf ;
+    sh:class data:Variable ;
+    sh:message "A variable is a linear transformation of variables."@en .
+
+shape:Variable-equivalent a sh:PropertyShape ;
+    sh:path data:isEquivalentTo ;
+    sh:class data:Variable ;
+    sh:message "A variable is equivalent to variables."@en .
+
+shape:Variable-dependsOn a sh:PropertyShape ;
+    sh:path data:dependsOnVariable ;
+    sh:class data:Variable ;
+    sh:message "A variable depends on variables (dimensions or parameters)."@en .
+
+
+shape:MIPVariable a sh:NodeShape ;
+    rdfs:label "MIP variable"@en ;
+    rdfs:comment """A variable of the CMOR tables (member of cs:variables/mip): it has its name in the tables as
+acronym, and the CF variable it specializes, if any, is a member of cs:variables/cf."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select "SELECT ?this WHERE { ?this top:isMemberOf <https://w3id.org/hacid/data/cs/variables/mip> }" ;
+    ] ;
+    sh:property shape:MIPVariable-acronym , shape:MIPVariable-cf .
+
+shape:MIPVariable-acronym a sh:PropertyShape ;
+    sh:path top:acronym ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A MIP variable has exactly one acronym (its name in the CMOR tables)."@en .
+
+shape:MIPVariable-cf a sh:PropertyShape ;
+    sh:path data:isSpecializationOfVariable ;
+    sh:node [ sh:property [ sh:path top:isMemberOf ; sh:hasValue <https://w3id.org/hacid/data/cs/variables/cf> ] ] ;
+    sh:severity sh:Warning ;
+    sh:message "The variable specialized by a MIP variable is not a CF variable."@en .
+
+
+shape:Anomaly a sh:NodeShape ;
+    rdfs:label "Anomaly"@en ;
+    rdfs:comment "An anomaly is the anomaly of exactly one variable, with respect to exactly one baseline region."@en ;
+    sh:targetClass data:Anomaly ;
+    sh:targetSubjectsOf data:isAnomalyOf , data:hasBaselineRegion ;
+    sh:class data:Anomaly ;
+    sh:property shape:Anomaly-of , shape:Anomaly-baseline .
+
+shape:Anomaly-of a sh:PropertyShape ;
+    sh:path data:isAnomalyOf ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class data:Variable ;
+    sh:message "An anomaly is the anomaly of exactly one variable."@en .
+
+shape:Anomaly-baseline a sh:PropertyShape ;
+    sh:path data:hasBaselineRegion ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class data:Region ;
+    sh:message "An anomaly has exactly one baseline region."@en .
+
+
+shape:DistributionRepresentation a sh:NodeShape ;
+    rdfs:label "Distribution representation"@en ;
+    rdfs:comment """A variable that is the probabilistic representation of another one (pdf, quantile function, sample)
+is a data:DistributionRepresentation, of exactly one variable."""@en ;
+    sh:targetSubjectsOf data:isProbabilisticRepresentationOf ;
+    sh:class data:DistributionRepresentation ;
+    sh:property shape:DistributionRepresentation-of .
+
+shape:DistributionRepresentation-of a sh:PropertyShape ;
+    sh:path data:isProbabilisticRepresentationOf ;
+    sh:maxCount 1 ;
+    sh:class data:Variable ;
+    sh:message "A distribution representation represents exactly one variable."@en .
+
+
+shape:UnitOfMeasure a sh:NodeShape ;
+    rdfs:label "Unit of measure"@en ;
+    rdfs:comment """A unit of measure has exactly one label (its symbol). The units are described by each source using
+them, in its own graph: more than one label means that two sources disagree."""@en ;
+    sh:targetClass top:UnitOfMeasure ;
+    sh:property shape:UnitOfMeasure-label .
+
+shape:UnitOfMeasure-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A unit of measure has exactly one label."@en .
+
+
+shape:Collection a sh:NodeShape ;
+    rdfs:label "Collection"@en ;
+    rdfs:comment "A collection has a label, and its members and components are described."@en ;
+    sh:targetClass top:Collection ;
+    sh:property shape:Collection-label , shape:Collection-component .
+
+shape:Collection-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:severity sh:Warning ;
+    sh:message "The collection has no label (or more than one in a language)."@en .
+
+shape:Collection-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:class top:Collection ;
+    sh:message "The components of a collection are collections."@en .
+
+
+shape:Membership a sh:NodeShape ;
+    rdfs:label "Membership in a collection"@en ;
+    rdfs:comment "What a resource is a member of is a collection."@en ;
+    sh:targetObjectsOf top:isMemberOf ;
+    sh:targetSubjectsOf top:hasMember ;
+    sh:class top:Collection ;
+    sh:message "The resource has members but is not a top:Collection."@en .

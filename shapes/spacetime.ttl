@@ -1,0 +1,238 @@
+# Shapes of space and time: regions (temporal and geodetic), points,
+# dimensional spaces (grids), their quantizations and the specializations of
+# the variables on them.
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix geo:   <http://www.opengis.net/ont/geosparql#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix data:  <https://w3id.org/hacid/onto/data/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+
+shape:TemporalRegion a sh:NodeShape ;
+    rdfs:label "Temporal region"@en ;
+    rdfs:comment "A time interval has a label, exactly one start and one end (xsd:dateTime), and starts before it ends."@en ;
+    sh:targetClass data:TemporalRegion ;
+    sh:property shape:TemporalRegion-label , shape:TemporalRegion-start , shape:TemporalRegion-end .
+
+shape:TemporalRegion-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "A temporal region has a label, one per language."@en .
+
+shape:TemporalRegion-start a sh:PropertyShape ;
+    sh:path data:hasStartDateTime ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime ;
+    sh:lessThan data:hasEndDateTime ;
+    sh:message "A temporal region has exactly one start, an xsd:dateTime before its end."@en .
+
+shape:TemporalRegion-end a sh:PropertyShape ;
+    sh:path data:hasEndDateTime ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:dateTime ;
+    sh:message "A temporal region has exactly one end, an xsd:dateTime."@en .
+
+
+shape:GeodeticRegion a sh:NodeShape ;
+    rdfs:label "Geodetic region"@en ;
+    rdfs:comment """A geographic region has a label, belongs to a dimensional space (its reference frame) and has its
+geometry as WKT: a polygon whose rings are closed (the last point is the first one), as required by WKT. The regions
+in rotated coordinates have the pole of the rotation before the polygon ("SRID=ROTATED_POLAR:<longitude>
+<latitude>;"), a convention of this KG."""@en ;
+    sh:targetClass data:GeodeticRegion ;
+    sh:property
+        shape:GeodeticRegion-label ,
+        shape:GeodeticRegion-space ,
+        shape:GeodeticRegion-wkt ,
+        shape:GeodeticRegion-closedRing .
+
+shape:GeodeticRegion-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "A geodetic region has a label, one per language."@en .
+
+shape:GeodeticRegion-space a sh:PropertyShape ;
+    sh:path data:isRegionOf ;
+    sh:minCount 1 ;
+    sh:class data:DimensionalSpace ;
+    sh:severity sh:Warning ;
+    sh:message "The geodetic region is not the region of a dimensional space (its reference frame)."@en .
+
+shape:GeodeticRegion-wkt a sh:PropertyShape ;
+    sh:path geo:asWKT ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype geo:wktLiteral ;
+    sh:pattern "^(SRID=[^;]+;)?(MULTI)?POLYGON ?\\(.+\\)$" ;
+    sh:message "A geodetic region has exactly one geometry, a geo:wktLiteral with a polygon."@en .
+
+shape:GeodeticRegion-closedRing a sh:PropertyShape ;
+    sh:path geo:asWKT ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:message "The ring of the polygon is not closed: its last point is not the first one."@en ;
+        sh:select """
+            SELECT $this ?value WHERE {
+                $this $PATH ?value .
+                FILTER REGEX(STR(?value), "^(SRID=[^;]+;)?POLYGON ?\\\\(\\\\([^()]+\\\\)\\\\)$")
+                BIND (REPLACE(STR(?value), "^.*POLYGON ?\\\\(\\\\( *([^,]+?) *,.*$", "$1") AS ?first)
+                BIND (REPLACE(STR(?value), "^.*, *([^,]+?) *\\\\)\\\\)$", "$1") AS ?last)
+                FILTER (?first != ?last)
+            }""" ;
+    ] .
+
+
+shape:GeodeticPoint a sh:NodeShape ;
+    rdfs:label "Geodetic point"@en ;
+    rdfs:comment "A geographic point has a label, belongs to a dimensional space and has its geometry as WKT."@en ;
+    sh:targetClass data:GeodeticPoint ;
+    sh:property shape:GeodeticPoint-label , shape:GeodeticPoint-space , shape:GeodeticPoint-wkt .
+
+shape:GeodeticPoint-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "A geodetic point has a label, one per language."@en .
+
+shape:GeodeticPoint-space a sh:PropertyShape ;
+    sh:path data:isPointOf ;
+    sh:minCount 1 ;
+    sh:class data:DimensionalSpace ;
+    sh:message "A geodetic point is the point of a dimensional space (its reference frame)."@en .
+
+shape:GeodeticPoint-wkt a sh:PropertyShape ;
+    sh:path geo:asWKT ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype geo:wktLiteral ;
+    sh:pattern "^POINT ?\\(-?[0-9.]+ -?[0-9.]+\\)$" ;
+    sh:message "A geodetic point has exactly one geometry, a geo:wktLiteral with a point."@en .
+
+
+shape:Grid a sh:NodeShape ;
+    rdfs:label "Dimensional space based on another one"@en ;
+    rdfs:comment """A dimensional space defined on another one (a grid on a reference frame, a reference frame on a
+dimension): what it is based on, its bounding regions and reference points are described as such, and it adopts at
+most one quantization."""@en ;
+    sh:targetSubjectsOf data:basedOnDimensionalSpace , data:adoptsQuantization , data:hasExactBoundingRegion ;
+    sh:class data:DimensionalSpace ;
+    sh:property
+        shape:Grid-basis ,
+        shape:Grid-boundingRegion ,
+        shape:Grid-quantization ,
+        shape:Grid-referencePoint ,
+        shape:Grid-subspace .
+
+shape:Grid-basis a sh:PropertyShape ;
+    sh:path data:basedOnDimensionalSpace ;
+    sh:minCount 1 ;
+    sh:class data:DimensionalSpace ;
+    sh:message "A bounded or quantized dimensional space is based on a dimensional space."@en .
+
+shape:Grid-boundingRegion a sh:PropertyShape ;
+    sh:path data:hasExactBoundingRegion ;
+    sh:maxCount 1 ;
+    sh:class data:Region ;
+    sh:message "A dimensional space has at most one exact bounding region, a data:Region."@en .
+
+shape:Grid-quantization a sh:PropertyShape ;
+    sh:path data:adoptsQuantization ;
+    sh:maxCount 1 ;
+    sh:class data:Quantization ;
+    sh:message "A dimensional space adopts at most one quantization, a data:Quantization."@en .
+
+shape:Grid-referencePoint a sh:PropertyShape ;
+    sh:path data:hasReferencePoint ;
+    sh:class data:Point ;
+    sh:message "The reference point of a dimensional space is a data:Point."@en .
+
+shape:Grid-subspace a sh:PropertyShape ;
+    sh:path data:hasSubDimensionalSpace ;
+    sh:class data:DimensionalSpace ;
+    sh:message "The subspace of a dimensional space is a dimensional space."@en .
+
+
+shape:Quantization a sh:NodeShape ;
+    rdfs:label "Quantization"@en ;
+    rdfs:comment """A quantization (the binning of a grid) is based on the dimensional space it divides and has a
+resolution: a duration for time, a number (degrees) or an amount with its unit for space."""@en ;
+    sh:targetClass data:Quantization ;
+    sh:property
+        shape:Quantization-basis ,
+        shape:Quantization-resolutionValue ,
+        shape:Quantization-resolution ;
+    sh:or (
+        [ sh:path data:hasResolutionValue ; sh:minCount 1 ]
+        [ sh:path data:hasResolution ; sh:minCount 1 ]
+        [ sh:path data:hasPeriodValue ; sh:minCount 1 ]
+    ) ;
+    sh:message "The quantization has no resolution (data:hasResolutionValue, data:hasResolution) nor period."@en .
+
+shape:Quantization-basis a sh:PropertyShape ;
+    sh:path data:basedOnDimensionalSpace ;
+    sh:minCount 1 ;
+    sh:class data:DimensionalSpace ;
+    sh:severity sh:Warning ;
+    sh:message "The quantization is not based on a dimensional space."@en .
+
+shape:Quantization-resolutionValue a sh:PropertyShape ;
+    sh:path data:hasResolutionValue ;
+    sh:maxCount 1 ;
+    sh:or ( [ sh:datatype xsd:duration ] [ sh:datatype xsd:float ] [ sh:datatype xsd:double ] [ sh:datatype xsd:decimal ] ) ;
+    sh:message "A quantization has at most one resolution value, a duration or a number."@en .
+
+shape:Quantization-resolution a sh:PropertyShape ;
+    sh:path data:hasResolution ;
+    sh:maxCount 1 ;
+    sh:class top:Amount ;
+    sh:message "The resolution of a quantization is a top:Amount."@en .
+
+
+shape:PeriodicBinning a sh:NodeShape ;
+    rdfs:label "Periodic binning"@en ;
+    rdfs:comment "A periodic binning (e.g. the months of each year) has exactly one period and one resolution in it, durations."@en ;
+    sh:targetClass data:PeriodicBinning ;
+    sh:property shape:PeriodicBinning-period , shape:PeriodicBinning-inPeriodResolution .
+
+shape:PeriodicBinning-period a sh:PropertyShape ;
+    sh:path data:hasPeriodValue ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:duration ;
+    sh:message "A periodic binning has exactly one period, an xsd:duration."@en .
+
+shape:PeriodicBinning-inPeriodResolution a sh:PropertyShape ;
+    sh:path data:hasInPeriodResolutionValue ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:duration ;
+    sh:message "A periodic binning has exactly one resolution in the period, an xsd:duration."@en .
+
+
+shape:VariableSpecialization a sh:NodeShape ;
+    rdfs:label "Variable specialization"@en ;
+    rdfs:comment "The specialization of a variable selects exactly one region of exactly one dimension."@en ;
+    sh:targetClass data:VariableSpecialization ;
+    sh:property shape:VariableSpecialization-region , shape:VariableSpecialization-dimension .
+
+shape:VariableSpecialization-region a sh:PropertyShape ;
+    sh:path data:hasSelectedRegion ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class data:Region ;
+    sh:message "A variable specialization selects exactly one region, a data:Region."@en .
+
+shape:VariableSpecialization-dimension a sh:PropertyShape ;
+    sh:path data:isSpecializationOn ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class data:DimensionalSpace ;
+    sh:message "A variable specialization is on exactly one dimension, a data:DimensionalSpace."@en .

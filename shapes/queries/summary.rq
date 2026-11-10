@@ -1,0 +1,17 @@
+# Summary of a SHACL validation report: the number of results for each
+# severity, shape and message, with one of the focus nodes as example, from the
+# violations to the informative results.
+
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+SELECT ?severity ?shape ?message (COUNT(?result) AS ?results) (SAMPLE(?focusNode) AS ?example)
+WHERE {
+    ?result a sh:ValidationResult ;
+        sh:resultSeverity ?severity ;
+        sh:sourceShape ?shape ;
+        sh:focusNode ?focusNode .
+    OPTIONAL { ?result sh:resultMessage ?resultMessage }
+    BIND (COALESCE(STR(?resultMessage), "") AS ?message)
+}
+GROUP BY ?severity ?shape ?message
+ORDER BY (IF(?severity = sh:Violation, 1, IF(?severity = sh:Warning, 2, 3))) DESC(?results) ?shape ?message

@@ -1,0 +1,231 @@
+# Description of the knowledge graph as a dataset: the part written by hand.
+#
+# The KG is described with DCAT (dcat:Dataset, with its distribution), VoID
+# (void:Dataset, with a subset per named graph), Dublin Core terms and PROV-O
+# (the sources each graph is derived from). The workflow (rule metadata,
+# workflow/rules/metadata.smk) completes it with what is computed at each
+# build:
+#
+# - statistics.rq: the named graphs (SPARQL service description) and the VoID
+#   statistics of the KG and of each of them;
+# - provenance.jq: the build (date, commit of the workflow) and the versions of
+#   the sources given by the configuration of the workflow;
+# - quality.jq: the results of the validation with the SHACL shapes (DQV).
+#
+# The description of the named graph <g> is the void:Dataset <g#graph>, a
+# subset of the KG (void:subset, added by statistics.rq for the graphs found in
+# the KG): a new graph of graph_names.csv is to be described here (the shapes
+# of the metadata, shapes.ttl, require a title and a description for each, and
+# statistics for each graph described).
+
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix quality: <https://w3id.org/hacid/data/cs/kg/quality/> .
+@base <https://w3id.org/hacid/data/cs/> .
+
+
+# --- The knowledge graph
+
+<kg> a dcat:Dataset , void:Dataset ;
+    dcterms:title "HACID climate services knowledge graph"@en ;
+    dcterms:description """Knowledge graph of the HACID project for climate services: the climate variables (CF standard
+names, MIP variables of the CMOR tables, climate indices), the climate models and the simulations of CMIP5 and
+CORDEX-CMIP5 with their datasets, the UKCP18 datasets, the emission scenarios and global warming levels, and the
+controlled vocabularies of hazards, methods and operations of climate services, described with the HACID ontologies
+(top-level, data and CCSO)."""@en ;
+    dcterms:creator <person/miguel-ceriani> , <person/andrea-giovanni-nuzzolese> ;
+    dcterms:publisher <organizations/HACID> ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
+    dcterms:language <http://id.loc.gov/vocabulary/iso639-1/en> ;
+    dcat:theme <http://publications.europa.eu/resource/authority/data-theme/ENVI> ,
+        <http://publications.europa.eu/resource/authority/data-theme/TECH> ;
+    dcat:keyword "climate services"@en , "climate models"@en , "climate model simulations"@en ,
+        "climate variables"@en , "climate indices"@en , "CMIP5"@en , "CORDEX"@en , "UKCP18"@en ;
+    dcat:landingPage <https://github.com/hacid-project/climate-services-kg> ;
+    dcat:distribution <kg/distributions/nquads> ;
+    dcterms:conformsTo <shapes> ;
+    void:feature <http://www.w3.org/ns/formats/N-Quads> ;
+    void:uriSpace "https://w3id.org/hacid/data/cs/" ;
+    void:vocabulary <https://w3id.org/hacid/onto/top-level/> , <https://w3id.org/hacid/onto/data/> , <https://w3id.org/hacid/onto/ccso/> ;
+    void:exampleResource <variables/mip/tas> , <models/HadGEM2-ES> , <scenarios/RCP/RCP8.5> ,
+        <simulations/cmip5.HadGEM2-ES.rcp85.r1i1p1> .
+
+<kg/distributions/nquads> a dcat:Distribution ;
+    dcterms:title "N-Quads dump of the knowledge graph"@en ;
+    dcterms:description "All the named graphs of the knowledge graph, with its metadata, as gzipped N-Quads."@en ;
+    dcterms:format <http://www.w3.org/ns/formats/N-Quads> ;
+    dcat:mediaType <https://www.iana.org/assignments/media-types/application/n-quads> ;
+    dcat:compressFormat <https://www.iana.org/assignments/media-types/application/gzip> ;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> .
+
+<shapes> a dcterms:Standard ;
+    dcterms:title "SHACL shapes of the HACID climate services knowledge graph"@en ;
+    dcat:landingPage <https://github.com/hacid-project/climate-services-kg/tree/main/shapes> .
+
+<organizations/HACID> a foaf:Agent , foaf:Organization ;
+    foaf:name "HACID - Hybrid Human Artificial Collective Intelligence in Open-Ended Decision Making" .
+
+<person/miguel-ceriani> a foaf:Agent , foaf:Person ;
+    foaf:name "Miguel Ceriani" .
+
+<person/andrea-giovanni-nuzzolese> a foaf:Agent , foaf:Person ;
+    foaf:name "Andrea Giovanni Nuzzolese" .
+
+
+# --- The named graphs
+
+<https://w3id.org/hacid/onto/top-level#graph> a void:Dataset ;
+    dcterms:title "HACID top-level ontology"@en ;
+    dcterms:description "The top-level ontology of HACID: entities, events, collections, concepts, descriptions, roles and their general relations."@en ;
+    prov:wasDerivedFrom <sources/ontologies> .
+
+<https://w3id.org/hacid/onto/data#graph> a void:Dataset ;
+    dcterms:title "HACID data ontology"@en ;
+    dcterms:description "The data ontology of HACID: variables, datasets, dimensional spaces, regions and quantizations, and the processes generating and transforming data."@en ;
+    prov:wasDerivedFrom <sources/ontologies> .
+
+<https://w3id.org/hacid/onto/ccso#graph> a void:Dataset ;
+    dcterms:title "CCSO - Core Climate Services Ontology"@en ;
+    dcterms:description "The Core Climate Services Ontology: climate models, simulations, projections, scenarios, hazards."@en ;
+    prov:wasDerivedFrom <sources/ontologies> .
+
+<https://w3id.org/hacid/data/cs#graph> a void:Dataset ;
+    dcterms:title "Common entities"@en ;
+    dcterms:description "Entities shared by the sources, written by hand: space and time dimensions and their reference frames, collections, model intercomparison projects, emission scenarios (RCP, SSP) and global warming levels."@en .
+
+<cf#graph> a void:Dataset ;
+    dcterms:title "CF variables"@en ;
+    dcterms:description "The variables of the CF standard name table, with their units of measure and aliases."@en ;
+    prov:wasDerivedFrom <sources/cf-standard-names> .
+
+<cmor-tables#graph> a void:Dataset ;
+    dcterms:title "MIP variables"@en ;
+    dcterms:description "The variables of the CMOR tables of CMIP5, CMIP6 and CMIP6Plus: those of the current edition and the previous ones kept separate from them."@en ;
+    prov:wasDerivedFrom <sources/cmor-tables/cmip5> , <sources/cmor-tables/cmip6> , <sources/cmor-tables/cmip6plus> .
+
+<variables#graph> a void:Dataset ;
+    dcterms:title "Collection of the standard variables"@en ;
+    dcterms:description "The collection of all the standard variables of the knowledge graph, generated by the consolidation."@en ;
+    prov:wasDerivedFrom <cf#graph> , <cmor-tables#graph> .
+
+<cmip5/cvs#graph> a void:Dataset ;
+    dcterms:title "CMIP5 controlled vocabularies"@en ;
+    dcterms:description "The experiments and the institutions of CMIP5, from the configuration of the ESGF publisher."@en ;
+    prov:wasDerivedFrom <sources/esgf-config> .
+
+<cmip5/datasets#graph> a void:Dataset ;
+    dcterms:title "CMIP5 datasets"@en ;
+    dcterms:description "The CMIP5 datasets found on ESGF, with their simulations, ensembles, models and grids."@en ;
+    prov:wasDerivedFrom <https://doi.org/10.5281/zenodo.23363413> , <sources/cmor-tables/cmip5> .
+
+<cordex/cvs#graph> a void:Dataset ;
+    dcterms:title "CORDEX controlled vocabularies"@en ;
+    dcterms:description "The CORDEX-CMIP5 domains with their grids, and the CORDEX regional climate models with their institutes."@en ;
+    prov:wasDerivedFrom <sources/cordex-domains> , <sources/cordex-rcms> .
+
+<cordex-cmip5/datasets#graph> a void:Dataset ;
+    dcterms:title "CORDEX-CMIP5 datasets"@en ;
+    dcterms:description "The CORDEX-CMIP5 datasets found on ESGF, with their simulations (downscalings of the CMIP5 simulations), ensembles, models and grids, and the variables requested by CORDEX that are not MIP variables."@en ;
+    prov:wasDerivedFrom <https://doi.org/10.5281/zenodo.23477951> , <sources/cmor-tables/cmip5> .
+
+<ukcp18#graph> a void:Dataset ;
+    dcterms:title "UKCP18 datasets"@en ;
+    dcterms:description "The datasets of the UK Climate Projections 2018 (UKCP18) catalogued by CEDA, with their simulations, derivations, models, grids and local variables (anomalies, indices, distribution representations)."@en ;
+    prov:wasDerivedFrom <https://doi.org/10.5281/zenodo.23515656> .
+
+<climdex#graph> a void:Dataset ;
+    dcterms:title "Climdex indices"@en ;
+    dcterms:description "The climate indices of Climdex/Climpact, with their time aggregations and their classification by sector."@en ;
+    prov:wasDerivedFrom <sources/climpact-user-guide> , <https://www.climdex.org/learn/indices/sector/> .
+
+<mohc-cvs#graph> a void:Dataset ;
+    dcterms:title "Met Office Hadley Centre controlled vocabularies"@en ;
+    dcterms:description "Controlled vocabularies of climate indices, hazard types, methods and operations of climate services, with the schemes of their values."@en .
+
+<indices#graph> a void:Dataset ;
+    dcterms:title "Collection of the standard indices"@en ;
+    dcterms:description "The collection of all the standard climate indices of the knowledge graph, generated by the consolidation."@en ;
+    prov:wasDerivedFrom <climdex#graph> , <mohc-cvs#graph> .
+
+
+# --- The sources (their versions are added by provenance.jq)
+
+<sources/ontologies> a prov:Entity ;
+    dcterms:title "HACID ontologies"@en .
+
+<sources/cf-standard-names> a prov:Entity ;
+    dcterms:title "CF standard name table"@en ;
+    dcterms:publisher <https://cfconventions.org/> .
+
+<sources/cmor-tables/cmip5> a prov:Entity ;
+    dcterms:title "CMIP5 CMOR tables"@en .
+
+<sources/cmor-tables/cmip6> a prov:Entity ;
+    dcterms:title "CMIP6 CMOR tables"@en .
+
+<sources/cmor-tables/cmip6plus> a prov:Entity ;
+    dcterms:title "CMIP6Plus CMOR tables (MIP CMOR tables)"@en .
+
+<sources/esgf-config> a prov:Entity ;
+    dcterms:title "Configuration of the ESGF publisher"@en .
+
+<sources/cordex-domains> a prov:Entity ;
+    dcterms:title "CORDEX domain tables"@en .
+
+<sources/cordex-rcms> a prov:Entity ;
+    dcterms:title "CORDEX RCMs (IS-ENES Data)"@en .
+
+<sources/climpact-user-guide> a prov:Entity ;
+    dcterms:title "Tables of the Climpact indices (Climpact user guide)"@en ;
+    foaf:page <https://github.com/ARCCSS-extremes/climpact/blob/master/www/user_guide/Climpact_user_guide.md> .
+
+<https://doi.org/10.5281/zenodo.23363413> a prov:Entity , dcat:Dataset ;
+    dcterms:title "Metadata of the CMIP5 datasets on ESGF"@en ;
+    dcterms:identifier "10.5281/zenodo.23363413" .
+
+<https://doi.org/10.5281/zenodo.23477951> a prov:Entity , dcat:Dataset ;
+    dcterms:title "Metadata of the CORDEX-CMIP5 datasets on ESGF"@en ;
+    dcterms:identifier "10.5281/zenodo.23477951" .
+
+<https://doi.org/10.5281/zenodo.23515656> a prov:Entity , dcat:Dataset ;
+    dcterms:title "Metadata of the UKCP18 datasets (CEDA)"@en ;
+    dcterms:identifier "10.5281/zenodo.23515656" .
+
+<https://www.climdex.org/learn/indices/sector/> a prov:Entity ;
+    dcterms:title "Climdex indices by sector"@en .
+
+
+# --- Quality metrics (their measurements are added by quality.jq)
+
+quality:conformance a dqv:Dimension ;
+    rdfs:label "Conformance to the SHACL shapes"@en ;
+    dqv:inCategory quality:validation .
+
+quality:validation a dqv:Category ;
+    rdfs:label "Validation"@en .
+
+quality:violations a dqv:Metric ;
+    rdfs:label "Violations"@en ;
+    rdfs:comment "Number of validation results of severity sh:Violation of the validation of the KG with its SHACL shapes."@en ;
+    dqv:expectedDataType xsd:integer ;
+    dqv:inDimension quality:conformance .
+
+quality:warnings a dqv:Metric ;
+    rdfs:label "Warnings"@en ;
+    rdfs:comment "Number of validation results of severity sh:Warning of the validation of the KG with its SHACL shapes."@en ;
+    dqv:expectedDataType xsd:integer ;
+    dqv:inDimension quality:conformance .
+
+quality:infos a dqv:Metric ;
+    rdfs:label "Informative results"@en ;
+    rdfs:comment "Number of validation results of severity sh:Info of the validation of the KG with its SHACL shapes."@en ;
+    dqv:expectedDataType xsd:integer ;
+    dqv:inDimension quality:conformance .

@@ -1,0 +1,192 @@
+# Shapes of the controlled vocabularies: hazard types, operations (tasks) with
+# their roles, methods, concepts and their schemes (Met Office Hadley Centre),
+# and the time aggregations of the climate indices (Climdex).
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix data:  <https://w3id.org/hacid/onto/data/> .
+@prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+
+shape:HazardType a sh:NodeShape ;
+    rdfs:label "Hazard type"@en ;
+    rdfs:comment "A hazard type has exactly one label, its indicators are variables and its specializations hazard types."@en ;
+    sh:targetClass ccso:HazardType ;
+    sh:property
+        shape:HazardType-label ,
+        shape:HazardType-indicator ,
+        shape:HazardType-specialization .
+
+shape:HazardType-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A hazard type has exactly one label."@en .
+
+shape:HazardType-indicator a sh:PropertyShape ;
+    sh:path ccso:hasIndicator ;
+    sh:class data:Variable ;
+    sh:message "The indicator of a hazard type is a data:Variable."@en .
+
+shape:HazardType-specialization a sh:PropertyShape ;
+    sh:path top:isSpecializedBy ;
+    sh:class ccso:HazardType ;
+    sh:message "A hazard type is specialized by hazard types."@en .
+
+
+shape:Operation a sh:NodeShape ;
+    rdfs:label "Operation"@en ;
+    rdfs:comment "An operation (a task of a climate service workflow) has exactly one label and a description; its roles are information roles and its specializations operations."@en ;
+    sh:targetClass top:Operation ;
+    sh:property
+        shape:Operation-label ,
+        shape:Operation-comment ,
+        shape:Operation-role ,
+        shape:Operation-specialization .
+
+shape:Operation-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "An operation has exactly one label."@en .
+
+shape:Operation-comment a sh:PropertyShape ;
+    sh:path rdfs:comment ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The operation has no description."@en .
+
+shape:Operation-role a sh:PropertyShape ;
+    sh:path top:definesRole ;
+    sh:class top:Role ;
+    sh:message "The role defined by an operation is a top:Role."@en .
+
+shape:Operation-specialization a sh:PropertyShape ;
+    sh:path top:isSpecializedBy ;
+    sh:class top:Operation ;
+    sh:message "An operation is specialized by operations."@en .
+
+
+shape:InformationRole a sh:NodeShape ;
+    rdfs:label "Information role"@en ;
+    rdfs:comment "An information role (the data associated with an operation) is defined by exactly one operation and has exactly one expected type."@en ;
+    sh:targetClass top:InformationRole ;
+    sh:property shape:InformationRole-operation , shape:InformationRole-expectedType .
+
+shape:InformationRole-operation a sh:PropertyShape ;
+    sh:path [ sh:inversePath top:definesRole ] ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "An information role is defined by exactly one operation."@en .
+
+shape:InformationRole-expectedType a sh:PropertyShape ;
+    sh:path top:hasExpectedType ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "An information role has exactly one expected type."@en .
+
+
+shape:Method a sh:NodeShape ;
+    rdfs:label "Method"@en ;
+    rdfs:comment "A method has a label (one per language), and its specializations are methods."@en ;
+    sh:targetClass top:Method ;
+    sh:property shape:Method-label , shape:Method-specialization .
+
+shape:Method-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "A method has a label, one per language."@en .
+
+shape:Method-specialization a sh:PropertyShape ;
+    sh:path top:isSpecializedBy ;
+    sh:class top:Method ;
+    sh:message "A method is specialized by methods."@en .
+
+
+shape:Concept a sh:NodeShape ;
+    rdfs:label "Concept of a controlled vocabulary"@en ;
+    rdfs:comment """A concept asserted as such (a sector, a CORDEX domain, a value of a scheme) has a label, one per
+language, and what it classifies or is in the scheme of is described."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select "SELECT ?this WHERE { ?this rdf:type top:Concept }" ;
+    ] ;
+    sh:property shape:Concept-label , shape:Concept-scheme .
+
+shape:Concept-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "A concept has a label, one per language."@en .
+
+shape:Concept-scheme a sh:PropertyShape ;
+    sh:path top:inScheme ;
+    sh:class top:ConceptScheme ;
+    sh:message "The scheme of a concept is a top:ConceptScheme."@en .
+
+
+shape:ConceptScheme a sh:NodeShape ;
+    rdfs:label "Concept scheme"@en ;
+    rdfs:comment "A concept scheme has a label and is not empty: something is in it or defined by it."@en ;
+    sh:targetClass top:ConceptScheme ;
+    sh:targetObjectsOf top:inScheme ;
+    sh:class top:ConceptScheme ;
+    sh:property shape:ConceptScheme-label ;
+    sh:or (
+        [ sh:path [ sh:inversePath top:inScheme ] ; sh:minCount 1 ]
+        [ sh:path top:defines ; sh:minCount 1 ]
+    ) ;
+    sh:severity sh:Warning ;
+    sh:message "The concept scheme is empty (nothing is in the scheme nor defined by it)."@en .
+
+shape:ConceptScheme-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The concept scheme has no label."@en .
+
+
+shape:Classification a sh:NodeShape ;
+    rdfs:label "Classification"@en ;
+    rdfs:comment "What classifies a resource is a concept."@en ;
+    sh:targetObjectsOf top:isClassifiedBy ;
+    sh:targetSubjectsOf top:classifies ;
+    sh:class top:Concept ;
+    sh:message "The resource classifies others but is not a top:Concept."@en .
+
+
+shape:IndexAggregation a sh:NodeShape ;
+    rdfs:label "Time aggregation of an index"@en ;
+    rdfs:comment """The aggregation of a climate index (over which dimension, at which suggested resolutions) is defined
+by exactly one index, aggregates exactly one variable (a dimension) and suggests quantizations."""@en ;
+    sh:targetSubjectsOf data:aggregatesVariable ;
+    sh:targetObjectsOf data:definesAggregation ;
+    sh:property
+        shape:IndexAggregation-index ,
+        shape:IndexAggregation-variable ,
+        shape:IndexAggregation-quantization .
+
+shape:IndexAggregation-index a sh:PropertyShape ;
+    sh:path [ sh:inversePath data:definesAggregation ] ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "An aggregation is defined by exactly one variable."@en .
+
+shape:IndexAggregation-variable a sh:PropertyShape ;
+    sh:path data:aggregatesVariable ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:class data:Variable ;
+    sh:message "An aggregation aggregates exactly one variable."@en .
+
+shape:IndexAggregation-quantization a sh:PropertyShape ;
+    sh:path data:hasSuggestedQuantization ;
+    sh:minCount 1 ;
+    sh:class data:Quantization ;
+    sh:message "An aggregation suggests at least a quantization, a data:Quantization."@en .

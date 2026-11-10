@@ -2,14 +2,17 @@
 # files written by hand, as listed in graph_names.csv, are loaded into a TDB2
 # dataset (config.yaml, consolidate.location, kg/tdb2, not tracked), the
 # updates of consolidation/ (listed in consolidation_updates.csv) are applied
-# to it, and it is exported as N-Quads (kg/export/kg.nq.gz). It uses the Jena
-# command-line tools (tdb2.tdbloader, tdb2.tdbupdate, tdb2.tdbdump). The
-# updates see the union of the named graphs as default graph
-# (tdb:unionDefaultGraph), as in the Fuseki configuration (fuseki-conf.ttl).
+# to it, its metadata is added (rules/metadata.smk, with the results of its
+# validation, rules/validate.smk), and it is exported as N-Quads
+# (kg/export/kg.nq.gz). It uses the Jena command-line tools (tdb2.tdbloader,
+# tdb2.tdbupdate, tdb2.tdbdump). The updates see the union of the named graphs
+# as default graph (tdb:unionDefaultGraph), as in the Fuseki configuration
+# (fuseki-conf.ttl).
 #
-# The dataset is modified in place by the updates: the steps record their
-# completion in kg/ (load.json, updates.done), so that a change in the inputs
-# of a step reruns it and the following ones.
+# The dataset is modified in place by the updates and by the load of the
+# metadata: the steps record their completion in kg/ (load.json, updates.done,
+# metadata.done), so that a change in the inputs of a step reruns it and the
+# following ones.
 
 # The files written by hand listed in graph_names.csv: those tracked in git
 # (the others are outputs of the mappings, inputs through rule mapping)
@@ -76,7 +79,7 @@ rule consolidate_updates:
 
 rule consolidate_export:
     input:
-        updated="kg/updates.done",
+        described="kg/metadata.done",
     output:
         "kg/export/kg.nq.gz",
     params:

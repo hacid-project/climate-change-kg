@@ -1,0 +1,107 @@
+# Statistics of the knowledge graph, as VoID: its named graphs (SPARQL service
+# description), and the numbers of triples, entities (subjects that are IRIs),
+# distinct subjects and objects, classes and properties, with the partitions by
+# class and by property, of the whole KG and of each named graph.
+#
+# The description of the named graph <g> is the void:Dataset <g#graph>. The
+# graph of the metadata itself (<https://w3id.org/hacid/data/cs/kg>) is left
+# out, so that the statistics do not depend on a previous build.
+#
+# Run on the TDB2 dataset (rule metadata_statistics).
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX sd:   <http://www.w3.org/ns/sparql-service-description#>
+PREFIX kg:   <https://w3id.org/hacid/data/cs/kg>
+
+CONSTRUCT {
+    kg: a sd:Dataset ;
+        sd:namedGraph ?namedGraph ;
+        void:subset ?subset .
+    ?namedGraph a sd:NamedGraph ;
+        sd:name ?graph ;
+        sd:graph ?dataset .
+    ?dataset a void:Dataset , sd:Graph ;
+        void:triples ?triples ;
+        void:entities ?entities ;
+        void:distinctSubjects ?subjects ;
+        void:distinctObjects ?objects ;
+        void:properties ?properties ;
+        void:classes ?classes ;
+        void:classPartition ?classPartition ;
+        void:propertyPartition ?propertyPartition .
+    ?classPartition void:class ?class ;
+        void:entities ?classEntities .
+    ?propertyPartition void:property ?property ;
+        void:triples ?propertyTriples .
+}
+WHERE {
+    {
+        # The KG: the union of the named graphs (a triple in several graphs counts once)
+        SELECT (kg: AS ?dataset) ?triples ?entities ?subjects ?objects ?properties ?classes WHERE {
+            {
+                SELECT (COUNT(*) AS ?triples) (COUNT(DISTINCT ?s) AS ?subjects) (COUNT(DISTINCT ?o) AS ?objects)
+                    (COUNT(DISTINCT ?p) AS ?properties)
+                WHERE { SELECT DISTINCT ?s ?p ?o WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (?graph != kg:) } }
+            }
+            {
+                SELECT (COUNT(DISTINCT ?s) AS ?entities)
+                WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (isIRI(?s) && ?graph != kg:) }
+            }
+            {
+                SELECT (COUNT(DISTINCT ?class) AS ?classes)
+                WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != kg:) }
+            }
+        }
+    }
+    UNION {
+        SELECT (kg: AS ?dataset) ?class (COUNT(DISTINCT ?s) AS ?classEntities)
+            (IRI(CONCAT(STR(kg:), "#class-", ENCODE_FOR_URI(STR(?class)))) AS ?classPartition)
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != kg:) }
+        GROUP BY ?class
+    }
+    UNION {
+        SELECT (kg: AS ?dataset) ?property (COUNT(*) AS ?propertyTriples)
+            (IRI(CONCAT(STR(kg:), "#property-", ENCODE_FOR_URI(STR(?property)))) AS ?propertyPartition)
+        WHERE { SELECT DISTINCT ?s ?property ?o WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != kg:) } }
+        GROUP BY ?property
+    }
+    UNION {
+        # Each named graph
+        SELECT ?graph ?dataset ?subset ?namedGraph ?triples ?entities ?subjects ?objects ?properties WHERE {
+            {
+                SELECT ?graph (COUNT(*) AS ?triples) (COUNT(DISTINCT ?s) AS ?subjects)
+                    (COUNT(DISTINCT ?o) AS ?objects) (COUNT(DISTINCT ?p) AS ?properties)
+                WHERE { GRAPH ?graph { ?s ?p ?o } }
+                GROUP BY ?graph
+            }
+            {
+                SELECT ?graph (COUNT(DISTINCT ?s) AS ?entities)
+                WHERE { GRAPH ?graph { ?s ?p ?o } FILTER isIRI(?s) }
+                GROUP BY ?graph
+            }
+            FILTER (?graph != kg:)
+            BIND (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset)
+            BIND (?dataset AS ?subset)
+            BIND (IRI(CONCAT(STR(?graph), "#named-graph")) AS ?namedGraph)
+        }
+    }
+    UNION {
+        SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) (COUNT(DISTINCT ?class) AS ?classes)
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != kg:) }
+        GROUP BY ?graph
+    }
+    UNION {
+        SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) ?class (COUNT(DISTINCT ?s) AS ?classEntities)
+            (IRI(CONCAT(STR(?graph), "#class-", ENCODE_FOR_URI(STR(?class)))) AS ?classPartition)
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != kg:) }
+        GROUP BY ?graph ?class
+    }
+    UNION {
+        SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) ?property (COUNT(*) AS ?propertyTriples)
+            (IRI(CONCAT(STR(?graph), "#property-", ENCODE_FOR_URI(STR(?property)))) AS ?propertyPartition)
+        WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != kg:) }
+        GROUP BY ?graph ?property
+    }
+}
