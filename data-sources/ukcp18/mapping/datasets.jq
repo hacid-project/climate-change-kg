@@ -124,9 +124,13 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
                 else "ccso:SingleProjection"
             end,
             # its kind of distribution representation, as its variable
-            (VARIABLES::distribution_representation_type | values)
+            (VARIABLES::distribution_representation_type | values),
+            # based on a global warming level, as the output of its derivation
+            # (the land-derived datasets of gwl2 and gwl4)
+            (.scenario | SIMULATIONS::gwl_uri | values | "ccso:GlobalWarmingLevelBasedProjection")
         ],
         label: "ukcp18.\(.id[:-3])",
+        gwl: (.scenario | SIMULATIONS::gwl_uri),
         single_dependent_variable: VARIABLES::variable_iri,
         independent_variable: [
             UKCP18_TIME::dataset_to_variable($time_interval),

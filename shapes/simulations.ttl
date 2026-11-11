@@ -296,9 +296,9 @@ shape:EmissionScenario-acronym a sh:PropertyShape ;
 
 shape:GlobalWarmingLevel a sh:NodeShape ;
     rdfs:label "Global warming level"@en ;
-    rdfs:comment "A global warming level has a label and exactly one value: a positive number of degrees Celsius."@en ;
+    rdfs:comment "A global warming level has a label and exactly one value: a positive number of degrees Celsius, an xsd:decimal for all the levels, so that they compare and sort alike."@en ;
     sh:targetClass ccso:GlobalWarmingLevel ;
-    sh:property shape:GlobalWarmingLevel-label , shape:GlobalWarmingLevel-value , shape:GlobalWarmingLevel-datatype .
+    sh:property shape:GlobalWarmingLevel-label , shape:GlobalWarmingLevel-value .
 
 shape:GlobalWarmingLevel-label a sh:PropertyShape ;
     sh:path rdfs:label ;
@@ -310,13 +310,7 @@ shape:GlobalWarmingLevel-value a sh:PropertyShape ;
     sh:path rdf:value ;
     sh:minCount 1 ;
     sh:maxCount 1 ;
+    sh:datatype xsd:decimal ;
     sh:minExclusive 0 ;
     sh:maxInclusive 10 ;
-    sh:message "A global warming level has exactly one value, a number between 0 and 10 (°C)."@en .
-
-shape:GlobalWarmingLevel-datatype a sh:PropertyShape ;
-    rdfs:comment "The values of the levels have all the same datatype, so that they compare and sort as expected in every store."@en ;
-    sh:path rdf:value ;
-    sh:datatype xsd:decimal ;
-    sh:severity sh:Info ;
-    sh:message "The value of the global warming level is not an xsd:decimal."@en .
+    sh:message "A global warming level has exactly one value, an xsd:decimal between 0 and 10 (°C)."@en .

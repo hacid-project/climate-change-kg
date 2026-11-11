@@ -178,7 +178,9 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   not scenario based, its part of the scenario refers to it.
 - **Global warming level based projections.** The derived projections of a
   global warming level (`gwl2`, `gwl4`), which refer to it, are
-  `ccso:GlobalWarmingLevelBasedProjection`s (`projection_types`).
+  `ccso:GlobalWarmingLevelBasedProjection`s (`projection_types`), and so are
+  their datasets (the land-derived datasets of `gwl2` and `gwl4`,
+  `mapping/datasets.jq`), which refer to the level too.
 - **Output of the regional ensemble.** The output of the ensemble of the
   regional simulations (`.../ukcp18/land-rcm/datasets/<scenario>/output`) has a
   label and its scenario, as that of the local ones (it had neither, found by

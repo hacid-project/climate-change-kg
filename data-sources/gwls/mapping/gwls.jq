@@ -9,7 +9,10 @@
             "@id": "rdfs:comment",
             "@language": "en"
         },
-        value: "rdf:value"
+        value: {
+            "@id": "rdf:value",
+            "@type": "http://www.w3.org/2001/XMLSchema#decimal"
+        }
     },
     "@graph": [
         range(1.5;6.5;0.5) | {
@@ -17,7 +20,9 @@
             "@type": "ccso:GlobalWarmingLevel",
             label: "GWL\(.)",
             comment: "Global warming level of \(.)°C, i.e. \(.)°C of global mean temperature increase compared to pre-industrial times (1871-1900)",
-            value: .
+            # (as a decimal for all the levels: the numbers of JSON-LD are
+            # integers or doubles)
+            value: tostring
         }
     ]
 }
