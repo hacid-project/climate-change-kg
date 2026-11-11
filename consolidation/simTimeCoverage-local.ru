@@ -124,12 +124,16 @@ WHERE {
 #            COALESCE(CONCAT ('/', STR(?minGridPeriod)), '')
         ) AS ?gridTypeId
     ).
+    # The temporal grid has the IRI given by the mappings to the grid of the
+    # same region and quantization (<region>/quantized/<quantization>, see
+    # temporal_iris in data-sources/cmip5/mapping/esgf.jq), so that it is the
+    # same node
     BIND(
         IRI(
             CONCAT(
                 REPLACE(
                     ?simInterval, ?re,
-                    "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/$1-$2/"
+                    "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/$1-$2/quantized/"
                 ),
                 ?gridTypeId
             )

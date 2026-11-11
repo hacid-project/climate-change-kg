@@ -29,11 +29,13 @@ The rule `consolidate` (`workflow/rules/consolidate.smk`), run on the outputs of
 [Apache Jena](https://jena.apache.org/) command-line tools (which must be on the `PATH`), in four steps:
 
 1. `consolidate_load`: the files of each graph listed in `graph_names.csv` (path or glob pattern, graph name, skip)
-   are loaded into a new TDB2 dataset, `kg/tdb2` (`config/config.yaml`, `consolidate.location`; `kg/` is not
-   tracked), with `tdb2.tdbloader` (`workflow/scripts/consolidate_load.py`, which writes the graphs and their files
+   are loaded into a new TDB2 dataset, `kg/tdb2-loaded` (`config/config.yaml`, `consolidate.loaded_location`; `kg/`
+   is not tracked), with `tdb2.tdbloader` (`workflow/scripts/consolidate_load.py`, which writes the graphs and their files
    in `kg/load.json`);
-2. `consolidate_updates`: the SPARQL updates listed in `consolidation_updates.csv` (in `consolidation/`) are applied
-   in their order with `tdb2.tdbupdate`, seeing the union of the named graphs as the default graph;
+2. `consolidate_updates`: the loaded dataset is copied to `kg/tdb2` (`consolidate.location`), and the SPARQL updates
+   listed in `consolidation_updates.csv` (in `consolidation/`) are applied to the copy in their order with
+   `tdb2.tdbupdate`, seeing the union of the named graphs as the default graph. The loaded dataset is left as it is, so
+   that a change in the updates reruns them from it, without loading the RDF files again;
 3. `metadata`: the description of the KG as a dataset is built (`kg/export/void.ttl`), with the results of its
    validation, and loaded as a named graph (see [Metadata](#metadata) and [Validation](#validation));
 4. `consolidate_export`: the dataset is exported as N-Quads, `kg/export/kg.nq.gz`, with `tdb2.tdbdump`.

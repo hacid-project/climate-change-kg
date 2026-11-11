@@ -90,6 +90,9 @@ ontologies:
     - ccso
 
 consolidate:
+  # Location of the TDB2 dataset of the KG as loaded from the RDF files, before
+  # the updates (not tracked): the consolidated one is made from a copy of it
+  loaded_location: kg/tdb2-loaded
   # Location of the TDB2 dataset of the consolidated KG (not tracked)
   location: kg/tdb2
   # Options of the JVM of the Jena command-line tools (JVM_ARGS)

@@ -2,8 +2,9 @@
 
 The files of each graph are listed in graph_names.csv (path or glob pattern,
 graph name, skip), relative to the root of the repository; those with skip
-"y" are left out. The dataset (at its location) is recreated, and the files
-of each graph are loaded with tdb2.tdbloader. A pattern that matches no file
+"y" are left out. The dataset (at its location, that of the KG as loaded: the
+updates are applied to a copy of it) is recreated, and the files of each graph
+are loaded with tdb2.tdbloader. A pattern that matches no file
 is an error.
 
 Writes a report of the graphs and their files (JSON). Run by snakemake (rule
