@@ -50,7 +50,7 @@ arq --data kg/validation/report.ttl \
 | --- | --- | --- |
 | `sh:Violation` | The KG contradicts its model: a wrong mapping, a dangling reference, a term that no ontology declares. It should be fixed (in the mapping, the source data or the ontology) | an untyped resource, a dataset with two variables |
 | `sh:Warning` | The KG is incomplete or inconsistent in a way that the sources may explain. It should be reviewed, and either fixed or accepted | a model without maintainer, an experiment without simulations |
-| `sh:Info` | A convention that is not followed uniformly, or a consequence of the ontology that is not materialised. It is reported once per class or property, with the number of cases, not once per resource | the subjects of a property that are not asserted instances of its domain |
+| `sh:Info` | A convention that is not followed uniformly. It is reported once per class or property, with the number of cases, not once per resource | the instances of a class with labels with and without a language tag |
 
 ## Shapes
 
@@ -61,7 +61,7 @@ Each node shape has a label and a description (`rdfs:label`, `rdfs:comment`), an
 | File | Node shapes | What they check |
 | --- | --- | --- |
 | `generic.ttl` | `Resource`, `Class`, `Property` | Every resource of the KG is typed; every class and property used is declared by an ontology loaded in the KG |
-| | `PropertyDomain`, `PropertyRange`, `PropertyDatatype` | The subjects and objects of the properties are asserted instances of their `rdfs:domain` and `rdfs:range`, and the literals have the datatype of the range (one result per property) |
+| | `PropertyDatatype` | The literals of a datatype property have the datatype of its `rdfs:range` (one result per property). The domains and ranges of the object properties are not checked: the published KG is served with RDFS inference, which gives their types to the subjects and objects |
 | | `LabelLanguage` | The labels of the instances of a class are all with or all without a language tag (one result per class) |
 | `variables.ttl` | `Variable` | The variables of the catalogues (CF, MIP, local variables, indices): label, unit of measure, collection, links to other variables |
 | | `MIPVariable`, `Anomaly`, `DistributionRepresentation` | Acronym and CF variable of a MIP variable; variable and baseline of an anomaly; variable of a distribution representation |
@@ -69,7 +69,7 @@ Each node shape has a label and a description (`rdfs:label`, `rdfs:comment`), an
 | `spacetime.ttl` | `TemporalRegion`, `GeodeticRegion`, `GeodeticPoint` | Start before end, as `xsd:dateTime`; geometries as WKT, with closed polygons |
 | | `Grid`, `Quantization`, `PeriodicBinning`, `VariableSpecialization` | What a grid is based on, its bounding region and quantization; resolutions and periods; region and dimension of a specialization |
 | `datasets.ttl` | `Dataset`, `Projection` | Components, variables, grids and specializations of a dataset; no unattached dataset; label, scenario and global warming level of a projection |
-| | `VariableDataset`, `EnsembleProjection`, `ScenarioReference`, `DistributionDataset` | A dataset of a variable has a grid; an ensemble has components; a projection with a scenario is scenario based; a probabilistic dataset has the representation of its variable |
+| | `VariableDataset`, `EnsembleProjection`, `ScenarioBasedProjection`, `ScenarioReference`, `DistributionDataset` | A dataset of a variable has a grid; an ensemble has components; a projection is scenario based if and only if it refers to a scenario (so not the historical ones); a probabilistic dataset has the representation of its variable |
 | `simulations.ttl` | `DataGeneratingProcess`, `ScenarioConsistency` | Label, inputs, outputs and components of any process; a process and its output, components and driving simulation agree on the scenario |
 | | `SingleSimulation`, `EnsembleSimulation`, `ClimateSimulation`, `GlobalClimateSimulation`, `DynamicalDownscaling`, `DownscalingRun`, `ProjectionTransformation` | The model of each kind of simulation, its components and the kind of its outputs; the driving simulation of a downscaling; inputs and output of a transformation |
 | | `ClimateModel`, `Organization`, `EmissionScenario`, `GlobalWarmingLevel` | Labels, maintainers, acronyms, values |
@@ -89,7 +89,7 @@ needs SHACL-SPARQL and SHACL-AF targets.
 - Target a class (`sh:targetClass`, with its subclasses) or the subjects or objects of a property; use a SPARQL-based
   target only when neither identifies the focus nodes.
 - Give each property shape an IRI and a `sh:message`, and choose its severity as above. A constraint with thousands of
-  expected results is better written as a SPARQL-based constraint grouping them (see `shape:PropertyDomain`).
+  expected results is better written as a SPARQL-based constraint grouping them (see `shape:LabelLanguage`).
 - A constraint that needs a required value and a constraint on the values present are better kept apart (e.g.
   `shape:Variable-unit`, a violation if the unit is not a unit, and `shape:Variable-unitRequired`, a warning if there is
   none), so that each has its severity.

@@ -159,14 +159,15 @@ def cordex_dataset_iri: ns + "datasets/\(.)";
 def cordex_dataset_part_jsonld:
     (cordex_dataset_id | cordex_dataset_iri) as $dataset |
     cordex_simulation_iris as $iris |
+    ([.experiment] | scenario_iris | map(id(.))) as $refers_to_scenario |
     (
         {
             "@id": $dataset,
-            "@type": ["ccso:SingleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
             "rdfs:label": cordex_dataset_id,
             "data:dependsOnVariable": ($iris.grid | values | id("\(.)/ds")),
             "data:isSpecializedAccordingTo": ($iris.grid | values | id("\(.)/specialization")),
-            "ccso:refersToScenario": ([.experiment] | scenario_iris | map(id(.)))
+            "ccso:refersToScenario": $refers_to_scenario
         },
         {
             "@id": $iris.output,
@@ -206,7 +207,7 @@ def cordex_simulation_jsonld:
             # Output of the simulation
             {
                 "@id": $iris.output,
-                "@type": ["ccso:SingleProjection", "ccso:ScenarioBasedProjection"],
+                "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
                 "rdfs:label": ($iris.output_id | en),
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "data:dependsOnVariable": $geodetic_variable,
@@ -237,7 +238,7 @@ def cordex_simulation_jsonld:
             # Output of the driving ensemble
             {
                 "@id": $iris.driving_ensemble_output,
-                "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+                "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
                 "rdfs:label": ($iris.driving_ensemble_output_id | en),
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "top:hasComponent": id($iris.output),
@@ -258,7 +259,7 @@ def cordex_simulation_jsonld:
             # Output of the ensemble
             {
                 "@id": $iris.ensemble_output,
-                "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+                "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
                 "rdfs:label": ($iris.ensemble_id | en),
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "top:hasComponent": id($iris.driving_ensemble_output),
@@ -278,7 +279,7 @@ def cordex_simulation_jsonld:
             # Output of the experiment
             {
                 "@id": $iris.experiment_output,
-                "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+                "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
                 "rdfs:label": ("output of \($iris.experiment_id)" | en),
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "top:hasComponent": id($iris.ensemble_output),
@@ -294,10 +295,10 @@ def cordex_simulation_jsonld:
                 "top:hasComponent": id($iris.experiment),
                 "data:hasOutput": id($iris.domain_output)
             },
-            # Output of the domain
+            # Output of the domain (of all its experiments: of no scenario)
             {
                 "@id": $iris.domain_output,
-                "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+                "@type": "ccso:EnsembleProjection",
                 "rdfs:label": ("output of \($iris.domain_id)" | en),
                 "top:hasComponent": id($iris.experiment_output),
                 "data:dependsOnVariable": $geodetic_variable,
@@ -358,7 +359,7 @@ def cordex_dataset_jsonld($variables; $grids):
         # Dataset
         {
             "@id": $dataset,
-            "@type": ["ccso:SingleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
             "rdfs:label": .master_id,
             "data:isSpecializationOfVariable": ($variables | map(id(.))),
             "data:dependsOnVariable": [

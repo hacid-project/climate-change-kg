@@ -168,6 +168,14 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   inputs of the derived projections and indices are the outputs of the
   simulations (`data:hasInput` relates a process to a dataset), not the
   simulations.
+- **Scenario based projections.** An output is a
+  `ccso:ScenarioBasedProjection` if and only if it is of an emission scenario
+  (`projection_types` in `mapping/simulations.jq`), to which it refers: the
+  outputs of the global and regional simulations and of the global ensemble,
+  scenario based, had no scenario; the derived projections of a scenario
+  referred to it without being scenario based, while those of a global warming
+  level (`gwl2`, `gwl4`) are not; the historical part of a EuroCORDEX dataset is
+  not scenario based, its part of the scenario refers to it.
 - **Output of the regional ensemble.** The output of the ensemble of the
   regional simulations (`.../ukcp18/land-rcm/datasets/<scenario>/output`) has a
   label and its scenario, as that of the local ones (it had neither, found by

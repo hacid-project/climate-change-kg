@@ -155,7 +155,7 @@ def cmip5_simulation_jsonld:
         # Output of the simulation
         {
             "@id": $iris.output,
-            "@type": ["ccso:SingleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
             "rdfs:label": ($iris.output_id | en),
             "ccso:productId": .product,
             "rdfs:comment": [.description[]? | en],
@@ -188,7 +188,7 @@ def cmip5_simulation_jsonld:
         # Output of the ensemble
         {
             "@id": $iris.ensemble_output,
-            "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
             "rdfs:label": ($iris.ensemble_output_id | en),
             "data:holdsSpecializationOfVariable": $holds_variable,
             "top:hasComponent": id($iris.output),
@@ -206,7 +206,7 @@ def cmip5_simulation_jsonld:
         # Output of the experiment
         {
             "@id": $iris.experiment_output,
-            "@type": ["ccso:EnsembleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
             "rdfs:label": ("output of cmip5.\(.experiment)" | en),
             "data:holdsSpecializationOfVariable": $holds_variable,
             "top:hasComponent": _id_or_null($iris.ensemble_output),
@@ -268,7 +268,7 @@ def cmip5_dataset_jsonld($variables):
         # Dataset
         {
             "@id": $dataset,
-            "@type": ["ccso:SingleProjection", "ccso:ScenarioBasedProjection"],
+            "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
             "rdfs:label": .master_id,
             "data:holdsSpecializationOfVariable": ($variables | map(id(.))),
             "data:dependsOnVariable": [id($iris.space), ($time_grid.variable | values | id(.))],

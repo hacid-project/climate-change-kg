@@ -96,9 +96,23 @@ shape:Projection-gwl a sh:PropertyShape ;
     sh:message "A projection refers to at most one global warming level, a ccso:GlobalWarmingLevel."@en .
 
 
+shape:ScenarioBasedProjection a sh:NodeShape ;
+    rdfs:label "Scenario based projection"@en ;
+    rdfs:comment """A scenario based projection refers to its emission scenario. The projections of the historical
+and evaluation experiments, of several experiments (e.g. the output of a CORDEX domain) or of a global warming level
+are not scenario based: they are only single, ensemble or probabilistic projections."""@en ;
+    sh:targetClass ccso:ScenarioBasedProjection ;
+    sh:property shape:ScenarioBasedProjection-scenario .
+
+shape:ScenarioBasedProjection-scenario a sh:PropertyShape ;
+    sh:path ccso:refersToScenario ;
+    sh:minCount 1 ;
+    sh:message "The scenario based projection refers to no scenario."@en .
+
+
 shape:ScenarioReference a sh:NodeShape ;
     rdfs:label "Projection referring to a scenario"@en ;
-    rdfs:comment "A projection that refers to an emission scenario is a ccso:ScenarioBasedProjection."@en ;
+    rdfs:comment "Conversely, a projection that refers to an emission scenario is a ccso:ScenarioBasedProjection."@en ;
     sh:target [
         a sh:SPARQLTarget ;
         sh:prefixes shape:prefixes ;
@@ -108,7 +122,6 @@ shape:ScenarioReference a sh:NodeShape ;
             }""" ;
     ] ;
     sh:class ccso:ScenarioBasedProjection ;
-    sh:severity sh:Warning ;
     sh:message "The projection refers to a scenario but is not a ccso:ScenarioBasedProjection."@en .
 
 

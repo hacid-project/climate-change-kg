@@ -34,6 +34,9 @@ methods, operations) to the KG.
   variables `tasmin` and `tasmax`. The original text of the sources
   (`_AssociatedVariable`) is kept.
 
+- **Space of the values.** An index with a unit of measure has its values on
+  it (`data:hasValuesOn`), as the CF and MIP variables and the Climdex indices.
+
 ## Validation
 
 The Snakemake rules give byte-identical outputs to the JSON-LD previously kept

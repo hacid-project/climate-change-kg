@@ -162,7 +162,9 @@ def to_camel_case:
                                 "@id": @uri "unit:\(.)",
                                 "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
                                 label: .
-                            }
+                            } |
+                            # (the values of the index are in the space of its unit)
+                            .hasValuesOn = .Unit."@id"
                         end |
                         del(.Variants)
                     ] |

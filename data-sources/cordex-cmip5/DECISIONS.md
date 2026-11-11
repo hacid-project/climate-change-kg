@@ -173,6 +173,12 @@ documented with each function.
 - **Same triples.** The refactoring gave the same triples as before (the
   variables of the datasets of `variables_from_id`, added afterwards, apart).
 
+- **Scenario based projections.** As for CMIP5 (`projection_types` in
+  `data-sources/cmip5/mapping/esgf.jq`), a dataset or an output is a
+  `ccso:ScenarioBasedProjection` only if it refers to an emission scenario: not
+  those of the historical and evaluation experiments, nor the output of a
+  domain, which is of all its experiments.
+
 ## Variables (`mapping/cordex-variables.jq`, `mapping/variables.jq`)
 
 - **Resolution to the MIP variables.** As for CMIP5 (see
