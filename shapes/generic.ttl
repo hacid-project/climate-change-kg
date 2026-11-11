@@ -42,12 +42,21 @@ minted by a mapping for something no mapping describes) or a malformed IRI."""@e
                 FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/hacid/data/cs/"))
             }""" ;
     ] ;
-    sh:property shape:Resource-type .
+    sh:property shape:Resource-type , shape:Resource-label .
 
 shape:Resource-type a sh:PropertyShape ;
     sh:path rdf:type ;
     sh:minCount 1 ;
     sh:message "The resource is used but not described: it has no type."@en .
+
+
+shape:Resource-label a sh:PropertyShape ;
+    rdfs:comment """The labels are strings without language, when they are identifiers or standard names (the id of
+a dataset or of a simulation, the name of a model, a CF standard name, the symbol of a unit), or in English, when they
+are text. No other language is used."""@en ;
+    sh:path rdfs:label ;
+    sh:or ( [ sh:datatype xsd:string ] [ sh:languageIn ( "en" ) ] ) ;
+    sh:message "The label is neither a string without language nor in English."@en .
 
 
 shape:Class a sh:NodeShape ;
@@ -103,10 +112,11 @@ property and datatype found, with the number of values concerned and one of them
 
 shape:LabelLanguage a sh:NodeShape ;
     rdfs:label "Language of the labels of a class"@en ;
-    rdfs:comment """The labels of the instances of a class are either all with a language tag or all without: a mix
-usually comes from sources mapped with different conventions, and makes the labels harder to query (a filter on the
-language misses the plain ones). One result per class, with the numbers of instances labelled in each way and one of
-those without language as value."""@en ;
+    rdfs:comment """The labels of the instances of a class are generally all without language (identifiers and
+standard names) or all in English (text), see shape:Resource-label. A class with both is reported, with the numbers of
+instances labelled in each way and one of those without language as value: it is expected where a class has
+resources named by an identifier and resources with a descriptive label (e.g. the CF variables, labelled by their
+standard name, and the MIP variables, by their long name), otherwise a label is tagged against the convention."""@en ;
     sh:targetObjectsOf rdf:type ;
     sh:severity sh:Info ;
     sh:sparql [

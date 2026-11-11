@@ -279,7 +279,7 @@ def convert_parameter:
         dimension: "https://w3id.org/hacid/data/cs/dimensions/",
         aggregation: "https://w3id.org/hacid/data/cs/climdex/index-time-aggregations/",
         temporalgrid: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/regular/",
-        label: "rdfs:label",
+        label: {"@id": "rdfs:label", "@language": "en"},
         comment: "rdfs:comment",
         acronym: "top:acronym",
         definition: "top:definition",

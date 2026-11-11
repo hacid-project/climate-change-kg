@@ -79,7 +79,7 @@ def cmip5_model_jsonld:
         {
             "@id": ($name | cmip5_model_iri),
             "@type": "ccso:GlobalClimateModel",
-            "rdfs:label": ($name | en),
+            "rdfs:label": $name,
             "ccso:isMaintainedBy": ($institutes | map(id(.)))
         },
         (
@@ -156,7 +156,7 @@ def cmip5_simulation_jsonld:
         {
             "@id": $iris.output,
             "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
-            "rdfs:label": ($iris.output_id | en),
+            "rdfs:label": $iris.output_id,
             "ccso:productId": .product,
             "rdfs:comment": [.description[]? | en],
             "data:holdsSpecializationOfVariable": $holds_variable,
@@ -169,7 +169,7 @@ def cmip5_simulation_jsonld:
         {
             "@id": $iris.simulation,
             "@type": ["ccso:SingleSimulation", "ccso:GlobalClimateSimulation"],
-            "rdfs:label": ($iris.simulation_id | en),
+            "rdfs:label": $iris.simulation_id,
             "top:componentIdentifier": .ensemble,
             "data:hasOutput": _id_or_null($iris.output),
             "ccso:usesModel": $uses_model,
@@ -179,7 +179,7 @@ def cmip5_simulation_jsonld:
         {
             "@id": $iris.ensemble,
             "@type": ["ccso:PerturbedParameterClimateEnsembleSimulation", "ccso:GlobalClimateSimulation"],
-            "rdfs:label": ($iris.ensemble_id | en),
+            "rdfs:label": $iris.ensemble_id,
             "top:hasComponent": id($iris.simulation),
             "data:hasOutput": _id_or_null($iris.ensemble_output),
             "ccso:usesModel": $uses_model,
@@ -189,7 +189,7 @@ def cmip5_simulation_jsonld:
         {
             "@id": $iris.ensemble_output,
             "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
-            "rdfs:label": ($iris.ensemble_output_id | en),
+            "rdfs:label": $iris.ensemble_output_id,
             "data:holdsSpecializationOfVariable": $holds_variable,
             "top:hasComponent": id($iris.output),
             "data:isSpecializedAccordingTo": $geodetic_specialization,

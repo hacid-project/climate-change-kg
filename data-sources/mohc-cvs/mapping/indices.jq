@@ -37,7 +37,7 @@ def to_camel_case:
         cfvariable: "https://w3id.org/hacid/data/cs/variables/cf/",
         unit: "https://w3id.org/hacid/data/cs/unitsofmeasure/",
         dimension: "https://w3id.org/hacid/data/cs/dimensions/",
-        label: "rdfs:label",
+        label: {"@id": "rdfs:label", "@language": "en"},
         comment: "rdfs:comment",
         acronym: "top:acronym",
         Definition: "top:definition",
@@ -161,7 +161,8 @@ def to_camel_case:
                             .Unit |= {
                                 "@id": @uri "unit:\(.)",
                                 "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
-                                label: .
+                                # (a symbol: without language)
+                                "rdfs:label": .
                             } |
                             # (the values of the index are in the space of its unit)
                             .hasValuesOn = .Unit."@id"

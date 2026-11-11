@@ -2,7 +2,7 @@
     "@context": {
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         top: "https://w3id.org/hacid/onto/top-level/",
-        label: "rdfs:label",
+        label: {"@id": "rdfs:label", "@language": "en"},
         acronym: "top:acronym"
     },
     "@graph": [

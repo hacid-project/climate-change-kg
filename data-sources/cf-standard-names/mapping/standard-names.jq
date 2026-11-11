@@ -19,7 +19,7 @@ def present: select(. != null and . != "");
         owl: "http://www.w3.org/2002/07/owl#",
         top: "https://w3id.org/hacid/onto/top-level/",
         data: "https://w3id.org/hacid/onto/data/",
-        label: {"@id": "rdfs:label", "@language": "en"},
+        label: "rdfs:label",
         comment: {"@id": "rdfs:comment", "@language": "en"},
         isMemberOf: {"@id": "top:isMemberOf", "@type": "@id"},
         hasUnitOfMeasure: {"@id": "top:hasUnitOfMeasure", "@type": "@id"},

@@ -48,6 +48,16 @@ argument, further options for `fuseki-server` after it, e.g. `./serve_kg.sh kg/t
 workflow is writing the dataset). The dataset can also be served by a Fuseki installation pointing its configuration
 (`fuseki-conf.ttl`, installed by `setup_kg.sh`) to its location.
 
+### Labels
+
+The labels (`rdfs:label`) follow one convention in all the mappings: a label that is an identifier or a standard name
+(the id of a dataset, of a simulation or of their outputs, the name of a model, a CF standard name, the symbol of a
+unit, an acronym as `CMIP5`) is a string without language; a label that is text (the long name of a variable or of an
+index, the name of an organization, of a hazard, of an operation, the description of a region or of a grid) is in
+English (`@en`). No other language is used, and the labels of a class are of the same kind, but where the class has
+resources of both kinds (e.g. the CF variables, labelled by their standard name, and the MIP variables, by their long
+name). The shapes check it (`shape:Resource-label`, `shape:LabelLanguage`).
+
 ### Validation
 
 The consolidated KG is validated with the [SHACL](https://www.w3.org/TR/shacl/) shapes of `shapes/`

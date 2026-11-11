@@ -181,6 +181,16 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   `ccso:GlobalWarmingLevelBasedProjection`s (`projection_types`), and so are
   their datasets (the land-derived datasets of `gwl2` and `gwl4`,
   `mapping/datasets.jq`), which refer to the level too.
+  The land-prob datasets of a level in a scenario (`gwl1.5` to `gwl4.0` in place
+  of the time slice, 1,520) are based on the level too: they are part of a
+  projection of the level (`.../derivations/ukcp18.prob.<scenario>.<level>/output`),
+  output of a production with the probabilistic projection of the scenario as
+  input, from which it is derived, and are not based on the scenario
+  themselves (`dataset_to_probabilistic_projection`).
+- **Labels.** The labels that are identifiers (of datasets, outputs,
+  simulations, derivations, and the names of the models) have no language
+  (`id_label` in `mapping/context.jq`); the descriptive ones (variables, grids,
+  regions, "processing of ...") are in English (`label`).
 - **Output of the regional ensemble.** The output of the ensemble of the
   regional simulations (`.../ukcp18/land-rcm/datasets/<scenario>/output`) has a
   label and its scenario, as that of the local ones (it had neither, found by

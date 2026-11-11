@@ -4,6 +4,7 @@
         top: "https://w3id.org/hacid/onto/top-level/",
         ccso: "https://w3id.org/hacid/onto/ccso/",
         label: "rdfs:label",
+        label_en: {"@id": "rdfs:label", "@language": "en"},
         comment: "rdfs:comment",
         acronym: "top:acronym",
         isMaintainedBy: {
@@ -20,7 +21,7 @@
                 "@id": @uri "https://w3id.org/hacid/data/cs/organizations/\(.institute_id)",
                 "@type": "top:Organization",
                 acronym: .institute_id,
-                label: .institute_name
+                label_en: .institute_name
             }
         }
     ]

@@ -60,9 +60,9 @@ Each node shape has a label and a description (`rdfs:label`, `rdfs:comment`), an
 
 | File | Node shapes | What they check |
 | --- | --- | --- |
-| `generic.ttl` | `Resource`, `Class`, `Property` | Every resource of the KG is typed; every class and property used is declared by an ontology loaded in the KG |
+| `generic.ttl` | `Resource`, `Class`, `Property` | Every resource of the KG is typed, and its labels are without language or in English; every class and property used is declared by an ontology loaded in the KG |
 | | `PropertyDatatype` | The literals of a datatype property have the datatype of its `rdfs:range` (one result per property). The domains and ranges of the object properties are not checked: the published KG is served with RDFS inference, which gives their types to the subjects and objects |
-| | `LabelLanguage` | The labels of the instances of a class are all with or all without a language tag (one result per class) |
+| | `LabelLanguage` | The labels of the instances of a class are all without language (identifiers, standard names) or all in English (text); one result per class with both, expected where a class has both kinds of label |
 | `variables.ttl` | `Variable` | The variables of the catalogues (CF, MIP, local variables, indices): label, unit of measure, collection, links to other variables |
 | | `MIPVariable`, `Anomaly`, `DistributionRepresentation` | Acronym and CF variable of a MIP variable; variable and baseline of an anomaly; variable of a distribution representation |
 | | `UnitOfMeasure`, `Collection`, `Membership` | One label per unit; labels and components of the collections; what has members is a collection |

@@ -115,6 +115,10 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
 .scenario |= if . == "a1b" then "sres-a1b" end |
 .id |= sub("_a1b_"; "_sres-a1b_") |
 
+# its global warming level, if any: its scenario (gwl2, gwl4) or, in a
+# scenario, in place of the time slice (.gwl)
+(first((.gwl, .scenario) | SIMULATIONS::gwl_uri | values) // null) as $gwl |
+
 (
     {
         "@id": @uri "https://w3id.org/hacid/data/cs/ukcp18/datasets/\(.id)",
@@ -126,11 +130,12 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
             # its kind of distribution representation, as its variable
             (VARIABLES::distribution_representation_type | values),
             # based on a global warming level, as the output of its derivation
-            # (the land-derived datasets of gwl2 and gwl4)
-            (.scenario | SIMULATIONS::gwl_uri | values | "ccso:GlobalWarmingLevelBasedProjection")
+            # (the land-derived datasets of gwl2 and gwl4, and the land-prob
+            # datasets of a level in a scenario)
+            ($gwl | values | "ccso:GlobalWarmingLevelBasedProjection")
         ],
-        label: "ukcp18.\(.id[:-3])",
-        gwl: (.scenario | SIMULATIONS::gwl_uri),
+        id_label: "ukcp18.\(.id[:-3])",
+        gwl: $gwl,
         single_dependent_variable: VARIABLES::variable_iri,
         independent_variable: [
             UKCP18_TIME::dataset_to_variable($time_interval),

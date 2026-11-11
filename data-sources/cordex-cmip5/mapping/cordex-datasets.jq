@@ -46,7 +46,7 @@ def cordex_model_jsonld:
         {
             "@id": ($name | cordex_model_iri),
             "@type": "ccso:RegionalClimateModel",
-            "rdfs:label": ($name | en),
+            "rdfs:label": $name,
             "ccso:isMaintainedBy": ($institutes | map(id(.)))
         },
         (
@@ -208,7 +208,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.output,
                 "@type": projection_types("ccso:SingleProjection"; $refers_to_scenario),
-                "rdfs:label": ($iris.output_id | en),
+                "rdfs:label": $iris.output_id,
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "data:dependsOnVariable": $geodetic_variable,
                 "data:isSpecializedAccordingTo": $geodetic_specialization,
@@ -219,7 +219,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.simulation,
                 "@type": ["ccso:SingleSimulation", "ccso:DynamicalDownscaling"],
-                "rdfs:label": ($iris.simulation_id | en),
+                "rdfs:label": $iris.simulation_id,
                 "ccso:isDownscalingOf": _id_or_null($iris.driving_simulation),
                 "data:hasOutput": id($iris.output),
                 "ccso:usesModel": $uses_model,
@@ -229,7 +229,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.driving_ensemble,
                 "@type": ["ccso:EnsembleSimulation", "ccso:DynamicalDownscaling"],
-                "rdfs:label": ($iris.driving_ensemble_id | en),
+                "rdfs:label": $iris.driving_ensemble_id,
                 "top:hasComponent": id($iris.simulation),
                 "data:hasOutput": id($iris.driving_ensemble_output),
                 "ccso:usesModel": $uses_model,
@@ -239,7 +239,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.driving_ensemble_output,
                 "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
-                "rdfs:label": ($iris.driving_ensemble_output_id | en),
+                "rdfs:label": $iris.driving_ensemble_output_id,
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "top:hasComponent": id($iris.output),
                 "data:dependsOnVariable": $geodetic_variable,
@@ -250,7 +250,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.ensemble,
                 "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"],
-                "rdfs:label": ($iris.ensemble_id | en),
+                "rdfs:label": $iris.ensemble_id,
                 "top:hasComponent": id($iris.driving_ensemble),
                 "data:hasOutput": id($iris.ensemble_output),
                 "ccso:usesModel": $uses_model,
@@ -260,7 +260,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.ensemble_output,
                 "@type": projection_types("ccso:EnsembleProjection"; $refers_to_scenario),
-                "rdfs:label": ($iris.ensemble_id | en),
+                "rdfs:label": $iris.ensemble_id,
                 "data:holdsSpecializationOfVariable": $variable_ids,
                 "top:hasComponent": id($iris.driving_ensemble_output),
                 "data:dependsOnVariable": $geodetic_variable,
@@ -271,7 +271,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.experiment,
                 "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"],
-                "rdfs:label": ($iris.experiment_id | en),
+                "rdfs:label": $iris.experiment_id,
                 "top:hasComponent": id($iris.ensemble),
                 "data:hasOutput": id($iris.experiment_output),
                 "ccso:refersToScenario": $refers_to_scenario
@@ -291,7 +291,7 @@ def cordex_simulation_jsonld:
             {
                 "@id": $iris.domain,
                 "@type": "top:Action",
-                "rdfs:label": ($iris.domain_id | en),
+                "rdfs:label": $iris.domain_id,
                 "top:hasComponent": id($iris.experiment),
                 "data:hasOutput": id($iris.domain_output)
             },

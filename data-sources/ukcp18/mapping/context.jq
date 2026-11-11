@@ -21,6 +21,9 @@ def context:
         temporalgrid: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/",
         time: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/",
         geodetic: "https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/",
+        # the label of a resource that is its identifier (without language; label
+        # is for the labels in English)
+        id_label: "rdfs:label",
         ensemble: {
             "@reverse": "top:hasComponent"
         },

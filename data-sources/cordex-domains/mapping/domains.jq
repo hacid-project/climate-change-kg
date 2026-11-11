@@ -35,6 +35,7 @@ def domain: "\(cs)cordex/domains/\(.area_id)";
         top: "https://w3id.org/hacid/onto/top-level/",
         data: "https://w3id.org/hacid/onto/data/",
         label: {"@id": "rdfs:label", "@language": "en"},
+        name: "rdfs:label",
         comment: {"@id": "rdfs:comment", "@language": "en"},
         asWKT: "geo:asWKT",
         isMemberOf: {"@id": "top:isMemberOf", "@type": "@id"},
@@ -56,7 +57,7 @@ def domain: "\(cs)cordex/domains/\(.area_id)";
             "@id": domain,
             "@type": "top:Concept",
             isMemberOf: "\(cs)cordex/domains",
-            label: "CORDEX:\(.area_id)",
+            name: "CORDEX:\(.area_id)",
             comment: "CORDEX geographic domain for \(.domain) (\(.area_id))."
         },
         # Grid
@@ -64,7 +65,7 @@ def domain: "\(cs)cordex/domains/\(.area_id)";
             "@id": "\(grid)/ds",
             "@type": "data:DimensionalSpace",
             isConstituentOf: domain,
-            label: "CORDEX:\(.CORDEX_domain)",
+            name: "CORDEX:\(.CORDEX_domain)",
             comment: "CORDEX geographic grid for \(.area_id), with \(.type) coordinates and a resolution of \(.dlon)° degrees (\(.CORDEX_domain)).",
             basedOnDimensionalSpace: (if .type == "rotated" then rotated_space else wgs84 end),
             adoptsQuantization: quantization,
