@@ -176,6 +176,9 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   referred to it without being scenario based, while those of a global warming
   level (`gwl2`, `gwl4`) are not; the historical part of a EuroCORDEX dataset is
   not scenario based, its part of the scenario refers to it.
+- **Global warming level based projections.** The derived projections of a
+  global warming level (`gwl2`, `gwl4`), which refer to it, are
+  `ccso:GlobalWarmingLevelBasedProjection`s (`projection_types`).
 - **Output of the regional ensemble.** The output of the ensemble of the
   regional simulations (`.../ukcp18/land-rcm/datasets/<scenario>/output`) has a
   label and its scenario, as that of the local ones (it had neither, found by

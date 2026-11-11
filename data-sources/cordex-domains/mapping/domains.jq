@@ -15,7 +15,7 @@ def wkt: {"@value": ., "@type": "geo:wktLiteral"};
 def rotated_space: "\(geodetic)/reference-frames/rotated-WGS84/\(.pollon),\(.pollat)";
 def pole: "\(wgs84)/points/\(.pollon),\(.pollat)";
 def rectangle: "\(.ll_lon),\(.ll_lat):\(.ur_lon),\(.ur_lat)";
-def polygon: "POLYGON((\(.ll_lon) \(.ll_lat),\(.ll_lon) \(.ur_lat),\(.ur_lon) \(.ur_lat),\(.ur_lon) \(.ll_lat)))";
+def polygon: "POLYGON((\(.ll_lon) \(.ll_lat),\(.ll_lon) \(.ur_lat),\(.ur_lon) \(.ur_lat),\(.ur_lon) \(.ll_lat),\(.ll_lon) \(.ll_lat)))";
 def coordinates: "\(.ll_lon)° \(.ll_lat)°";
 def region:
     if .type == "rotated"

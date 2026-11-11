@@ -76,7 +76,6 @@ shape:GeodeticRegion-wkt a sh:PropertyShape ;
 
 shape:GeodeticRegion-closedRing a sh:PropertyShape ;
     sh:path geo:asWKT ;
-    sh:severity sh:Warning ;
     sh:sparql [
         sh:message "The ring of the polygon is not closed: its last point is not the first one."@en ;
         sh:select """

@@ -125,6 +125,29 @@ shape:ScenarioReference a sh:NodeShape ;
     sh:message "The projection refers to a scenario but is not a ccso:ScenarioBasedProjection."@en .
 
 
+shape:GlobalWarmingLevelBasedProjection a sh:NodeShape ;
+    rdfs:label "Global warming level based projection"@en ;
+    rdfs:comment """A projection is based on a global warming level (ccso:GlobalWarmingLevelBasedProjection) if and
+only if it refers to one."""@en ;
+    sh:targetClass ccso:GlobalWarmingLevelBasedProjection ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this ccso:refersToGlobalWarmingLevel ?level ; rdf:type/rdfs:subClassOf* ccso:Projection
+            }""" ;
+    ] ;
+    sh:class ccso:GlobalWarmingLevelBasedProjection ;
+    sh:property shape:GlobalWarmingLevelBasedProjection-level ;
+    sh:message "The projection refers to a global warming level but is not a ccso:GlobalWarmingLevelBasedProjection."@en .
+
+shape:GlobalWarmingLevelBasedProjection-level a sh:PropertyShape ;
+    sh:path ccso:refersToGlobalWarmingLevel ;
+    sh:minCount 1 ;
+    sh:message "The global warming level based projection refers to no global warming level."@en .
+
+
 shape:VariableDataset a sh:NodeShape ;
     rdfs:label "Dataset of a variable"@en ;
     rdfs:comment """A projection with the values of one variable (data:isSpecializationOfVariable) is a single or

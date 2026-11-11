@@ -29,14 +29,6 @@ def scenario_uri:
     else null
     end;
 
-# Types of a projection of a kind (ccso:SingleProjection,
-# ccso:EnsembleProjection, ccso:ProbabilisticProjection) of a scenario or
-# experiment (input: its id, e.g. rcp85, historical, gwl2): it is based on a
-# scenario (ccso:ScenarioBasedProjection) only if that is an emission scenario
-# (scenario_uri), so not a historical one nor one of a global warming level
-def projection_types($kind):
-    [$kind, (if scenario_uri != null then "ccso:ScenarioBasedProjection" else empty end)];
-
 def gwl_uri:
     {
         "gwl2": "GWL2",
@@ -46,6 +38,19 @@ def gwl_uri:
         @uri "https://w3id.org/hacid/data/cs/GWLs/\($gwl_map[.])"
     else null
     end;
+
+# Types of a projection of a kind (ccso:SingleProjection,
+# ccso:EnsembleProjection, ccso:ProbabilisticProjection) of a scenario or
+# experiment (input: its id, e.g. rcp85, historical, gwl2): it is based on a
+# scenario (ccso:ScenarioBasedProjection) only if that is an emission scenario
+# (scenario_uri), so not a historical one, and on a global warming level
+# (ccso:GlobalWarmingLevelBasedProjection) if that is one (gwl_uri)
+def projection_types($kind):
+    [
+        $kind,
+        (if scenario_uri != null then "ccso:ScenarioBasedProjection" else empty end),
+        (if gwl_uri != null then "ccso:GlobalWarmingLevelBasedProjection" else empty end)
+    ];
 
 def normalize_model_id:
     $model_synonyms_source::model_synonyms_source[0]
