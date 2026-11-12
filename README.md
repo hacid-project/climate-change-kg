@@ -90,7 +90,8 @@ assembled in `kg/export/void.ttl` from:
 3. `metadata/provenance.jq`: the build (`prov:wasGeneratedBy`, with its date and the commit of this repository, also
    `dcterms:modified` and `dcat:version`), the versions of the sources given by the configuration of the workflow
    (git commits, version of the CF standard name table) and, if set in `config/config.yaml` (`metadata`), the public
-   SPARQL endpoint and the URL of the dump;
+   SPARQL endpoint (`void:sparqlEndpoint`, and a `dcat:DataService`), the website documenting the KG
+   (`dcat:landingPage`) and the DOI of the record of its dumps (`dcat:accessURL` of the distribution);
 4. `metadata/quality.jq`: the numbers of violations, warnings and informative results of the validation
    (`dqv:QualityMeasurement`).
 

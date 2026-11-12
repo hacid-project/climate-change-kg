@@ -47,13 +47,23 @@ shape:Agent a sh:NodeShape ;
 
 shape:Distribution a sh:NodeShape ;
     rdfs:label "Distribution"@en ;
-    rdfs:comment "A distribution has a title, a media type and a license; its download URL, if published, is an IRI."@en ;
+    rdfs:comment "A distribution has a title, a media type and a license; where it is accessed or downloaded from, if published, is an IRI."@en ;
     sh:targetClass dcat:Distribution ;
     sh:property
         [ sh:path dcterms:title ; sh:minCount 1 ] ,
         [ sh:path dcat:mediaType ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
         [ sh:path dcterms:license ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:accessURL ; sh:nodeKind sh:IRI ] ,
         [ sh:path dcat:downloadURL ; sh:nodeKind sh:IRI ] .
+
+shape:DataService a sh:NodeShape ;
+    rdfs:label "Data service"@en ;
+    rdfs:comment "The SPARQL endpoint of the KG, if published: a service with its endpoint, serving the KG."@en ;
+    sh:targetClass dcat:DataService ;
+    sh:property
+        [ sh:path dcterms:title ; sh:minCount 1 ] ,
+        [ sh:path dcat:endpointURL ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:servesDataset ; sh:minCount 1 ; sh:class dcat:Dataset ] .
 
 shape:VoidDataset a sh:NodeShape ;
     rdfs:label "VoID dataset"@en ;
