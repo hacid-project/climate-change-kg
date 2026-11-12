@@ -59,14 +59,13 @@ resources with a descriptive label:
 
 Other open cases:
 
-- **More than one label.** Some variables of the CMOR tables have a label for each of their definitions in the
-  tables (e.g. `variables/mip/prra`), and some organizations a name from each source (e.g. `organizations/CSIRO`,
-  `organizations/UNSW`): reported by `shape:Variable-uniqueLabel` and `shape:Organization-label`. The update
+- **More than one name.** A variable of the CMOR tables with a different long name in each table (e.g.
+  `variables/mip/prra`) has the shortest as label and the others as `top:altLabel`. The update
   `consolidation/unify-labels.ru` keeps, among the English labels of a resource, the one contained in all the others,
   if any.
 - **No label.** The grids of the datasets (temporal grids, `simulations/<id>/geodetic-grid`), the specializations,
-  the quantizations of time, the information roles of the operations, the datasets by grid of the UKCP18 outputs, the
-  collections of the realms (`realms/<realm>`), most concept schemes and seven organizations have no label.
+  the quantizations of time, the information roles of the operations and the datasets by grid of the UKCP18 outputs
+  have no label.
 - **Names of the units.** The labels of the units are their symbols as written by each source (`degC`, `°C`, `K`,
   `proportion of time`): they are not normalised across the sources.
 
@@ -88,7 +87,6 @@ Open cases:
   (`RCP4.5`).
 - The CF variables, the MOHC indices, the models, the CORDEX experiments and the UKCP18 simulations have no acronym:
   their identifier is their label. For the CMIP5 experiments it is also in `top:componentIdentifier`.
-- One organization has two acronyms (`organizations/CCCMA`, from two sources): `shape:Organization-acronym`.
 
 ### `rdfs:comment`
 
@@ -120,7 +118,7 @@ Open cases:
   | --- | --- | --- | --- |
   | `top:definition` | the definitions of the Climdex and MOHC indices (text) | `en` | `shape:Resource-definition` |
   | `top:altLabel` | the aliases of the CF standard names (standard names) | none | `shape:Resource-altLabel` |
-  | `top:altLabel` | the alternative names of the methods (text) | `en` | `shape:Resource-altLabel` |
+  | `top:altLabel` | the alternative names of the methods and the other long names of the MIP variables (text) | `en` | `shape:Resource-altLabel` |
   | `top:name` | the names of the people | none | |
   | `top:componentIdentifier`, `ccso:productId` | ids of experiments, ensemble members, products | none | |
   | `dcterms:title` | the titles of the shared socioeconomic pathways (text) | `en` | |

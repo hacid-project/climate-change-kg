@@ -100,6 +100,21 @@ Decisions taken in mapping the CMIP5 experiments and institutions to the KG.
   see `data-sources/cmip5`): removed (it remains in the git history, up to
   commit 26a9334).
 
+## Models of the institutions (`mapping/institutions.jq`)
+
+- **Models.** The institutions are given with their models, which they maintain
+  (`ccso:isMaintainedBy`): all the CMIP5 models of the ESGF configuration, named
+  as in the datasets (`cmip5_model_name`), also those without CMIP5 datasets in
+  the KG, as other sources refer to them (the driving models of CORDEX-CMIP5
+  and UKCP18 had no maintainer, found by the validation,
+  `shape:ClimateModel-maintainerRequired`). A model whose name in the datasets
+  is not its id and is not in `_cmip5_model_ids` would get another IRI here.
+- **Acronym.** The acronym of an institution is its id, as in the datasets
+  (ESGF also writes it in another case, e.g. `CCCma` for `CCCMA`).
+- **CSIRO, NSF-DOE-NCAR** (`mapping/institution-fixes.json`). CSIRO has the name
+  of the CORDEX vocabulary (ESGF gives it the name of CSIRO-QCCCE);
+  NSF-DOE-NCAR is no longer excluded, as its models drive UKCP18 datasets.
+
 ## Validation
 
 Both vocabularies now come from ESGF: the differences from the outputs of the

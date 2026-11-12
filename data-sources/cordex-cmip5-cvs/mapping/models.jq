@@ -13,7 +13,7 @@
         }
     },
     "@graph": [
-        .[] | {
+        (.[] | {
             "@id": @uri "https://w3id.org/hacid/data/cs/models/\(.model_id)",
             "@type": "ccso:RegionalClimateModel",
             label: .model_id,
@@ -23,6 +23,17 @@
                 acronym: .institute_id,
                 label_en: .institute_name
             }
-        }
+        }),
+        # The institutes of the datasets that are not in the list of the RCMs
+        # (mapping/institute-names.json)
+        (
+            $institute_names[0] | to_entries[] | select(.value | type == "object") |
+            {
+                "@id": @uri "https://w3id.org/hacid/data/cs/organizations/\(.key)",
+                "@type": "top:Organization",
+                acronym: .key,
+                label_en: .value.name
+            }
+        )
     ]
 }

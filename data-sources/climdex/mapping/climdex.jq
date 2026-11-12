@@ -46,17 +46,20 @@ def trim:
 {
     propertyId: "minimumLength",
     shortName: "minimum length",
-    varLabel: "d"
+    varLabel: "d",
+    units: "day"
 } as $minimumLengthVar |
 {
     propertyId: "baseTemperature",
     shortName: "base temperature",
-    varLabel: "n"
+    varLabel: "n",
+    units: "°C"
 } as $baseTemperatureVar |
 {
     propertyId: "minimumPrecipitation",
     shortName: "minimum precipitation",
-    varLabel: "nn"
+    varLabel: "nn",
+    units: "mm"
 } as $minimumPrecipitationVar |
 
 # Specification of parametric indices
@@ -154,7 +157,10 @@ def convert_parameter:
         "@id": @uri "parameter:\(.propertyId)",
         "@type": "data:IndependentVariable",
         "label": .shortName,
-        "acronym": .varLabel
+        "acronym": .varLabel,
+        # (the method of a heatwave has no units)
+        hasUnitOfMeasure: (.units | if . then @uri "unit:\(.)" else [] end),
+        hasValuesOn: (.units | if . then @uri "unit:\(.)" else [] end)
     };
 
 (
@@ -244,6 +250,8 @@ def convert_parameter:
         "@id": @uri "index:\(.shortName)",
 #        "@type": [(if (.parametric | not) then ["ccso:Index"] else [] end).[] , "ccso:ParametricIndex" ],
         "@type": "data:DependentVariable",
+        # (all the indices, also those of no sector, see by_sector.jq)
+        isMemberOf: {"@id": "https://w3id.org/hacid/data/cs/climdex/indices"},
         acronym: .shortName,
         label: (.longName + " (" + .shortName + ")"),
         definition: .definition,
@@ -317,6 +325,9 @@ def convert_parameter:
         },
         generated: {
             "@reverse": "data:holdsSpecializationOfVariable"
+        },
+        isMemberOf: {
+            "@reverse": "top:hasMember"
         }
     },
     "@graph": [

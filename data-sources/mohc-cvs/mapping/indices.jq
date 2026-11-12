@@ -105,11 +105,13 @@ def to_camel_case:
             (.key | sub(" ";"-")) as $group_id |
             {
                 "@id": @uri "cs:\($group_id)",
-                "@type": "top:ConceptScheme"
+                "@type": "top:ConceptScheme",
+                label: .key
             },
             {
                 "@id": @uri "cs:\($group_id)/indices",
                 "@type": "top:Collection",
+                label: "\(.key) indices",
                 members: [
                     .value | to_entries | .[] |
                     .key as $index_name |

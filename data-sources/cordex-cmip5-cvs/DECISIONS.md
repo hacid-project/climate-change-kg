@@ -43,6 +43,13 @@ institute to each id:
 
 Neither `UM` model is in the CORDEX-CMIP5 datasets of the KG.
 
+## Institutes of the datasets (`mapping/institute-names.json`)
+
+- Seven institutes of the CORDEX-CMIP5 datasets are not in the list of the RCMs
+  (`BOM`, `CYI`, `ETH`, `ISU`, `ORNL`, `RU-CORE`, `UA`), so they had no name
+  (found by the validation, `shape:Organization-label`). Their names are given
+  by hand, from the ids: to be verified against the CORDEX registration.
+
 ## Validation
 
 The output is byte-identical to the JSON-LD previously kept in the repository

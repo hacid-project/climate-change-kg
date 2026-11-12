@@ -37,7 +37,6 @@ The parameters of the indices (data:IndependentVariable) belong to no collection
         shape:Variable-label ,
         shape:Variable-uniqueLabel ,
         shape:Variable-unit ,
-        shape:Variable-unitRequired ,
         shape:Variable-valuesOn ,
         shape:Variable-specialization ,
         shape:Variable-derivation ,
@@ -70,6 +69,23 @@ shape:Variable-unit a sh:PropertyShape ;
     sh:maxCount 1 ;
     sh:class top:UnitOfMeasure ;
     sh:message "A variable has at most one unit of measure, a top:UnitOfMeasure."@en .
+
+shape:MeasuredVariable a sh:NodeShape ;
+    rdfs:label "Variable with a unit of measure"@en ;
+    rdfs:comment """A variable has a unit of measure. The CF variables are not checked: the standard names of
+categories and identifiers (e.g. area_type, region, institution) have no canonical unit."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* data:Variable .
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:Dataset }
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:DimensionalSpace }
+                FILTER NOT EXISTS { ?this top:isMemberOf <https://w3id.org/hacid/data/cs/variables/cf> }
+            }""" ;
+    ] ;
+    sh:property shape:Variable-unitRequired .
 
 shape:Variable-unitRequired a sh:PropertyShape ;
     sh:path top:hasUnitOfMeasure ;

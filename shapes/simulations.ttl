@@ -23,7 +23,6 @@ scenario and one global warming level."""@en ;
     sh:property
         shape:DataGeneratingProcess-label ,
         shape:DataGeneratingProcess-output ,
-        shape:DataGeneratingProcess-outputRequired ,
         shape:DataGeneratingProcess-input ,
         shape:DataGeneratingProcess-component ,
         shape:DataGeneratingProcess-scenario ,
@@ -39,6 +38,25 @@ shape:DataGeneratingProcess-output a sh:PropertyShape ;
     sh:path data:hasOutput ;
     sh:class data:Dataset ;
     sh:message "The output of a process is a dataset."@en .
+
+shape:ProcessOutput a sh:NodeShape ;
+    rdfs:label "Process with an output"@en ;
+    rdfs:comment """A process has an output. The experiments known only from a controlled vocabulary, with no
+simulation in the KG (the CMIP5 experiments without datasets in the sources), are not checked."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* data:DataGeneratingProcess .
+                # (an experiment of a vocabulary without simulations in the KG)
+                FILTER NOT EXISTS {
+                    ?this rdf:type ccso:ClimateModelIntercomparisonExperiment .
+                    FILTER NOT EXISTS { ?this top:hasComponent ?component }
+                }
+            }""" ;
+    ] ;
+    sh:property shape:DataGeneratingProcess-outputRequired .
 
 shape:DataGeneratingProcess-outputRequired a sh:PropertyShape ;
     sh:path data:hasOutput ;
@@ -117,9 +135,24 @@ shape:SingleSimulation-output a sh:PropertyShape ;
 
 shape:EnsembleSimulation a sh:NodeShape ;
     rdfs:label "Ensemble simulation"@en ;
-    rdfs:comment "An ensemble simulation is composed of simulations, and its outputs are ensemble projections."@en ;
+    rdfs:comment "The outputs of an ensemble simulation are ensemble projections."@en ;
     sh:targetClass ccso:EnsembleSimulation ;
-    sh:property shape:EnsembleSimulation-component , shape:EnsembleSimulation-output .
+    sh:property shape:EnsembleSimulation-output .
+
+shape:EnsembleComponents a sh:NodeShape ;
+    rdfs:label "Ensemble simulation with components"@en ;
+    rdfs:comment """An ensemble simulation is composed of simulations. The experiments are not checked: one without
+simulations is known only from a controlled vocabulary (see shape:ProcessOutput)."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* ccso:EnsembleSimulation .
+                FILTER NOT EXISTS { ?this rdf:type ccso:ClimateModelIntercomparisonExperiment }
+            }""" ;
+    ] ;
+    sh:property shape:EnsembleSimulation-component .
 
 shape:EnsembleSimulation-component a sh:PropertyShape ;
     sh:path top:hasComponent ;
@@ -180,11 +213,18 @@ shape:DynamicalDownscaling-driving a sh:PropertyShape ;
 
 shape:DownscalingRun a sh:NodeShape ;
     rdfs:label "Run of a dynamical downscaling"@en ;
-    rdfs:comment "A single simulation that is a dynamical downscaling downscales a simulation (its driving simulation)."@en ;
+    rdfs:comment """A single simulation that is a dynamical downscaling downscales a simulation (its driving
+simulation). The runs of the evaluation experiment are not checked: they are driven by a reanalysis (ERA-Interim),
+which is not a simulation of the KG."""@en ;
     sh:target [
         a sh:SPARQLTarget ;
         sh:prefixes shape:prefixes ;
-        sh:select "SELECT ?this WHERE { ?this rdf:type ccso:SingleSimulation , ccso:DynamicalDownscaling }" ;
+        sh:select """
+            SELECT ?this WHERE {
+                ?this rdf:type ccso:SingleSimulation , ccso:DynamicalDownscaling .
+                # (the id of the simulation has its experiment)
+                FILTER (!CONTAINS(STR(?this), ".evaluation."))
+            }""" ;
     ] ;
     sh:property shape:DownscalingRun-driving .
 

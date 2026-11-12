@@ -30,9 +30,11 @@ rule cordex_cmip5_cvs_map:
     input:
         data="data-sources/cordex-cmip5-cvs/data/rcms.json",
         mapping="data-sources/cordex-cmip5-cvs/mapping/models.jq",
+        institute_names="data-sources/cordex-cmip5-cvs/mapping/institute-names.json",
     output:
         "data-sources/cordex-cmip5-cvs/rdf/models.jsonld",
     log:
         "logs/cordex_cmip5_cvs/map.log",
     shell:
-        "jq -f {input.mapping:q} {input.data:q} > {output:q} 2> {log:q}"
+        "jq --slurpfile institute_names {input.institute_names:q} -f {input.mapping:q} {input.data:q}"
+        " > {output:q} 2> {log:q}"

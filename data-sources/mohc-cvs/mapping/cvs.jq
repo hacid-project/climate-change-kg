@@ -37,7 +37,9 @@ def member_spec($scheme_id):
         .id as $id |
         {
             "@id": @uri "schemes:\($id)",
-            "@type": "top:ConceptScheme"
+            "@type": "top:ConceptScheme",
+            # (the id in words: "Confidence level" for ConfidenceLevel)
+            label: ($id | gsub("(?<a>[a-z])(?<b>[A-Z])"; "\(.a) \(.b)") | ascii_downcase | (.[:1] | ascii_upcase) + .[1:])
         } +
         if .members then
             {members: .members | map(member_spec($id))}
