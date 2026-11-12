@@ -126,24 +126,24 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
                 [
                     $entries.[] |
                     .out_name as $out_name |
-                    ((.units | present | @uri "https://w3id.org/hacid/data/cs/unitsofmeasure/\(.)") // null) as $unit |
+                    ((.units | present | @uri "https://w3id.org/cckg/data/unitsofmeasure/\(.)") // null) as $unit |
                     {
                         "@id": iri_of,
                         "@type": "data:DeterministicVariable",
                         isMemberOf: [
                             $collection,
-                            (_realms | @uri "https://w3id.org/hacid/data/cs/realms/\(.)")
+                            (_realms | @uri "https://w3id.org/cckg/data/realms/\(.)")
                         ],
                         label: (((.long_name | present) as $long_name | label_of) // null),
                         isSpecializationOfVariable: (
                             (
                                 .standard_name | present | cf_standard_name($cf) |
-                                @uri "https://w3id.org/hacid/data/cs/variables/cf/\(.)"
+                                @uri "https://w3id.org/cckg/data/variables/cf/\(.)"
                             ) // null
                         ),
                         dependsOnVariable: [
                             .dimensions | words | $dimension_map[.] // [] | .[] |
-                            @uri "https://w3id.org/hacid/data/cs/dimensions/\(.)"
+                            @uri "https://w3id.org/cckg/data/dimensions/\(.)"
                         ] | unique,
                         comment: ((.comment | present) // null),
                         acronym: $out_name,
@@ -158,7 +158,7 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
                 [$entries.[] | _realms] | unique | .[] |
                 (_realm_names[.] // .) as $name |
                 {
-                    "@id": @uri "https://w3id.org/hacid/data/cs/realms/\(.)",
+                    "@id": @uri "https://w3id.org/cckg/data/realms/\(.)",
                     "@type": "top:Collection",
                     label: "\($name) variables",
                     comment: "Collection of the variables of the modeling realm \(.) in the CMOR tables."
@@ -168,7 +168,7 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
             (
                 [$entries.[] | .units | present] | unique | .[] |
                 {
-                    "@id": @uri "https://w3id.org/hacid/data/cs/unitsofmeasure/\(.)",
+                    "@id": @uri "https://w3id.org/cckg/data/unitsofmeasure/\(.)",
                     "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
                     "rdfs:label": .
                 }
@@ -179,4 +179,4 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
 # JSON-LD document of variable entries of the CMOR tables, members of the
 # collection of the MIP variables
 def variables_jsonld(iri_of; label_of; $cf):
-    variables_jsonld(iri_of; label_of; "https://w3id.org/hacid/data/cs/variables/mip"; $cf);
+    variables_jsonld(iri_of; label_of; "https://w3id.org/cckg/data/variables/mip"; $cf);

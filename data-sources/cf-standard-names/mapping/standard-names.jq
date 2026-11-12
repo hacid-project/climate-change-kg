@@ -31,11 +31,11 @@ def present: select(. != null and . != "");
         # Variables
         (
             $entries[] |
-            ((.canonical_units | present | @uri "https://w3id.org/hacid/data/cs/unitsofmeasure/\(.)") // null) as $unit |
+            ((.canonical_units | present | @uri "https://w3id.org/cckg/data/unitsofmeasure/\(.)") // null) as $unit |
             {
-                "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\(."@id")",
+                "@id": @uri "https://w3id.org/cckg/data/variables/cf/\(."@id")",
                 "@type": "data:DeterministicVariable",
-                isMemberOf: "https://w3id.org/hacid/data/cs/variables/cf",
+                isMemberOf: "https://w3id.org/cckg/data/variables/cf",
                 label: ."@id",
                 comment: ((.description | present) // null),
                 hasUnitOfMeasure: $unit,
@@ -47,7 +47,7 @@ def present: select(. != null and . != "");
         (
             [$entries[].canonical_units | present] | unique | .[] |
             {
-                "@id": @uri "https://w3id.org/hacid/data/cs/unitsofmeasure/\(.)",
+                "@id": @uri "https://w3id.org/cckg/data/unitsofmeasure/\(.)",
                 "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
                 "rdfs:label": .
             }
@@ -61,14 +61,14 @@ def present: select(. != null and . != "");
             (
                 select($entry_ids | length == 1) |
                 {
-                    "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\($alias)",
-                    sameAs: @uri "https://w3id.org/hacid/data/cs/variables/cf/\($entry_ids[0])"
+                    "@id": @uri "https://w3id.org/cckg/data/variables/cf/\($alias)",
+                    sameAs: @uri "https://w3id.org/cckg/data/variables/cf/\($entry_ids[0])"
                 }
             ),
             (
                 $entry_ids[] |
                 {
-                    "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\(.)",
+                    "@id": @uri "https://w3id.org/cckg/data/variables/cf/\(.)",
                     altLabel: $alias
                 }
             )

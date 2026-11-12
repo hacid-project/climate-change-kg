@@ -14,11 +14,11 @@
     },
     "@graph": [
         (.[] | {
-            "@id": @uri "https://w3id.org/hacid/data/cs/models/\(.model_id)",
+            "@id": @uri "https://w3id.org/cckg/data/models/\(.model_id)",
             "@type": "ccso:RegionalClimateModel",
             label: .model_id,
             isMaintainedBy: {
-                "@id": @uri "https://w3id.org/hacid/data/cs/organizations/\(.institute_id)",
+                "@id": @uri "https://w3id.org/cckg/data/organizations/\(.institute_id)",
                 "@type": "top:Organization",
                 acronym: .institute_id,
                 label_en: .institute_name
@@ -29,7 +29,7 @@
         (
             $institute_names[0] | to_entries[] | select(.value | type == "object") |
             {
-                "@id": @uri "https://w3id.org/hacid/data/cs/organizations/\(.key)",
+                "@id": @uri "https://w3id.org/cckg/data/organizations/\(.key)",
                 "@type": "top:Organization",
                 acronym: .key,
                 label_en: .value.name

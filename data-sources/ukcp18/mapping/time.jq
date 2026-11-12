@@ -72,7 +72,7 @@ def variable($interval; $grid):
         },
         discretization: {
             grid: $grid,
-            "@id": "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/\($grid_type_id)",
+            "@id": "https://w3id.org/cckg/data/dimensions/time/reference-frames/gregorian/quantizations/\($grid_type_id)",
             based_on_ds: {
                 "@id": "dimension:time" # xsd:duration
             },
@@ -86,7 +86,7 @@ def variable($interval; $grid):
 
 def interval($start_datetime; $end_datetime):
     {
-        "@id": "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/\($start_datetime)-\($end_datetime)",
+        "@id": "https://w3id.org/cckg/data/dimensions/time/reference-frames/gregorian/regions/\($start_datetime)-\($end_datetime)",
         "@type": "data:TemporalRegion",
         $start_datetime,
         $end_datetime,
@@ -103,7 +103,7 @@ def mobile_interval($duration):
         datetime_string
     ) as $end_datetime |
     {
-        "@id": "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/mobile-regions/\($duration)",
+        "@id": "https://w3id.org/cckg/data/dimensions/time/reference-frames/gregorian/mobile-regions/\($duration)",
         "@type": "data:TemporalRegion",
         start_datetime: "0000-01-01T00:00:00Z",
         $end_datetime,

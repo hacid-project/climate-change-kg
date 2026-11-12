@@ -3,10 +3,10 @@ PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/>
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
-PREFIX mips: <https://w3id.org/hacid/data/cs/mips/>
+PREFIX mips: <https://w3id.org/cckg/data/mips/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
-PREFIX dimension: <https://w3id.org/hacid/data/cs/dimensions/>
-PREFIX georeference: <https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/>
+PREFIX dimension: <https://w3id.org/cckg/data/dimensions/>
+PREFIX georeference: <https://w3id.org/cckg/data/dimensions/geodetic/reference-frames/>
 
 INSERT {    
     GRAPH ?rcm_simulation_graph {

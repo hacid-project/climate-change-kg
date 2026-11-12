@@ -38,7 +38,7 @@
 # The variables not in the KG that CORDEX requests (CORDEX_standard_output.json)
 # and the variables at a single level not in the KG (mapping/level-variables.json)
 # are defined locally (see variables.jq and local_variables in
-# cordex-variables.jq), https://w3id.org/hacid/data/cs/variables/cordex/<name>;
+# cordex-variables.jq), https://w3id.org/cckg/data/variables/cordex/<name>;
 # the bases of the single level variables that are aliases (e.g. u200, of
 # ua200) are resolved. The other variables not in the CMOR tables are skipped,
 # renamed or defined locally as given by mapping/local-variables.json (see

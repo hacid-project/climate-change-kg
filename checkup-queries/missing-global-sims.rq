@@ -9,5 +9,5 @@ WHERE {
   ?simulation a ccso:Simulation;
   ccso:isDownscalingOf ?global_simulation.
   FILTER NOT EXISTS {?global_simulation a ccso:Simulation}
-  BIND(STRBEFORE(SUBSTR(STR(?global_simulation),46),".") AS ?model_name)
+  BIND(STRBEFORE(STRAFTER(STR(?global_simulation),"/simulations/cmip5."),".") AS ?model_name)
 } 

@@ -14,19 +14,19 @@
     },
     "@graph": [
         {
-            "@id": "https://w3id.org/hacid/data/cs/mips/cmip5",
+            "@id": "https://w3id.org/cckg/data/mips/cmip5",
             "@type": "top:Action",
             label: "CMIP5",
             comment: "Coupled Model Intercomparison Project Phase 5"
         },
         (
             .[] | {
-                "@id": @uri "https://w3id.org/hacid/data/cs/mips/cmip5/experiments/\(.id)",
+                "@id": @uri "https://w3id.org/cckg/data/mips/cmip5/experiments/\(.id)",
                 "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:GlobalClimateSimulation"],
                 acronym: .id,
                 experimentId: .id,
                 label_en: .description,
-                isComponentOf: {"@id": "https://w3id.org/hacid/data/cs/mips/cmip5"},
+                isComponentOf: {"@id": "https://w3id.org/cckg/data/mips/cmip5"},
             }
         )
     ]

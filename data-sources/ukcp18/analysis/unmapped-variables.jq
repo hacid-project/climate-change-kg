@@ -34,7 +34,7 @@ VARIABLES::local_variables_by_iri as $by_iri |
                 .local_version_of, .probabilistic_representation_of
             ) |
             strings |
-            select(startswith("https://w3id.org/hacid/data/cs/variables/ukcp/") | not)
+            select(startswith("https://w3id.org/cckg/data/variables/ukcp/") | not)
         ] |
         all(.[]; $known[.]) |
         not

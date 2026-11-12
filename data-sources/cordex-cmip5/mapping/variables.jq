@@ -7,8 +7,8 @@
 # not variables of the KG (see local_variables in cordex-variables.jq), mapped as
 # the variables of the CMOR tables (variables_jsonld in
 # data-sources/cmor-tables/mapping/variables-jsonld.jq), as
-# https://w3id.org/hacid/data/cs/variables/cordex/<out_name>, members of the
-# collection https://w3id.org/hacid/data/cs/variables/cordex.
+# https://w3id.org/cckg/data/variables/cordex/<out_name>, members of the
+# collection https://w3id.org/cckg/data/variables/cordex.
 #
 # The long names of the variables of the standard output at a single pressure
 # level, <base><level> (e.g. ta200), are derived from the analogous MIP variables, of the same base
@@ -89,7 +89,7 @@ variables_jsonld(
 .["@graph"] += [
     $data_issues[0].model_variables[]? |
     . as $rule |
-    (.units | @uri "https://w3id.org/hacid/data/cs/unitsofmeasure/\(.)") as $unit |
+    (.units | @uri "https://w3id.org/cckg/data/unitsofmeasure/\(.)") as $unit |
     {
         "@id": model_variable_iri,
         "@type": "data:DeterministicVariable",
@@ -113,7 +113,7 @@ variables_jsonld(
         "@type": "top:Collection",
         "rdfs:label": {"@value": "\(.model) variables", "@language": "en"},
         "rdfs:comment": {"@value": "Collection of the variables of the CORDEX-CMIP5 datasets of the model \(.model) used differently from the CORDEX standard (e.g. with other units).", "@language": "en"},
-        "top:associatedWith": {"@id": ("https://w3id.org/hacid/data/cs/models/" + (.model | @uri))}
+        "top:associatedWith": {"@id": ("https://w3id.org/cckg/data/models/" + (.model | @uri))}
     },
     {
         "@id": $unit,

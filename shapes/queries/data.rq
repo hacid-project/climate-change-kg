@@ -7,5 +7,5 @@
 CONSTRUCT { ?s ?p ?o }
 WHERE {
     GRAPH ?graph { ?s ?p ?o }
-    FILTER (?graph != <https://w3id.org/hacid/data/cs/kg>)
+    FILTER (?graph != <https://w3id.org/cckg/data/kg>)
 }

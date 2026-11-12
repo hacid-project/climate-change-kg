@@ -214,7 +214,7 @@ def cmip5_variable_iri_indexed($index; $entries_by_name; $mip_index):
 
 # --- IRIs and literals
 
-def ns: "https://w3id.org/hacid/data/cs/";
+def ns: "https://w3id.org/cckg/data/";
 
 # --- Variables of the models (mapping/variables.json)
 

@@ -18,7 +18,7 @@
 
 import "./mip-mapping" as $MIP_MAPPING;
 
-def _mip_variables_base: "https://w3id.org/hacid/data/cs/variables/mip/";
+def _mip_variables_base: "https://w3id.org/cckg/data/variables/mip/";
 
 # Lists are either space-separated strings or arrays
 def _words:

@@ -11,8 +11,8 @@ WHERE {
   graph ?g {
 	  ?s a top:UnitOfMeasure.
   }
-  BIND(STRAFTER(STR(?g), "https://w3id.org/hacid/data/cs/") AS ?graph_id)
-#  BIND(STRAFTER(STR(?s), "https://w3id.org/hacid/data/cs/unitsofmeasure/") AS ?id)
+  BIND(STRAFTER(STR(?g), "https://w3id.org/cckg/data/") AS ?graph_id)
+#  BIND(STRAFTER(STR(?s), "https://w3id.org/cckg/data/unitsofmeasure/") AS ?id)
   optional {
     ?s rdfs:label ?unit
   }

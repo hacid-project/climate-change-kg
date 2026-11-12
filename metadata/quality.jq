@@ -9,7 +9,7 @@
 [.results.bindings[] | {severity: (.severity.value | sub(".*#"; "")), results: (.results.value | tonumber)}] as $summary
 | {
   "@context": {
-    "@base": "https://w3id.org/hacid/data/cs/",
+    "@base": "https://w3id.org/cckg/data/",
     "dqv": "http://www.w3.org/ns/dqv#",
     "xsd": "http://www.w3.org/2001/XMLSchema#"
   },
