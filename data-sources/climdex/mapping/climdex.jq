@@ -280,7 +280,7 @@ def convert_parameter:
         aggregation: "https://w3id.org/hacid/data/cs/climdex/index-time-aggregations/",
         temporalgrid: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/regular/",
         label: {"@id": "rdfs:label", "@language": "en"},
-        comment: "rdfs:comment",
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
         definition: "top:definition",
         hasUnitOfMeasure: {

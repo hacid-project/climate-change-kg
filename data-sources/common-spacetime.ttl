@@ -48,13 +48,13 @@ geodetic:WGS84 a data:Continuum;
     rdfs:label "World Geodetic System (WGS) 84"@en;
     rdfs:comment "A standard dimensional space for geodetic coordinates. It defines a reference ellipsoid for the Earth surface and represent positions as angular coordinates latitude/longitude."@en;
     data:basedOnDimensionalSpace dimension:geodetic;
-    data:hasSubDimensionalSpace geodetic_long:WGS84, geodetic_lat:WGS8.
+    data:hasSubDimensionalSpace geodetic_long:WGS84, geodetic_lat:WGS84.
 
 geodetic_long:WGS84 a data:Continuum;
     rdfs:label "Longitude according to World Geodetic System (WGS) 84"@en;
     rdfs:comment "The longitude component of geodetic coordinates defined according to World Geodetic System (WGS) 84."@en.
 
-geodetic_lat:WGS8 a data:Continuum;
+geodetic_lat:WGS84 a data:Continuum;
     rdfs:label "Latitude according to World Geodetic System (WGS) 84"@en;
     rdfs:comment "The latitude component of geodetic coordinates defined according to World Geodetic System (WGS) 84."@en.
 

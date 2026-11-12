@@ -15,6 +15,7 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
 @prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
 
 shape:prefixes a owl:Ontology ;
@@ -42,7 +43,7 @@ minted by a mapping for something no mapping describes) or a malformed IRI."""@e
                 FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/hacid/data/cs/"))
             }""" ;
     ] ;
-    sh:property shape:Resource-type , shape:Resource-label .
+    sh:property shape:Resource-type , shape:Resource-label , shape:Resource-acronym , shape:Resource-comment .
 
 shape:Resource-type a sh:PropertyShape ;
     sh:path rdf:type ;
@@ -57,6 +58,19 @@ are text. No other language is used."""@en ;
     sh:path rdfs:label ;
     sh:or ( [ sh:datatype xsd:string ] [ sh:languageIn ( "en" ) ] ) ;
     sh:message "The label is neither a string without language nor in English."@en .
+
+
+shape:Resource-acronym a sh:PropertyShape ;
+    rdfs:comment "An acronym is an identifier (the name of a variable in the tables, the id of an institute or of an experiment): a string without language."@en ;
+    sh:path top:acronym ;
+    sh:datatype xsd:string ;
+    sh:message "The acronym is not a string without language."@en .
+
+shape:Resource-comment a sh:PropertyShape ;
+    rdfs:comment "A comment is text: in English."@en ;
+    sh:path rdfs:comment ;
+    sh:languageIn ( "en" ) ;
+    sh:message "The comment is not in English."@en .
 
 
 shape:Class a sh:NodeShape ;

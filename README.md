@@ -56,7 +56,10 @@ unit, an acronym as `CMIP5`) is a string without language; a label that is text 
 index, the name of an organization, of a hazard, of an operation, the description of a region or of a grid) is in
 English (`@en`). No other language is used, and the labels of a class are of the same kind, but where the class has
 resources of both kinds (e.g. the CF variables, labelled by their standard name, and the MIP variables, by their long
-name). The shapes check it (`shape:Resource-label`, `shape:LabelLanguage`).
+name). The same holds for the acronyms (`top:acronym`), always identifiers, and for the comments (`rdfs:comment`),
+always text. The shapes check it (`shape:Resource-label`, `shape:Resource-acronym`, `shape:Resource-comment`,
+`shape:LabelLanguage`). The values of these properties for each kind of resource, the schemes of the IRIs and the
+variations left for review are documented in [`doc/conventions.md`](doc/conventions.md).
 
 ### Validation
 

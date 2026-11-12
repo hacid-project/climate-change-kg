@@ -80,7 +80,7 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
             data: "https://w3id.org/hacid/onto/data/",
             label: {"@id": "rdfs:label", "@language": "en"},
             comment: {"@id": "rdfs:comment", "@language": "en"},
-            acronym: {"@id": "top:acronym", "@language": "en"},
+            acronym: "top:acronym",
             isMemberOf: {"@id": "top:isMemberOf", "@type": "@id"},
             isSpecializationOfVariable: {"@id": "data:isSpecializationOfVariable", "@type": "@id"},
             dependsOnVariable: {"@id": "data:dependsOnVariable", "@type": "@id"},

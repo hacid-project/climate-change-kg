@@ -47,7 +47,7 @@ walk((
         hazards: "https://w3id.org/hacid/data/cs/hazard-types/",
         Id: "@id",
         Label: {"@id": "rdfs:label", "@language": "en"},
-        Description: "rdfs:comment",
+        Description: {"@id": "rdfs:comment", "@language": "en"},
         Specializations: "top:isSpecializedBy",
         AssociatedIndices: {
             "@id": "ccso:hasIndicator",

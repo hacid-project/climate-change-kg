@@ -27,7 +27,7 @@
         index: "https://w3id.org/hacid/data/cs/climdex/indices/",
         sector: "https://w3id.org/hacid/data/cs/climdex/sectors/",
         label: {"@id": "rdfs:label", "@language": "en"},
-        comment: "rdfs:comment",
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
         definition: "top:definition",
         isMemberOf:  {

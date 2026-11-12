@@ -5,7 +5,7 @@
         ccso: "https://w3id.org/hacid/onto/ccso/",
         label: "rdfs:label",
         label_en: {"@id": "rdfs:label", "@language": "en"},
-        comment: "rdfs:comment",
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
         experimentId: "top:componentIdentifier",
         isComponentOf: {

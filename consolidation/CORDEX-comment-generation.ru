@@ -17,8 +17,9 @@ WHERE {
     SELECT
         ?rcm_simulation
         ?rcm_simulation_graph
+        # The description, in English: the labels joined are with and without language
         (
-            CONCAT(
+            STRLANG(STR(CONCAT(
                 "RCM simulation from CORDEX, ",
                 "covering the ", ?cordex_domain_descr,
                 IF(BOUND(?geodetic_resolution),
@@ -34,7 +35,7 @@ WHERE {
                 ?gcm_descr,
                 ?rcm_descr,
                 "Ensemble member: ", ?gcm_simulation_member_id, "."
-            ) AS ?rcm_simulation_descr
+            )), "en") AS ?rcm_simulation_descr
         )
     WHERE {
         {

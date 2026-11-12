@@ -38,7 +38,7 @@ def to_camel_case:
         unit: "https://w3id.org/hacid/data/cs/unitsofmeasure/",
         dimension: "https://w3id.org/hacid/data/cs/dimensions/",
         label: {"@id": "rdfs:label", "@language": "en"},
-        comment: "rdfs:comment",
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
         Definition: "top:definition",
         Unit: {

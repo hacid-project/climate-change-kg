@@ -166,7 +166,7 @@ walk((
         collections: "https://w3id.org/hacid/data/cs/wf/collections/",
         Id: "@id",
         Label: {"@id": "rdfs:label", "@language": "en"},
-        Description: "rdfs:comment",
+        Description: {"@id": "rdfs:comment", "@language": "en"},
         Specializations: "top:isSpecializedBy",
         ExpectedType: "top:hasExpectedType",
         InformationRoles: "top:definesRole",
