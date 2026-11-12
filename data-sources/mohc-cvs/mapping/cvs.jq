@@ -27,7 +27,7 @@ def member_spec($scheme_id):
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         top: "https://w3id.org/hacid/onto/top-level/",
         schemes: "https://w3id.org/hacid/data/cs/wf/schemes/",
-        label: "rdfs:label",
+        label: {"@id": "rdfs:label", "@language": "en"},
         members: {
             "@reverse": "top:inScheme"
         }
@@ -37,7 +37,9 @@ def member_spec($scheme_id):
         .id as $id |
         {
             "@id": @uri "schemes:\($id)",
-            "@type": "top:ConceptScheme"
+            "@type": "top:ConceptScheme",
+            # (the id in words: "Confidence level" for ConfidenceLevel)
+            label: ($id | gsub("(?<a>[a-z])(?<b>[A-Z])"; "\(.a) \(.b)") | ascii_downcase | (.[:1] | ascii_upcase) + .[1:])
         } +
         if .members then
             {members: .members | map(member_spec($id))}

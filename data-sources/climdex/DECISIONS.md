@@ -29,6 +29,21 @@ kept in the repository as source, with the online sources they come from:
   the time grids of 3 and 6 months, used by the mapping and defined nowhere
   else in the KG.
 
+## Mapping (`mapping/climdex.jq`)
+
+- **Time aggregations.** The aggregation of an index is a
+  `data:AggregationSpecification`, the class of the data ontology that is the
+  range of `data:definesAggregation` (it was `data:Aggregation`, which no
+  ontology declares, found by the validation, `shape:Class`).
+
+- **Collection.** All the indices are members of the collection of the Climdex
+  indices (`mapping/climdex.jq`): it was given only with the sectors
+  (`mapping/by_sector.jq`), leaving out the indices of no sector (the heatwave
+  indices and ETR).
+- **Units of the parameters.** The parameters of the indices have their units
+  (base temperature in °C, minimum length in days, minimum precipitation in
+  mm), but for the method identifying the heatwaves.
+
 ## Validation
 
 The Snakemake rules give byte-identical outputs to the JSON-LD previously kept

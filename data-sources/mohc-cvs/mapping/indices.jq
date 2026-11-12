@@ -37,10 +37,10 @@ def to_camel_case:
         cfvariable: "https://w3id.org/hacid/data/cs/variables/cf/",
         unit: "https://w3id.org/hacid/data/cs/unitsofmeasure/",
         dimension: "https://w3id.org/hacid/data/cs/dimensions/",
-        label: "rdfs:label",
-        comment: "rdfs:comment",
+        label: {"@id": "rdfs:label", "@language": "en"},
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
-        Definition: "top:definition",
+        Definition: {"@id": "top:definition", "@language": "en"},
         Unit: {
             "@id": "top:hasUnitOfMeasure",
             "@type": "@id"
@@ -105,11 +105,13 @@ def to_camel_case:
             (.key | sub(" ";"-")) as $group_id |
             {
                 "@id": @uri "cs:\($group_id)",
-                "@type": "top:ConceptScheme"
+                "@type": "top:ConceptScheme",
+                label: .key
             },
             {
                 "@id": @uri "cs:\($group_id)/indices",
                 "@type": "top:Collection",
+                label: "\(.key) indices",
                 members: [
                     .value | to_entries | .[] |
                     .key as $index_name |
@@ -161,8 +163,11 @@ def to_camel_case:
                             .Unit |= {
                                 "@id": @uri "unit:\(.)",
                                 "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
-                                label: .
-                            }
+                                # (a symbol: without language)
+                                "rdfs:label": .
+                            } |
+                            # (the values of the index are in the space of its unit)
+                            .hasValuesOn = .Unit."@id"
                         end |
                         del(.Variants)
                     ] |

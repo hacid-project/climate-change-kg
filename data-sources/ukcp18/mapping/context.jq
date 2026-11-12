@@ -21,6 +21,11 @@ def context:
         temporalgrid: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/",
         time: "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/",
         geodetic: "https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/",
+        # the label of a resource that is its identifier (without language; label
+        # is for the labels in English)
+        id_label: "rdfs:label",
+        # (an acronym is an identifier too)
+        acronym: "top:acronym",
         ensemble: {
             "@reverse": "top:hasComponent"
         },
@@ -80,8 +85,7 @@ def context:
             "@language": {
                 en: {
                     label: "rdfs:label",
-                    comment: "rdfs:comment",
-                    acronym: "top:acronym"
+                    comment: "rdfs:comment"
                 }
             }
 

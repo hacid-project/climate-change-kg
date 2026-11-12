@@ -62,6 +62,12 @@ Their input keys are documented with each function.
     already taken as the last component.
 - **Same triples.** The refactoring gives the same triples as before (282,210).
 
+- **Scenario based projections.** A dataset or an output is a
+  `ccso:ScenarioBasedProjection` only if it refers to an emission scenario
+  (`projection_types` in `mapping/esgf.jq`): those of the RCP experiments. Those
+  of the historical experiment are only single or ensemble projections (they
+  were scenario based too, without a scenario).
+
 ## Variables (`cmip5_variable_spec`, `cmip5_variable_iri` in `mapping/esgf.jq`)
 
 - **Resolution to the MIP variables.** The variables are resolved to the MIP

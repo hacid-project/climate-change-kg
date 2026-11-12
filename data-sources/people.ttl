@@ -1,0 +1,14 @@
+# The people referred to by the ontologies and by the metadata of the KG (their
+# creators).
+
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix top: <https://w3id.org/hacid/onto/top-level/> .
+@base <https://w3id.org/hacid/data/cs/> .
+
+<person/miguel-ceriani> a top:Person ;
+    rdfs:label "Miguel Ceriani" ;
+    top:name "Miguel Ceriani" .
+
+<person/andrea-giovanni-nuzzolese> a top:Person ;
+    rdfs:label "Andrea Giovanni Nuzzolese" ;
+    top:name "Andrea Giovanni Nuzzolese" .

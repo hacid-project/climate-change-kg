@@ -57,6 +57,13 @@ rule cmip5_cvs_map:
     input:
         data="data-sources/cmip5-cvs/data/{name}-esgf.json",
         mapping="data-sources/cmip5-cvs/mapping/{name}.jq",
+        # (the institutions name their models as the CMIP5 datasets)
+        modules=[
+            "data-sources/cmip5/mapping/esgf.jq",
+            "data-sources/cmip5/mapping/cmip5-datasets.jq",
+            "data-sources/cmor-tables/mapping/mip-variables.jq",
+            "data-sources/cmor-tables/mapping/mip-mapping.json",
+        ],
     output:
         "data-sources/cmip5-cvs/rdf/{name}.jsonld",
     wildcard_constraints:
@@ -64,4 +71,5 @@ rule cmip5_cvs_map:
     log:
         "logs/cmip5_cvs/map_{name}.log",
     shell:
-        "jq -f {input.mapping:q} {input.data:q} > {output:q} 2> {log:q}"
+        "jq -L data-sources/cmip5/mapping -L data-sources/cmor-tables/mapping"
+        " -f {input.mapping:q} {input.data:q} > {output:q} 2> {log:q}"

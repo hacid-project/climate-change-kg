@@ -13,15 +13,16 @@ WHERE {
     SELECT
         ?gcm_simulation
         ?gcm_simulation_graph
+        # The description, in English: the labels joined are with and without language
         (
-            CONCAT(
+            STRLANG(STR(CONCAT(
                 "GCM simulation from CMIP5. ",
                 "Experiment: ", ?experiment_label, ". ",
                 ?gcm_descr,
                 "Ensemble member: ",
                 ?gcm_simulation_member_id,
                 "."
-            ) AS ?gcm_simulation_descr
+            )), "en") AS ?gcm_simulation_descr
         )
     WHERE {
         {

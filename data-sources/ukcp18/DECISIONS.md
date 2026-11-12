@@ -168,6 +168,33 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   inputs of the derived projections and indices are the outputs of the
   simulations (`data:hasInput` relates a process to a dataset), not the
   simulations.
+- **Scenario based projections.** An output is a
+  `ccso:ScenarioBasedProjection` if and only if it is of an emission scenario
+  (`projection_types` in `mapping/simulations.jq`), to which it refers: the
+  outputs of the global and regional simulations and of the global ensemble,
+  scenario based, had no scenario; the derived projections of a scenario
+  referred to it without being scenario based, while those of a global warming
+  level (`gwl2`, `gwl4`) are not; the historical part of a EuroCORDEX dataset is
+  not scenario based, its part of the scenario refers to it.
+- **Global warming level based projections.** The derived projections of a
+  global warming level (`gwl2`, `gwl4`), which refer to it, are
+  `ccso:GlobalWarmingLevelBasedProjection`s (`projection_types`), and so are
+  their datasets (the land-derived datasets of `gwl2` and `gwl4`,
+  `mapping/datasets.jq`), which refer to the level too.
+  The land-prob datasets of a level in a scenario (`gwl1.5` to `gwl4.0` in place
+  of the time slice, 1,520) are based on the level too: they are part of a
+  projection of the level (`.../derivations/ukcp18.prob.<scenario>.<level>/output`),
+  output of a production with the probabilistic projection of the scenario as
+  input, from which it is derived, and are not based on the scenario
+  themselves (`dataset_to_probabilistic_projection`).
+- **Labels.** The labels that are identifiers (of datasets, outputs,
+  simulations, derivations, and the names of the models) have no language
+  (`id_label` in `mapping/context.jq`); the descriptive ones (variables, grids,
+  regions, "processing of ...") are in English (`label`).
+- **Output of the regional ensemble.** The output of the ensemble of the
+  regional simulations (`.../ukcp18/land-rcm/datasets/<scenario>/output`) has a
+  label and its scenario, as that of the local ones (it had neither, found by
+  the validation, `shape:Projection-label`).
 - **CMIP5 members** (land-gcm, members 16 to 28, and the CMIP5 driven
   members of land-rcm and land-cpm, 23, 25, 27, 29). The UKCP18 global
   datasets of a CMIP5 member are derived from the CMIP5 data, regridded and
@@ -269,3 +296,19 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
   outputs and models are given by each dataset referring to them: the framing
   (`AWK_FRAME_BLOCKS` in `workflow/rules/ukcp18.smk`) writes each of their
   lines once.
+
+
+## Spatial grids (`mapping/spatial-grids.jq`)
+
+- **Region covered by OSGB.** The OSGB36 reference frame and its grids had as
+  exact bounding region a region without geometry (found by the validation,
+  `shape:GeodeticRegion-wkt`). The region is now the area of use of OSGB36 /
+  British National Grid in the EPSG registry (EPSG:27700, extent 4390):
+  49.75°N to 61.01°N, 9.01°W to 2.01°E, a closed rectangle in WGS84 longitude
+  and latitude. As it is given in WGS84 coordinates it is a region of WGS84
+  (`.../WGS84/regions/rectangle/-9.01,49.75:2.01,61.01`, named as the rectangles
+  of the CORDEX domains), and as OSGB36 is defined on another projection it
+  bounds the reference frame and its grids only approximately
+  (`data:hasApproximateBoundingRegion`, not `data:hasExactBoundingRegion`). It
+  is the area where the reference frame is valid, not the extent of the UKCP18
+  grids, which is not in the metadata of the datasets.

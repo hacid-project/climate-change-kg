@@ -73,3 +73,14 @@ The evolution of the definitions across all the editions is analysed in
   (`tomint`), `strat_aerosol_optical_depth` (`od550aerstrat`), never CF names
   (up to version 95), and the placeholder `missing` (`nwdFracLut`). The same
   rule applies to the variables defined locally with `variables_jsonld`.
+
+## Labels and realms (`mapping/variables-jsonld.jq`)
+
+- **One label for a variable.** A variable with entries in several tables may
+  have a different long name in each (e.g. `prra`: "Rainfall Flux", "Rainfall
+  Flux over Land", ...). The shortest is its label, the others are alternative
+  labels (`top:altLabel`): before, the variable had all of them as labels
+  (found by the validation, `shape:Variable-uniqueLabel`).
+- **Realms.** The collections of the modeling realms (`realms/<realm>`) have a
+  label and a comment, and the realm written in two ways in the tables
+  (`ocnBgchem`, `ocnBgChem`) is one, `ocnBgchem`.

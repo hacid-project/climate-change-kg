@@ -26,10 +26,10 @@
         top: "https://w3id.org/hacid/onto/top-level/",
         index: "https://w3id.org/hacid/data/cs/climdex/indices/",
         sector: "https://w3id.org/hacid/data/cs/climdex/sectors/",
-        label: "rdfs:label",
-        comment: "rdfs:comment",
+        label: {"@id": "rdfs:label", "@language": "en"},
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
-        definition: "top:definition",
+        definition: {"@id": "top:definition", "@language": "en"},
         isMemberOf:  {
             "@reverse": "top:hasMember"
         },

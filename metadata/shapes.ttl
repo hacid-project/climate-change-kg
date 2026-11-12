@@ -1,0 +1,119 @@
+# Shapes of the metadata of the knowledge graph (kg/export/void.ttl): what the
+# description of the KG as a dataset must have to be usable by a catalogue
+# (DCAT) and by a client of the endpoint (VoID, SPARQL service description),
+# and to stay aligned with the named graphs actually in the KG.
+
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:    <http://www.w3.org/ns/dcat#> .
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix sd:      <http://www.w3.org/ns/sparql-service-description#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix dqv:     <http://www.w3.org/ns/dqv#> .
+@prefix shape:   <https://w3id.org/hacid/data/cs/kg/shapes/> .
+
+
+shape:KnowledgeGraph a sh:NodeShape ;
+    rdfs:label "The knowledge graph"@en ;
+    rdfs:comment """The KG has what DCAT recommends for a dataset in a catalogue (title, description, creators,
+publisher, license, keywords, themes, landing page, a distribution), the date and version of its build, and its named
+graphs as VoID subsets."""@en ;
+    sh:targetNode <https://w3id.org/hacid/data/cs/kg> ;
+    sh:class dcat:Dataset , void:Dataset , sd:Dataset ;
+    sh:property
+        [ sh:path dcterms:creator ; sh:minCount 1 ; sh:class foaf:Agent ] ,
+        [ sh:path dcterms:publisher ; sh:minCount 1 ; sh:maxCount 1 ; sh:class foaf:Agent ] ,
+        [ sh:path dcterms:license ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcterms:modified ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ,
+        [ sh:path dcat:version ; sh:minCount 1 ; sh:maxCount 1 ] ,
+        [ sh:path dcat:keyword ; sh:minCount 1 ] ,
+        [ sh:path dcat:theme ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:landingPage ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:distribution ; sh:minCount 1 ; sh:class dcat:Distribution ] ,
+        [ sh:path void:uriSpace ; sh:minCount 1 ; sh:maxCount 1 ] ,
+        [ sh:path void:vocabulary ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path void:subset ; sh:minCount 1 ; sh:class void:Dataset ] ,
+        [ sh:path sd:namedGraph ; sh:minCount 1 ; sh:class sd:NamedGraph ] ,
+        [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Activity ] .
+
+shape:Agent a sh:NodeShape ;
+    rdfs:label "Agent"@en ;
+    rdfs:comment "The creators and the publisher have a name."@en ;
+    sh:targetClass foaf:Agent ;
+    sh:property [ sh:path foaf:name ; sh:minCount 1 ] .
+
+shape:Distribution a sh:NodeShape ;
+    rdfs:label "Distribution"@en ;
+    rdfs:comment "A distribution has a title, a media type and a license; where it is accessed or downloaded from, if published, is an IRI."@en ;
+    sh:targetClass dcat:Distribution ;
+    sh:property
+        [ sh:path dcterms:title ; sh:minCount 1 ] ,
+        [ sh:path dcat:mediaType ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcterms:license ; sh:minCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:accessURL ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:downloadURL ; sh:nodeKind sh:IRI ] .
+
+shape:DataService a sh:NodeShape ;
+    rdfs:label "Data service"@en ;
+    rdfs:comment "The SPARQL endpoint of the KG, if published: a service with its endpoint, serving the KG."@en ;
+    sh:targetClass dcat:DataService ;
+    sh:property
+        [ sh:path dcterms:title ; sh:minCount 1 ] ,
+        [ sh:path dcat:endpointURL ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path dcat:servesDataset ; sh:minCount 1 ; sh:class dcat:Dataset ] .
+
+shape:VoidDataset a sh:NodeShape ;
+    rdfs:label "VoID dataset"@en ;
+    rdfs:comment """The KG and each of its named graphs: described by hand (title and description, in metadata/kg.ttl)
+and with its statistics (metadata/statistics.rq). A graph without title is a graph of the KG not yet described; a graph
+without statistics is a described graph that is not in the KG any more."""@en ;
+    sh:targetClass void:Dataset ;
+    sh:property
+        [ sh:path dcterms:title ; sh:minCount 1 ; sh:uniqueLang true ;
+          sh:message "The graph is in the KG but has no title: describe it in metadata/kg.ttl."@en ] ,
+        [ sh:path dcterms:description ; sh:minCount 1 ; sh:uniqueLang true ;
+          sh:message "The graph is in the KG but has no description: describe it in metadata/kg.ttl."@en ] ,
+        [ sh:path void:triples ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ; sh:minExclusive 0 ;
+          sh:message "The graph is described but has no triples: it is not in the KG."@en ] ,
+        [ sh:path void:entities ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ,
+        [ sh:path void:classPartition ; sh:node shape:ClassPartition ] ,
+        [ sh:path void:propertyPartition ; sh:node shape:PropertyPartition ] ,
+        [ sh:path prov:wasDerivedFrom ; sh:or ( [ sh:class prov:Entity ] [ sh:class void:Dataset ] ) ;
+          sh:message "The source of a graph is a described prov:Entity (or another graph of the KG)."@en ] .
+
+shape:ClassPartition a sh:NodeShape ;
+    sh:property
+        [ sh:path void:class ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path void:entities ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] .
+
+shape:PropertyPartition a sh:NodeShape ;
+    sh:property
+        [ sh:path void:property ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path void:triples ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] .
+
+shape:NamedGraph a sh:NodeShape ;
+    rdfs:label "Named graph"@en ;
+    rdfs:comment "A named graph of the KG has its name and its description, a subset of the KG."@en ;
+    sh:targetClass sd:NamedGraph ;
+    sh:property
+        [ sh:path sd:name ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ,
+        [ sh:path sd:graph ; sh:minCount 1 ; sh:maxCount 1 ; sh:class void:Dataset ] ,
+        [ sh:path ( sd:graph [ sh:inversePath void:subset ] ) ; sh:minCount 1 ] .
+
+shape:Source a sh:NodeShape ;
+    rdfs:label "Source"@en ;
+    rdfs:comment "A source a graph is derived from has a title; where the configuration of the workflow gives its version, it has it."@en ;
+    sh:targetObjectsOf prov:wasDerivedFrom ;
+    sh:property [ sh:path dcterms:title ; sh:minCount 1 ] .
+
+shape:QualityMeasurement a sh:NodeShape ;
+    rdfs:label "Quality measurement"@en ;
+    rdfs:comment "A measurement of the validation: an integer, of a metric, computed on the KG."@en ;
+    sh:targetClass dqv:QualityMeasurement ;
+    sh:property
+        [ sh:path dqv:value ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ,
+        [ sh:path dqv:isMeasurementOf ; sh:minCount 1 ; sh:maxCount 1 ; sh:class dqv:Metric ] ,
+        [ sh:path dqv:computedOn ; sh:minCount 1 ; sh:maxCount 1 ; sh:class dcat:Dataset ] .

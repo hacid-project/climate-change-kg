@@ -165,8 +165,8 @@ walk((
         schemes: "https://w3id.org/hacid/data/cs/wf/schemes/",
         collections: "https://w3id.org/hacid/data/cs/wf/collections/",
         Id: "@id",
-        Label: "rdfs:label",
-        Description: "rdfs:comment",
+        Label: {"@id": "rdfs:label", "@language": "en"},
+        Description: {"@id": "rdfs:comment", "@language": "en"},
         Specializations: "top:isSpecializedBy",
         ExpectedType: "top:hasExpectedType",
         InformationRoles: "top:definesRole",
@@ -196,12 +196,15 @@ walk((
     "@id": "ops:CaseOperation",
     "@type": "top:Operation",
     Label: "Case operation",
+    Description: "Any operation on a case of a climate service.",
     Specializations: [
-        (.[] | select(."@id" == "ops:CreateCase")),
+        # (no description in the source)
+        (.[] | select(."@id" == "ops:CreateCase") | .Description //= "The operation that creates a case."),
         {
             "@id": "ops:HandleCase",
             "@type": "top:Operation",
             Label: "Handle case",
+            Description: "Any operation that handles an existing case.",
             Specializations: [
                 .[] | select(."@id" != "ops:CreateCase")
             ]

@@ -149,8 +149,10 @@ documented with each function.
       (`hus200`, `ta500`, `zg850`, ..., 27) list the variable of all the
       levels (`hus`, `ta`, `zg`, ...), with the metadata of the dataset
       (e.g. "Specific Humidity", `specific_humidity`, `1`);
-    - some datasets have the variable of the id with others (`heightv`, a
-      coordinate, skipped, 9; `snd` with `snw`, 1): left as they are.
+    - some datasets have the variable of the id with others: `heightv`, a
+      coordinate, skipped (9), left as they are; `snd` with `snw` (1, a DMI
+      `HIRHAM5` dataset of ANT-44, whose `snw` is also published as a dataset
+      on its own), with the metadata of both.
 
     The datasets matching a rule of `variables_from_id` (by regional model,
     institute, domain and facet `variable`) get the variable of their id (its
@@ -161,12 +163,21 @@ documented with each function.
     metadata of the facets are kept when they are those of the variable of the
     dataset (`facet_metadata`, the `WRF341I` rule), otherwise dropped (the
     `RegCM4-3` rule): the check (`analysis/variables-check.jq`) leaves those
-    datasets out of the comparison of the units and standard names. The
+    datasets out of the comparison of the units and standard names. The `snd`
+    dataset listing also `snw` is matched by its id (`master_id`) and holds only
+    `snd` (before, two variables, found by the validation,
+    `shape:Dataset-variable`). The
     `RegCM4-3` datasets now hold `sfcWind` and `mrsol` (before, no variable),
     the `WRF341I` datasets the variables at their levels (before, the variables
     on all the levels, e.g. `.../mip/hus` instead of `.../mip/hus850`).
 - **Same triples.** The refactoring gave the same triples as before (the
   variables of the datasets of `variables_from_id`, added afterwards, apart).
+
+- **Scenario based projections.** As for CMIP5 (`projection_types` in
+  `data-sources/cmip5/mapping/esgf.jq`), a dataset or an output is a
+  `ccso:ScenarioBasedProjection` only if it refers to an emission scenario: not
+  those of the historical and evaluation experiments, nor the output of a
+  domain, which is of all its experiments.
 
 ## Variables (`mapping/cordex-variables.jq`, `mapping/variables.jq`)
 

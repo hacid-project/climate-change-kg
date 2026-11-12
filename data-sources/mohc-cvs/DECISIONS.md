@@ -34,6 +34,16 @@ methods, operations) to the KG.
   variables `tasmin` and `tasmax`. The original text of the sources
   (`_AssociatedVariable`) is kept.
 
+- **Space of the values.** An index with a unit of measure has its values on
+  it (`data:hasValuesOn`), as the CF and MIP variables and the Climdex indices.
+
+- **Labels of schemes and collections.** The schemes of the indices and their
+  collections are labelled with the name of the scheme (`mapping/indices.jq`),
+  the schemes of the values with their id in words (`mapping/cvs.jq`); the
+  operations grouping the others (`CaseOperation`, `HandleCase`) and
+  `CreateCase`, without description in the source, have one
+  (`mapping/operations.jq`).
+
 ## Validation
 
 The Snakemake rules give byte-identical outputs to the JSON-LD previously kept

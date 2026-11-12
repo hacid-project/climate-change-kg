@@ -1,0 +1,24 @@
+{
+    "BOM": {
+        "name": "Bureau of Meteorology, Australia"
+    },
+    "CYI": {
+        "name": "The Cyprus Institute"
+    },
+    "ETH": {
+        "name": "ETH Zurich"
+    },
+    "ISU": {
+        "name": "Iowa State University"
+    },
+    "ORNL": {
+        "name": "Oak Ridge National Laboratory"
+    },
+    "RU-CORE": {
+        "name": "Ramkhamhaeng University Center of Regional Climate Change and Renewable Energy"
+    },
+    "UA": {
+        "name": "University of Arizona"
+    },
+    "reason": "Institutes of CORDEX-CMIP5 datasets (ESGF facet institute) that are not in the list of the RCMs of IS-ENES Data, which gives the names of the others: names given by hand from the ids, and checked"
+}

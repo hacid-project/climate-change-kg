@@ -4,7 +4,8 @@
         top: "https://w3id.org/hacid/onto/top-level/",
         ccso: "https://w3id.org/hacid/onto/ccso/",
         label: "rdfs:label",
-        comment: "rdfs:comment",
+        label_en: {"@id": "rdfs:label", "@language": "en"},
+        comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
         experimentId: "top:componentIdentifier",
         isComponentOf: {
@@ -24,7 +25,7 @@
                 "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:GlobalClimateSimulation"],
                 acronym: .id,
                 experimentId: .id,
-                label: .description,
+                label_en: .description,
                 isComponentOf: {"@id": "https://w3id.org/hacid/data/cs/mips/cmip5"},
             }
         )

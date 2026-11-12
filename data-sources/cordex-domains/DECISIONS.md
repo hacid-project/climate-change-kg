@@ -51,6 +51,11 @@ tables of WCRP-CORDEX) to the KG, with the place where each one is applied.
   referred to by nothing: they are not mapped. The bounding region of a rotated
   grid is a region of its rotated dimensional space, that of a regular grid a
   region of WGS84.
+- **Closed polygons.** The ring of the polygon of a bounding region ends with
+  its first point, as WKT requires (it had only the four corners, found by the
+  validation, `shape:GeodeticRegion-closedRing`); likewise the region of the
+  whole world in `data-sources/common-spacetime.ttl`. The IRIs of the regions
+  are unchanged.
 - **Domains.** A domain is identified by the first 3 characters of the ids of
   its grids (e.g. `EUR`), and described by the name of the domain in the
   tables (e.g. "Europe").

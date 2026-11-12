@@ -11,10 +11,17 @@
         "NCAR": {
             "name": "National Center for Atmospheric Research",
             "reason": "ESGF gives the name of the model (Community Climate System Model 4)"
+        },
+        "CSIRO": {
+            "name": "Commonwealth Scientific and Industrial Research Organisation",
+            "reason": "ESGF gives the name of CSIRO-QCCCE (of the model of CSIRO, CSIRO-Mk3-5A); the name of CSIRO in the CORDEX RCMs"
+        },
+        "NSF-DOE-NCAR": {
+            "name": "National Science Foundation, Department of Energy, National Center for Atmospheric Research",
+            "reason": "ESGF gives the name of the models (Community Earth System Model 1); name inferred from the id. Its models drive UKCP18 datasets (CESM1-BGC)"
         }
     },
     "excluded": {
-        "DOE-COLA-CMMAP-GMU": "no name in ESGF (only described by its model, SP-CCSM4); not used by the CMIP5 datasets mapped",
-        "NSF-DOE-NCAR": "ESGF gives the name of the models (Community Earth System Model 1); not used by the CMIP5 datasets mapped"
+        "DOE-COLA-CMMAP-GMU": "no name in ESGF (only described by its model, SP-CCSM4); not used by the CMIP5 datasets mapped"
     }
 }

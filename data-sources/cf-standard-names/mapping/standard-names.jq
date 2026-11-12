@@ -4,7 +4,8 @@
 # member of the CF variables, with its units of measure, and the aliases, the
 # same as (owl:sameAs) their entries, with the alias as alternative label.
 #
-# The entries whose name is also an alias (of another entry) are left out, see
+# The entries whose name is also an alias (of another entry) are left out, and
+# an alias of several entries is only an alternative label of each of them, see
 # DECISIONS.md. Missing units or descriptions are left out.
 
 def present: select(. != null and . != "");
@@ -18,7 +19,7 @@ def present: select(. != null and . != "");
         owl: "http://www.w3.org/2002/07/owl#",
         top: "https://w3id.org/hacid/onto/top-level/",
         data: "https://w3id.org/hacid/onto/data/",
-        label: {"@id": "rdfs:label", "@language": "en"},
+        label: "rdfs:label",
         comment: {"@id": "rdfs:comment", "@language": "en"},
         isMemberOf: {"@id": "top:isMemberOf", "@type": "@id"},
         hasUnitOfMeasure: {"@id": "top:hasUnitOfMeasure", "@type": "@id"},
@@ -54,14 +55,23 @@ def present: select(. != null and . != "");
         # Aliases
         (
             .alias[] |
-            {
-                "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\(."@id")",
-                sameAs: @uri "https://w3id.org/hacid/data/cs/variables/cf/\(.entry_id)"
-            },
-            {
-                "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\(.entry_id)",
-                altLabel: ."@id"
-            }
+            # (entry_id is an array for an alias of several entries)
+            ."@id" as $alias |
+            [.entry_id | arrays[], strings] as $entry_ids |
+            (
+                select($entry_ids | length == 1) |
+                {
+                    "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\($alias)",
+                    sameAs: @uri "https://w3id.org/hacid/data/cs/variables/cf/\($entry_ids[0])"
+                }
+            ),
+            (
+                $entry_ids[] |
+                {
+                    "@id": @uri "https://w3id.org/hacid/data/cs/variables/cf/\(.)",
+                    altLabel: $alias
+                }
+            )
         )
     ]
 }

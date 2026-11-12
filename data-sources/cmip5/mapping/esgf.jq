@@ -262,6 +262,14 @@ def scenario_iris:
         ns + "scenarios/\(.)"
     ];
 
+# Types of a projection of a kind (ccso:SingleProjection,
+# ccso:EnsembleProjection) referring to scenarios ($scenarios, e.g. from
+# scenario_iris): it is based on a scenario (ccso:ScenarioBasedProjection) only
+# if it refers to one, so not the projections of the historical and evaluation
+# experiments, nor those of several experiments
+def projection_types($kind; $scenarios):
+    [$kind, (if ($scenarios | length) > 0 then "ccso:ScenarioBasedProjection" else empty end)];
+
 # IRIs of the temporal region, of its specialization and of the temporal grid
 # (variable and quantization) of a temporal grid (input: temporal_grid)
 def temporal_iris:

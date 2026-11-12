@@ -1,0 +1,356 @@
+# Shapes of the processes generating the datasets (simulations, experiments,
+# downscalings, transformations) and of what they refer to: climate models,
+# the organizations maintaining them, emission scenarios and global warming
+# levels.
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix data:  <https://w3id.org/hacid/onto/data/> .
+@prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+
+shape:DataGeneratingProcess a sh:NodeShape ;
+    rdfs:label "Data generating process"@en ;
+    rdfs:comment """Any process generating datasets (simulations, experiments, transformations, projects): it has
+exactly one label, its outputs and inputs are datasets, its components are processes, and it refers to at most one
+scenario and one global warming level."""@en ;
+    sh:targetClass data:DataGeneratingProcess ;
+    sh:targetSubjectsOf data:hasOutput ;
+    sh:property
+        shape:DataGeneratingProcess-label ,
+        shape:DataGeneratingProcess-output ,
+        shape:DataGeneratingProcess-input ,
+        shape:DataGeneratingProcess-component ,
+        shape:DataGeneratingProcess-scenario ,
+        shape:DataGeneratingProcess-gwl .
+
+shape:DataGeneratingProcess-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A process has exactly one label."@en .
+
+shape:DataGeneratingProcess-output a sh:PropertyShape ;
+    sh:path data:hasOutput ;
+    sh:class data:Dataset ;
+    sh:message "The output of a process is a dataset."@en .
+
+shape:ProcessOutput a sh:NodeShape ;
+    rdfs:label "Process with an output"@en ;
+    rdfs:comment """A process has an output. The experiments known only from a controlled vocabulary, with no
+simulation in the KG (the CMIP5 experiments without datasets in the sources), are not checked."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* data:DataGeneratingProcess .
+                # (an experiment of a vocabulary without simulations in the KG)
+                FILTER NOT EXISTS {
+                    ?this rdf:type ccso:ClimateModelIntercomparisonExperiment .
+                    FILTER NOT EXISTS { ?this top:hasComponent ?component }
+                }
+            }""" ;
+    ] ;
+    sh:property shape:DataGeneratingProcess-outputRequired .
+
+shape:DataGeneratingProcess-outputRequired a sh:PropertyShape ;
+    sh:path data:hasOutput ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The process has no output."@en .
+
+shape:DataGeneratingProcess-input a sh:PropertyShape ;
+    sh:path data:hasInput ;
+    sh:class data:Dataset ;
+    sh:message "The input of a process is a dataset."@en .
+
+shape:DataGeneratingProcess-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:or ( [ sh:class data:DataGeneratingProcess ] [ sh:class top:Action ] ) ;
+    sh:message "The components of a process are processes."@en .
+
+shape:DataGeneratingProcess-scenario a sh:PropertyShape ;
+    sh:path ccso:refersToScenario ;
+    sh:maxCount 1 ;
+    sh:class ccso:EmissionScenario ;
+    sh:message "A process refers to at most one scenario, a ccso:EmissionScenario."@en .
+
+shape:DataGeneratingProcess-gwl a sh:PropertyShape ;
+    sh:path ccso:refersToGlobalWarmingLevel ;
+    sh:maxCount 1 ;
+    sh:class ccso:GlobalWarmingLevel ;
+    sh:message "A process refers to at most one global warming level, a ccso:GlobalWarmingLevel."@en .
+
+
+shape:ScenarioConsistency a sh:NodeShape ;
+    rdfs:label "Consistency of the scenarios"@en ;
+    rdfs:comment """A process and what is linked to it agree on the scenario: its output, its components and the
+simulation it downscales do not refer to a different scenario."""@en ;
+    sh:targetSubjectsOf ccso:refersToScenario ;
+    sh:sparql [
+        sh:prefixes shape:prefixes ;
+        sh:message "The resource refers to the scenario {?scenario}, but {?value}, linked by {?link}, to {?other}."@en ;
+        sh:select """
+            SELECT $this ?value ?link ?scenario ?other WHERE {
+                $this ccso:refersToScenario ?scenario .
+                VALUES ?link { data:hasOutput top:hasComponent ccso:isDownscalingOf }
+                $this ?link ?value .
+                ?value ccso:refersToScenario ?other .
+                FILTER (?other != ?scenario)
+            }""" ;
+    ] .
+
+
+shape:SingleSimulation a sh:NodeShape ;
+    rdfs:label "Single simulation"@en ;
+    rdfs:comment """A single simulation (a run of a model) uses exactly one model, has no component, and its outputs
+are single projections."""@en ;
+    sh:targetClass ccso:SingleSimulation ;
+    sh:property
+        shape:SingleSimulation-model ,
+        shape:SingleSimulation-component ,
+        shape:SingleSimulation-output .
+
+shape:SingleSimulation-model a sh:PropertyShape ;
+    sh:path ccso:usesModel ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A single simulation uses exactly one model."@en .
+
+shape:SingleSimulation-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:maxCount 0 ;
+    sh:message "A single simulation has no component."@en .
+
+shape:SingleSimulation-output a sh:PropertyShape ;
+    sh:path data:hasOutput ;
+    sh:class ccso:SingleProjection ;
+    sh:message "The output of a single simulation is a single projection."@en .
+
+
+shape:EnsembleSimulation a sh:NodeShape ;
+    rdfs:label "Ensemble simulation"@en ;
+    rdfs:comment "The outputs of an ensemble simulation are ensemble projections."@en ;
+    sh:targetClass ccso:EnsembleSimulation ;
+    sh:property shape:EnsembleSimulation-output .
+
+shape:EnsembleComponents a sh:NodeShape ;
+    rdfs:label "Ensemble simulation with components"@en ;
+    rdfs:comment """An ensemble simulation is composed of simulations. The experiments are not checked: one without
+simulations is known only from a controlled vocabulary (see shape:ProcessOutput)."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* ccso:EnsembleSimulation .
+                FILTER NOT EXISTS { ?this rdf:type ccso:ClimateModelIntercomparisonExperiment }
+            }""" ;
+    ] ;
+    sh:property shape:EnsembleSimulation-component .
+
+shape:EnsembleSimulation-component a sh:PropertyShape ;
+    sh:path top:hasComponent ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The ensemble simulation has no component."@en .
+
+shape:EnsembleSimulation-output a sh:PropertyShape ;
+    sh:path data:hasOutput ;
+    sh:class ccso:EnsembleProjection ;
+    sh:message "The output of an ensemble simulation is an ensemble projection."@en .
+
+
+shape:ClimateSimulation a sh:NodeShape ;
+    rdfs:label "Climate simulation"@en ;
+    rdfs:comment "A climate simulation uses at most one model, a climate model."@en ;
+    sh:targetClass ccso:ClimateSimulation ;
+    sh:targetSubjectsOf ccso:usesModel ;
+    sh:property shape:ClimateSimulation-model .
+
+shape:ClimateSimulation-model a sh:PropertyShape ;
+    sh:path ccso:usesModel ;
+    sh:maxCount 1 ;
+    sh:class ccso:ClimateModel ;
+    sh:message "A climate simulation uses at most one model, a ccso:ClimateModel."@en .
+
+
+shape:GlobalClimateSimulation a sh:NodeShape ;
+    rdfs:label "Global climate simulation"@en ;
+    rdfs:comment "The model of a global climate simulation is a global climate model."@en ;
+    sh:targetClass ccso:GlobalClimateSimulation ;
+    sh:property shape:GlobalClimateSimulation-model .
+
+shape:GlobalClimateSimulation-model a sh:PropertyShape ;
+    sh:path ccso:usesModel ;
+    sh:class ccso:GlobalClimateModel ;
+    sh:message "The model of a global climate simulation is a ccso:GlobalClimateModel."@en .
+
+
+shape:DynamicalDownscaling a sh:NodeShape ;
+    rdfs:label "Dynamical downscaling"@en ;
+    rdfs:comment """The model of a dynamical downscaling is a regional or local (e.g. convection permitting) climate
+model, and what it downscales is a described simulation. A single run downscales a simulation."""@en ;
+    sh:targetClass ccso:DynamicalDownscaling ;
+    sh:targetSubjectsOf ccso:isDownscalingOf ;
+    sh:property shape:DynamicalDownscaling-model , shape:DynamicalDownscaling-driving .
+
+shape:DynamicalDownscaling-model a sh:PropertyShape ;
+    sh:path ccso:usesModel ;
+    sh:or ( [ sh:class ccso:RegionalClimateModel ] [ sh:class ccso:LocalClimateModel ] ) ;
+    sh:message "The model of a dynamical downscaling is a regional or local climate model."@en .
+
+shape:DynamicalDownscaling-driving a sh:PropertyShape ;
+    sh:path ccso:isDownscalingOf ;
+    sh:class ccso:Simulation ;
+    sh:message "What is downscaled is a ccso:Simulation."@en .
+
+
+shape:DownscalingRun a sh:NodeShape ;
+    rdfs:label "Run of a dynamical downscaling"@en ;
+    rdfs:comment """A single simulation that is a dynamical downscaling downscales a simulation (its driving
+simulation). The runs of the evaluation experiment are not checked: they are driven by a reanalysis (ERA-Interim),
+which is not a simulation of the KG."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT ?this WHERE {
+                ?this rdf:type ccso:SingleSimulation , ccso:DynamicalDownscaling .
+                # (the id of the simulation has its experiment)
+                FILTER (!CONTAINS(STR(?this), ".evaluation."))
+            }""" ;
+    ] ;
+    sh:property shape:DownscalingRun-driving .
+
+shape:DownscalingRun-driving a sh:PropertyShape ;
+    sh:path ccso:isDownscalingOf ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The downscaling run has no driving simulation."@en .
+
+
+shape:ProjectionTransformation a sh:NodeShape ;
+    rdfs:label "Projection transformation"@en ;
+    rdfs:comment """A transformation of projections (rescaling, aggregation, statistical transformation) has inputs
+and exactly one output. The climate simulations that are transformations too (the dynamical downscalings, linked to
+what they downscale by ccso:isDownscalingOf) are left out."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                ?this rdf:type/rdfs:subClassOf* ccso:ProjectionTransformation .
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* ccso:ClimateSimulation }
+            }""" ;
+    ] ;
+    sh:property shape:ProjectionTransformation-input , shape:ProjectionTransformation-output .
+
+shape:ProjectionTransformation-input a sh:PropertyShape ;
+    sh:path data:hasInput ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The transformation has no input."@en .
+
+shape:ProjectionTransformation-output a sh:PropertyShape ;
+    sh:path data:hasOutput ;
+    sh:maxCount 1 ;
+    sh:message "A transformation has exactly one output."@en .
+
+
+shape:ClimateModel a sh:NodeShape ;
+    rdfs:label "Climate model"@en ;
+    rdfs:comment "A climate model has exactly one label and is maintained by agents."@en ;
+    sh:targetClass ccso:ClimateModel ;
+    sh:property shape:ClimateModel-label , shape:ClimateModel-maintainer , shape:ClimateModel-maintainerRequired .
+
+shape:ClimateModel-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A climate model has exactly one label."@en .
+
+shape:ClimateModel-maintainer a sh:PropertyShape ;
+    sh:path ccso:isMaintainedBy ;
+    sh:class top:Agent ;
+    sh:message "A climate model is maintained by a top:Agent."@en .
+
+shape:ClimateModel-maintainerRequired a sh:PropertyShape ;
+    sh:path ccso:isMaintainedBy ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The climate model has no maintainer."@en .
+
+
+shape:Organization a sh:NodeShape ;
+    rdfs:label "Organization"@en ;
+    rdfs:comment """An organization has one label (its name) and one acronym. The organizations are described by each
+source referring to them, in its own graph: more than one name or acronym means that two sources disagree."""@en ;
+    sh:targetClass top:Organization ;
+    sh:property shape:Organization-label , shape:Organization-acronym .
+
+shape:Organization-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The organization has no label, or more than one."@en .
+
+shape:Organization-acronym a sh:PropertyShape ;
+    sh:path top:acronym ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The organization has no acronym, or more than one."@en .
+
+
+shape:EmissionScenario a sh:NodeShape ;
+    rdfs:label "Emission scenario"@en ;
+    rdfs:comment "An emission scenario (RCP, SSP) has a label, a description and an acronym."@en ;
+    sh:targetClass ccso:EmissionScenario ;
+    sh:property shape:EmissionScenario-label , shape:EmissionScenario-comment , shape:EmissionScenario-acronym .
+
+shape:EmissionScenario-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:uniqueLang true ;
+    sh:message "An emission scenario has a label, one per language."@en .
+
+shape:EmissionScenario-comment a sh:PropertyShape ;
+    sh:path rdfs:comment ;
+    sh:minCount 1 ;
+    sh:severity sh:Warning ;
+    sh:message "The emission scenario has no description."@en .
+
+shape:EmissionScenario-acronym a sh:PropertyShape ;
+    sh:path top:acronym ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "An emission scenario has exactly one acronym."@en .
+
+
+shape:GlobalWarmingLevel a sh:NodeShape ;
+    rdfs:label "Global warming level"@en ;
+    rdfs:comment "A global warming level has a label and exactly one value: a positive number of degrees Celsius, an xsd:decimal for all the levels, so that they compare and sort alike."@en ;
+    sh:targetClass ccso:GlobalWarmingLevel ;
+    sh:property shape:GlobalWarmingLevel-label , shape:GlobalWarmingLevel-value .
+
+shape:GlobalWarmingLevel-label a sh:PropertyShape ;
+    sh:path rdfs:label ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:message "A global warming level has exactly one label."@en .
+
+shape:GlobalWarmingLevel-value a sh:PropertyShape ;
+    sh:path rdf:value ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:datatype xsd:decimal ;
+    sh:minExclusive 0 ;
+    sh:maxInclusive 10 ;
+    sh:message "A global warming level has exactly one value, an xsd:decimal between 0 and 10 (°C)."@en .

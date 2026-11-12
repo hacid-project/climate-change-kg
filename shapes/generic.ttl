@@ -1,0 +1,170 @@
+# Generic shapes: checks that apply to every resource of the KG, whatever its
+# class. They guard the basic hygiene the more specific shapes rely on: every
+# resource is typed, and every class and property used is a declared one.
+#
+# The rdfs:domain and rdfs:range of the properties are not checked: the
+# published KG is served with RDFS inference, which gives the subjects and the
+# objects of a property the types of its domain and range, so they need not be
+# asserted.
+#
+# These shapes use SPARQL-based targets (sh:SPARQLTarget, SHACL Advanced
+# Features) and SPARQL-based constraints (sh:sparql, SHACL-SPARQL).
+
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix top:   <https://w3id.org/hacid/onto/top-level/> .
+@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+
+shape:prefixes a owl:Ontology ;
+    rdfs:label "Prefixes of the SPARQL-based shapes"@en ;
+    sh:declare
+        [ sh:prefix "rdf" ; sh:namespace "http://www.w3.org/1999/02/22-rdf-syntax-ns#"^^xsd:anyURI ] ,
+        [ sh:prefix "rdfs" ; sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ] ,
+        [ sh:prefix "owl" ; sh:namespace "http://www.w3.org/2002/07/owl#"^^xsd:anyURI ] ,
+        [ sh:prefix "top" ; sh:namespace "https://w3id.org/hacid/onto/top-level/"^^xsd:anyURI ] ,
+        [ sh:prefix "data" ; sh:namespace "https://w3id.org/hacid/onto/data/"^^xsd:anyURI ] ,
+        [ sh:prefix "ccso" ; sh:namespace "https://w3id.org/hacid/onto/ccso/"^^xsd:anyURI ] .
+
+
+shape:Resource a sh:NodeShape ;
+    rdfs:label "Resource of the KG"@en ;
+    rdfs:comment """Every IRI in the namespace of the KG (https://w3id.org/hacid/data/cs/), used as subject or as
+object of a triple, is described: it has at least one type. An untyped resource is either a dangling reference (an IRI
+minted by a mapping for something no mapping describes) or a malformed IRI."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:prefixes shape:prefixes ;
+        sh:select """
+            SELECT DISTINCT ?this WHERE {
+                { ?this ?p ?o } UNION { ?s ?p ?this }
+                FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/hacid/data/cs/"))
+            }""" ;
+    ] ;
+    sh:property shape:Resource-type , shape:Resource-label , shape:Resource-acronym , shape:Resource-comment ,
+        shape:Resource-definition , shape:Resource-altLabel .
+
+shape:Resource-type a sh:PropertyShape ;
+    sh:path rdf:type ;
+    sh:minCount 1 ;
+    sh:message "The resource is used but not described: it has no type."@en .
+
+
+shape:Resource-label a sh:PropertyShape ;
+    rdfs:comment """The labels are strings without language, when they are identifiers or standard names (the id of
+a dataset or of a simulation, the name of a model, a CF standard name, the symbol of a unit), or in English, when they
+are text. No other language is used."""@en ;
+    sh:path rdfs:label ;
+    sh:or ( [ sh:datatype xsd:string ] [ sh:languageIn ( "en" ) ] ) ;
+    sh:message "The label is neither a string without language nor in English."@en .
+
+
+shape:Resource-acronym a sh:PropertyShape ;
+    rdfs:comment "An acronym is an identifier (the name of a variable in the tables, the id of an institute or of an experiment): a string without language."@en ;
+    sh:path top:acronym ;
+    sh:datatype xsd:string ;
+    sh:message "The acronym is not a string without language."@en .
+
+shape:Resource-comment a sh:PropertyShape ;
+    rdfs:comment "A comment is text: in English."@en ;
+    sh:path rdfs:comment ;
+    sh:languageIn ( "en" ) ;
+    sh:message "The comment is not in English."@en .
+
+
+shape:Resource-definition a sh:PropertyShape ;
+    rdfs:comment "A definition is text: in English."@en ;
+    sh:path top:definition ;
+    sh:languageIn ( "en" ) ;
+    sh:message "The definition is not in English."@en .
+
+shape:Resource-altLabel a sh:PropertyShape ;
+    rdfs:comment "An alternative label is, as a label, a string without language (an identifier or a standard name, e.g. the alias of a CF standard name) or in English (text, e.g. another name of a method)."@en ;
+    sh:path top:altLabel ;
+    sh:or ( [ sh:datatype xsd:string ] [ sh:languageIn ( "en" ) ] ) ;
+    sh:message "The alternative label is neither a string without language nor in English."@en .
+
+
+shape:Class a sh:NodeShape ;
+    rdfs:label "Class used in the KG"@en ;
+    rdfs:comment """Every class with instances is declared (as owl:Class) by one of the ontologies loaded in the KG.
+The classes of the RDF, RDFS, OWL and XSD vocabularies are exempt."""@en ;
+    sh:targetObjectsOf rdf:type ;
+    sh:or (
+        [ sh:pattern "^http://www\\.w3\\.org/" ]
+        [ sh:class owl:Class ]
+    ) ;
+    sh:message "The class has instances but is not declared by any ontology of the KG."@en .
+
+
+shape:Property a sh:NodeShape ;
+    rdfs:label "Property used in the KG"@en ;
+    rdfs:comment """Every property used in a triple is declared (it has a type: owl:ObjectProperty,
+owl:DatatypeProperty, owl:AnnotationProperty) by one of the ontologies loaded in the KG. The properties of the W3C
+vocabularies (RDF, RDFS, OWL, ...) and of GeoSPARQL, which are not loaded, are exempt."""@en ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:select "SELECT DISTINCT ?this WHERE { ?s ?this ?o }" ;
+    ] ;
+    sh:or (
+        [ sh:pattern "^http://www\\.w3\\.org/" ]
+        [ sh:pattern "^http://www\\.opengis\\.net/ont/geosparql#" ]
+        [ sh:property [ sh:path rdf:type ; sh:minCount 1 ] ]
+    ) ;
+    sh:message "The property is used but not declared by any ontology of the KG."@en .
+
+
+shape:PropertyDatatype a sh:NodeShape ;
+    rdfs:label "Range of a datatype property"@en ;
+    rdfs:comment """The values of a datatype property have the datatype given as its rdfs:range. One result per
+property and datatype found, with the number of values concerned and one of them as value."""@en ;
+    sh:targetClass owl:DatatypeProperty ;
+    sh:severity sh:Warning ;
+    sh:sparql [
+        sh:prefixes shape:prefixes ;
+        sh:message "{?count} values of the property have datatype {?datatype} instead of its range {?range} (e.g. {?value})."@en ;
+        sh:select """
+            SELECT $this ?range ?datatype (COUNT(?object) AS ?count) (SAMPLE(?object) AS ?value) WHERE {
+                $this rdfs:range ?range .
+                FILTER (isIRI(?range) && ?range != rdfs:Literal)
+                ?subject $this ?object .
+                BIND (DATATYPE(?object) AS ?datatype)
+                FILTER (?datatype != ?range)
+            }
+            GROUP BY $this ?range ?datatype
+            HAVING (COUNT(?object) > 0)""" ;
+    ] .
+
+
+shape:LabelLanguage a sh:NodeShape ;
+    rdfs:label "Language of the labels of a class"@en ;
+    rdfs:comment """The labels of the instances of a class are generally all without language (identifiers and
+standard names) or all in English (text), see shape:Resource-label. A class with both is reported, with the numbers of
+instances labelled in each way and one of those without language as value: it is expected where a class has
+resources named by an identifier and resources with a descriptive label (e.g. the CF variables, labelled by their
+standard name, and the MIP variables, by their long name), otherwise a label is tagged against the convention."""@en ;
+    sh:targetObjectsOf rdf:type ;
+    sh:severity sh:Info ;
+    sh:sparql [
+        sh:prefixes shape:prefixes ;
+        sh:message "{?plain} instances of the class have a label without language (e.g. {?value}), {?tagged} with a language."@en ;
+        sh:select """
+            SELECT $this (COUNT(DISTINCT ?untagged) AS ?plain) (COUNT(DISTINCT ?withLanguage) AS ?tagged)
+                (SAMPLE(?untagged) AS ?value)
+            WHERE {
+                FILTER (!STRSTARTS(STR($this), "http://www.w3.org/"))
+                {
+                    ?untagged rdf:type $this ; rdfs:label ?label .
+                    FILTER (LANG(?label) = "")
+                }
+                UNION
+                {
+                    ?withLanguage rdf:type $this ; rdfs:label ?label .
+                    FILTER (LANG(?label) != "")
+                }
+            }
+            GROUP BY $this
+            HAVING (COUNT(DISTINCT ?untagged) > 0 && COUNT(DISTINCT ?withLanguage) > 0)""" ;
+    ] .

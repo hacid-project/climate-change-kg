@@ -64,6 +64,38 @@ def variable_entries:
         .value + {out_name: ((.value.out_name | present) // .key), table: $table}
     ];
 
+# The modeling realms of an entry, by their id (input: the entry), with the
+# one spelling of the ids differing by case in the tables (ocnBgChem)
+def _realms: .modeling_realm | words | if ascii_downcase == "ocnbgchem" then "ocnBgchem" else . end;
+
+# Names of the modeling realms (the others are named by their id)
+def _realm_names:
+    {
+        aerosol: "Aerosol",
+        atmos: "Atmosphere",
+        atmosChem: "Atmospheric chemistry",
+        land: "Land",
+        landIce: "Land ice",
+        ocean: "Ocean",
+        ocnBgchem: "Ocean biogeochemistry",
+        seaIce: "Sea ice"
+    };
+
+# The nodes of the variables (input: an array), with one label for each
+# variable: an entry of each table of a variable gives a node with the same
+# IRI, and their long names may differ (e.g. prra, "Rainfall Flux", "Rainfall
+# Flux over Land", ...). The shortest label is kept, the others are alternative
+# labels.
+def _one_label:
+    group_by(."@id") |
+    map(
+        ([.[].label | values] | unique | sort_by([length, .])) as $labels |
+        if ($labels | length) > 1 then
+            map(.label = $labels[0]) + [{"@id": .[0]."@id", altLabel: $labels[1:]}]
+        end |
+        .[]
+    ) | unique;
+
 # JSON-LD document of variable entries (as given by variable_entries), with the
 # IRI and the label of each variable given by iri_of and label_of (applied to
 # the entry; the label only if the entry has a long_name), members of the
@@ -80,7 +112,8 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
             data: "https://w3id.org/hacid/onto/data/",
             label: {"@id": "rdfs:label", "@language": "en"},
             comment: {"@id": "rdfs:comment", "@language": "en"},
-            acronym: {"@id": "top:acronym", "@language": "en"},
+            acronym: "top:acronym",
+            altLabel: {"@id": "top:altLabel", "@language": "en"},
             isMemberOf: {"@id": "top:isMemberOf", "@type": "@id"},
             isSpecializationOfVariable: {"@id": "data:isSpecializationOfVariable", "@type": "@id"},
             dependsOnVariable: {"@id": "data:dependsOnVariable", "@type": "@id"},
@@ -99,7 +132,7 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
                         "@type": "data:DeterministicVariable",
                         isMemberOf: [
                             $collection,
-                            (.modeling_realm | words | @uri "https://w3id.org/hacid/data/cs/realms/\(.)")
+                            (_realms | @uri "https://w3id.org/hacid/data/cs/realms/\(.)")
                         ],
                         label: (((.long_name | present) as $long_name | label_of) // null),
                         isSpecializationOfVariable: (
@@ -118,14 +151,17 @@ def variables_jsonld(iri_of; label_of; $collection; $cf):
                         hasValuesOn: $unit
                     } |
                     with_entries(select(.value != null and .value != []))
-                ] | unique | .[]
+                ] | unique | _one_label | .[]
             ),
             # Realms
             (
-                [$entries.[] | .modeling_realm | words] | unique | .[] |
+                [$entries.[] | _realms] | unique | .[] |
+                (_realm_names[.] // .) as $name |
                 {
                     "@id": @uri "https://w3id.org/hacid/data/cs/realms/\(.)",
-                    "@type": "top:Collection"
+                    "@type": "top:Collection",
+                    label: "\($name) variables",
+                    comment: "Collection of the variables of the modeling realm \(.) in the CMOR tables."
                 }
             ),
             # Units of measure

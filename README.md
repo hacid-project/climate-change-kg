@@ -15,7 +15,8 @@ pip install -r workflow/requirements.txt
 snakemake --cores 4 mapping            # all the mappings to the KG (default target)
 snakemake --cores 4 sources_analysis   # all the analyses of the sources
 snakemake --cores 4 cmor_tables        # just the variables of the CMOR tables
-snakemake --cores 4 consolidate        # the KG loaded, consolidated and exported (kg/)
+snakemake --cores 4 consolidate        # the KG loaded, consolidated, described and exported (kg/)
+snakemake --cores 4 validate           # the consolidated KG validated with its SHACL shapes (shapes/)
 ```
 
 The decisions taken for each data source on its issues, inconsistencies and conflicting versions (and the cases left
@@ -25,15 +26,19 @@ for further analysis) are documented in its `DECISIONS.md` (`data-sources/cf-sta
 ### Consolidation
 
 The rule `consolidate` (`workflow/rules/consolidate.smk`), run on the outputs of `mapping`, builds the KG with the
-[Apache Jena](https://jena.apache.org/) command-line tools (which must be on the `PATH`), in three steps:
+[Apache Jena](https://jena.apache.org/) command-line tools (which must be on the `PATH`), in four steps:
 
 1. `consolidate_load`: the files of each graph listed in `graph_names.csv` (path or glob pattern, graph name, skip)
-   are loaded into a new TDB2 dataset, `kg/tdb2` (`config/config.yaml`, `consolidate.location`; `kg/` is not
-   tracked), with `tdb2.tdbloader` (`workflow/scripts/consolidate_load.py`, which writes the graphs and their files
+   are loaded into a new TDB2 dataset, `kg/tdb2-loaded` (`config/config.yaml`, `consolidate.loaded_location`; `kg/`
+   is not tracked), with `tdb2.tdbloader` (`workflow/scripts/consolidate_load.py`, which writes the graphs and their files
    in `kg/load.json`);
-2. `consolidate_updates`: the SPARQL updates listed in `consolidation_updates.csv` (in `consolidation/`) are applied
-   in their order with `tdb2.tdbupdate`, seeing the union of the named graphs as the default graph;
-3. `consolidate_export`: the dataset is exported as N-Quads, `kg/export/kg.nq.gz`, with `tdb2.tdbdump`.
+2. `consolidate_updates`: the loaded dataset is copied to `kg/tdb2` (`consolidate.location`), and the SPARQL updates
+   listed in `consolidation_updates.csv` (in `consolidation/`) are applied to the copy in their order with
+   `tdb2.tdbupdate`, seeing the union of the named graphs as the default graph. The loaded dataset is left as it is, so
+   that a change in the updates reruns them from it, without loading the RDF files again;
+3. `metadata`: the description of the KG as a dataset is built (`kg/export/void.ttl`), with the results of its
+   validation, and loaded as a named graph (see [Metadata](#metadata) and [Validation](#validation));
+4. `consolidate_export`: the dataset is exported as N-Quads, `kg/export/kg.nq.gz`, with `tdb2.tdbdump`.
 
 The JVM options of the tools are in `config/config.yaml` (`consolidate.jvm_args`, `-Xmx16G`: the JSON-LD parser of
 Jena reads a whole document in memory, and the UKCP18 datasets are about 1.8 GB). To inspect it, `./serve_kg.sh`
@@ -42,6 +47,59 @@ serves the dataset read-only with Fuseki (`fuseki-server` must be on the `PATH`)
 argument, further options for `fuseki-server` after it, e.g. `./serve_kg.sh kg/tdb2 --port=3031`; not while the
 workflow is writing the dataset). The dataset can also be served by a Fuseki installation pointing its configuration
 (`fuseki-conf.ttl`, installed by `setup_kg.sh`) to its location.
+
+### Labels
+
+The labels (`rdfs:label`) follow one convention in all the mappings: a label that is an identifier or a standard name
+(the id of a dataset, of a simulation or of their outputs, the name of a model, a CF standard name, the symbol of a
+unit, an acronym as `CMIP5`) is a string without language; a label that is text (the long name of a variable or of an
+index, the name of an organization, of a hazard, of an operation, the description of a region or of a grid) is in
+English (`@en`). No other language is used, and the labels of a class are of the same kind, but where the class has
+resources of both kinds (e.g. the CF variables, labelled by their standard name, and the MIP variables, by their long
+name). The same holds for the acronyms (`top:acronym`), always identifiers, for the comments (`rdfs:comment`) and the
+definitions (`top:definition`), always text, and for the alternative labels (`top:altLabel`), of either kind. The shapes check it (`shape:Resource-label`, `shape:Resource-acronym`, `shape:Resource-comment`,
+`shape:LabelLanguage`). The values of these properties for each kind of resource, the schemes of the IRIs and the
+variations left for review are documented in [`doc/conventions.md`](doc/conventions.md).
+
+### Validation
+
+The consolidated KG is validated with the [SHACL](https://www.w3.org/TR/shacl/) shapes of `shapes/`
+(`snakemake --cores 4 validate`, `workflow/rules/validate.smk`), with the `shacl` tool of Jena: the shapes are checked
+on the union of the named graphs (`kg/validation/report.ttl`), and the results are summarised by severity, shape and
+message in `kg/validation/summary.tsv`. The rule fails if there are results of the severities of `config/config.yaml`
+(`validate.fail_on`, by default the violations), while warnings and informative results are only reported. The
+consolidation does not depend on the outcome (only on the summary, for the metadata): to export the KG only if it is
+valid, build `validate` with it (`snakemake --cores 4 validate consolidate`). The shapes, their severities and how to
+read the report are documented in [`shapes/README.md`](shapes/README.md).
+
+### Metadata
+
+The KG is described as a dataset (`snakemake --cores 4 metadata`, `workflow/rules/metadata.smk`) with
+[DCAT](https://www.w3.org/TR/vocab-dcat-3/), [VoID](https://www.w3.org/TR/void/), the
+[SPARQL service description](https://www.w3.org/TR/sparql11-service-description/),
+[PROV-O](https://www.w3.org/TR/prov-o/), Dublin Core terms and the
+[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The description, `https://w3id.org/hacid/data/cs/kg`, is
+assembled in `kg/export/void.ttl` from:
+
+1. `metadata/kg.ttl`, written by hand: title, description, creators, publisher, license, keywords, themes and
+   distribution of the KG (`dcat:Dataset`, `void:Dataset`), and for each named graph `<g>` a `void:Dataset` `<g#graph>`
+   with its title, description and the sources it is derived from (`prov:wasDerivedFrom`);
+2. `metadata/statistics.rq`, a query on the KG: its named graphs (`sd:namedGraph`, `void:subset`) and, for the KG and
+   each of them, the numbers of triples, entities, distinct subjects and objects, classes and properties, with the
+   partitions by class and by property;
+3. `metadata/provenance.jq`: the build (`prov:wasGeneratedBy`, with its date and the commit of this repository, also
+   `dcterms:modified` and `dcat:version`), the versions of the sources given by the configuration of the workflow
+   (git commits, version of the CF standard name table) and, if set in `config/config.yaml` (`metadata`), the public
+   SPARQL endpoint (`void:sparqlEndpoint`, and a `dcat:DataService`), the website documenting the KG
+   (`dcat:landingPage`) and the DOI of the record of its dumps (`dcat:accessURL` of the distribution);
+4. `metadata/quality.jq`: the numbers of violations, warnings and informative results of the validation
+   (`dqv:QualityMeasurement`).
+
+It is checked with its own shapes (`metadata/shapes.ttl`: e.g. every named graph of the KG has a title and a
+description, so a graph added to `graph_names.csv` is to be described in `metadata/kg.ttl`, and every graph described
+is in the KG) and loaded in the KG as the named graph `https://w3id.org/hacid/data/cs/kg` (`config/config.yaml`,
+`metadata.graph`), replacing that of a previous build. The graph of the metadata is left out of the statistics and of
+the validation of the KG.
 
 ### Ontologies
 

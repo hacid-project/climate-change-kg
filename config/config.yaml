@@ -90,10 +90,35 @@ ontologies:
     - ccso
 
 consolidate:
+  # Location of the TDB2 dataset of the KG as loaded from the RDF files, before
+  # the updates (not tracked): the consolidated one is made from a copy of it
+  loaded_location: kg/tdb2-loaded
   # Location of the TDB2 dataset of the consolidated KG (not tracked)
   location: kg/tdb2
   # Options of the JVM of the Jena command-line tools (JVM_ARGS)
   jvm_args: -Xmx16G
+
+validate:
+  # Severities of the results of the SHACL validation (Violation, Warning,
+  # Info) that make the rule validate fail. The report and the metadata of the
+  # KG are produced in any case
+  fail_on:
+    - Violation
+
+metadata:
+  # Named graph of the metadata of the KG: also the IRI of the KG as a dataset
+  # in metadata/kg.ttl and in the queries leaving its graph out
+  # (metadata/statistics.rq, shapes/queries/data.rq)
+  graph: https://w3id.org/hacid/data/cs/kg
+  # Where the KG is published, if anywhere (each may be left empty):
+  # - the URL of its public SPARQL endpoint (void:sparqlEndpoint, and a
+  #   dcat:DataService serving the KG);
+  # - the DOI (as a URL) of the record holding its dumps, from which they are
+  #   accessed (dcat:accessURL of the distribution: not the URL of a file);
+  # - the URL of the website documenting it (dcat:landingPage)
+  sparql_endpoint: "https://w3id.org/hacid/cs/sparql"
+  dumps_figshare_url: "https://doi.org/10.6084/m9.figshare.29066711"
+  website_url: "https://hacid-project.github.io/cckg/"
 
 ukcp18:
   # Number of nodes of each JSON-LD document of the UKCP18 datasets
