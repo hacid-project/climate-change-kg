@@ -112,8 +112,9 @@ metadata:
   graph: https://w3id.org/hacid/data/cs/kg
   # URL of the public SPARQL endpoint of the KG (void:sparqlEndpoint) and of
   # its published N-Quads dump (void:dataDump, dcat:downloadURL), if any
-  sparql_endpoint: ""
-  download_url: ""
+  sparql_endpoint: "https://w3id.org/hacid/cs/sparql"
+  dumps_figshare_url: "https://doi.org/10.6084/m9.figshare.29066711"
+  website_url: "https://hacid-project.github.io/cckg/"
 
 ukcp18:
   # Number of nodes of each JSON-LD document of the UKCP18 datasets
