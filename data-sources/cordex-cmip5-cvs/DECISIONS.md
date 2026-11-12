@@ -48,7 +48,7 @@ Neither `UM` model is in the CORDEX-CMIP5 datasets of the KG.
 - Seven institutes of the CORDEX-CMIP5 datasets are not in the list of the RCMs
   (`BOM`, `CYI`, `ETH`, `ISU`, `ORNL`, `RU-CORE`, `UA`), so they had no name
   (found by the validation, `shape:Organization-label`). Their names are given
-  by hand, from the ids: to be verified against the CORDEX registration.
+  by hand, from the ids, and have been checked.
 
 ## Validation
 

@@ -20,5 +20,5 @@
     "UA": {
         "name": "University of Arizona"
     },
-    "reason": "Institutes of CORDEX-CMIP5 datasets (ESGF facet institute) that are not in the list of the RCMs of IS-ENES Data, which gives the names of the others: names from the registration of the institutes in CORDEX, to be verified"
+    "reason": "Institutes of CORDEX-CMIP5 datasets (ESGF facet institute) that are not in the list of the RCMs of IS-ENES Data, which gives the names of the others: names from the registration of the institutes in CORDEX, checked"
 }
