@@ -282,7 +282,7 @@ def convert_parameter:
         label: {"@id": "rdfs:label", "@language": "en"},
         comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
-        definition: "top:definition",
+        definition: {"@id": "top:definition", "@language": "en"},
         hasUnitOfMeasure: {
             "@id": "top:hasUnitOfMeasure",
             "@type": "@id"

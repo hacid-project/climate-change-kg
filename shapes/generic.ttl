@@ -43,7 +43,8 @@ minted by a mapping for something no mapping describes) or a malformed IRI."""@e
                 FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/hacid/data/cs/"))
             }""" ;
     ] ;
-    sh:property shape:Resource-type , shape:Resource-label , shape:Resource-acronym , shape:Resource-comment .
+    sh:property shape:Resource-type , shape:Resource-label , shape:Resource-acronym , shape:Resource-comment ,
+        shape:Resource-definition , shape:Resource-altLabel .
 
 shape:Resource-type a sh:PropertyShape ;
     sh:path rdf:type ;
@@ -71,6 +72,19 @@ shape:Resource-comment a sh:PropertyShape ;
     sh:path rdfs:comment ;
     sh:languageIn ( "en" ) ;
     sh:message "The comment is not in English."@en .
+
+
+shape:Resource-definition a sh:PropertyShape ;
+    rdfs:comment "A definition is text: in English."@en ;
+    sh:path top:definition ;
+    sh:languageIn ( "en" ) ;
+    sh:message "The definition is not in English."@en .
+
+shape:Resource-altLabel a sh:PropertyShape ;
+    rdfs:comment "An alternative label is, as a label, a string without language (an identifier or a standard name, e.g. the alias of a CF standard name) or in English (text, e.g. another name of a method)."@en ;
+    sh:path top:altLabel ;
+    sh:or ( [ sh:datatype xsd:string ] [ sh:languageIn ( "en" ) ] ) ;
+    sh:message "The alternative label is neither a string without language nor in English."@en .
 
 
 shape:Class a sh:NodeShape ;

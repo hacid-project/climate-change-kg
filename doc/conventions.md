@@ -15,8 +15,9 @@ variations and the open cases left for a future review. It describes the data gr
 | Text | English (`@en`) | the long name of a variable, the name of an organization, the description of a grid |
 
 No other language is used. The shapes check it (`shapes/generic.ttl`): a label is without language or in English
-(`shape:Resource-label`), an acronym is without language (`shape:Resource-acronym`), a comment is in English
-(`shape:Resource-comment`); the classes whose instances have labels of both kinds are listed, as information, by
+(`shape:Resource-label`, and likewise an alternative label, `shape:Resource-altLabel`), an acronym is without
+language (`shape:Resource-acronym`), a comment and a definition are in English (`shape:Resource-comment`,
+`shape:Resource-definition`); the classes whose instances have labels of both kinds are listed, as information, by
 `shape:LabelLanguage`.
 
 ### `rdfs:label`
@@ -113,18 +114,20 @@ Open cases:
   are tagged as English without checking their language; some are terse notes rather than sentences.
 - **No comment.** Datasets, most outputs, ensembles, models (but one), organizations, units and the MOHC indices have
   no comment.
-- **Other text properties**, not covered by the rule so far:
+- **Other text properties.** The rule applies to them as well:
 
-  | Property | Values | Language |
-  | --- | --- | --- |
-  | `top:altLabel` | the aliases of the CF standard names | none |
-  | `top:altLabel` | the alternative names of the methods | `en` (the range of the property is `xsd:string`: `shape:PropertyDatatype`) |
-  | `top:definition` | the definitions of the Climdex and MOHC indices (text) | none |
-  | `top:name` | the names of the people | none |
-  | `top:componentIdentifier`, `ccso:productId` | ids of experiments, ensemble members, products | none |
-  | `dcterms:title` | the titles of the shared socioeconomic pathways | `en` |
+  | Property | Values | Language | Check |
+  | --- | --- | --- | --- |
+  | `top:definition` | the definitions of the Climdex and MOHC indices (text) | `en` | `shape:Resource-definition` |
+  | `top:altLabel` | the aliases of the CF standard names (standard names) | none | `shape:Resource-altLabel` |
+  | `top:altLabel` | the alternative names of the methods (text) | `en` | `shape:Resource-altLabel` |
+  | `top:name` | the names of the people | none | |
+  | `top:componentIdentifier`, `ccso:productId` | ids of experiments, ensemble members, products | none | |
+  | `dcterms:title` | the titles of the shared socioeconomic pathways (text) | `en` | |
 
-  Following the rule, `top:definition` would be in English.
+  The top-level ontology gives `top:altLabel` the range `xsd:string`, so its values in English are reported by
+  `shape:PropertyDatatype` (a warning): either the range is widened in the ontology (e.g. to `rdfs:Literal`, as for
+  `top:name`), or the alternative names of the methods lose their language.
 
 ## IRIs
 

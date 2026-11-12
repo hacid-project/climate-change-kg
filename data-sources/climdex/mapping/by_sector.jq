@@ -29,7 +29,7 @@
         label: {"@id": "rdfs:label", "@language": "en"},
         comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
-        definition: "top:definition",
+        definition: {"@id": "top:definition", "@language": "en"},
         isMemberOf:  {
             "@reverse": "top:hasMember"
         },

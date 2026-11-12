@@ -40,7 +40,7 @@ def to_camel_case:
         label: {"@id": "rdfs:label", "@language": "en"},
         comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
-        Definition: "top:definition",
+        Definition: {"@id": "top:definition", "@language": "en"},
         Unit: {
             "@id": "top:hasUnitOfMeasure",
             "@type": "@id"
