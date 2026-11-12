@@ -19,6 +19,10 @@ import "./mapping/jsonld" as JSONLD;
 #   - region,
 #   - river
 
+# IRI of the area of use of OSGB36, a rectangle of WGS84 (named as the
+# rectangles of the CORDEX domains: lower left and upper right corners)
+def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
+
 {
     "@type": {
         "@id": {
@@ -26,6 +30,7 @@ import "./mapping/jsonld" as JSONLD;
             discretization: "data:adoptsQuantization",
             resolution: "data:hasResolution",
             exact_bounding_region: "data:hasExactBoundingRegion",
+            approximate_bounding_region: "data:hasApproximateBoundingRegion",
             pole: "data:hasReferencePoint",
             point_of: "data:isPointOf",
             region_of: "data:isRegionOf"
@@ -68,7 +73,8 @@ import "./mapping/jsonld" as JSONLD;
                     uom: "https://w3id.org/hacid/data/cs/unitsofmeasure/m"
                 }
             },
-            exact_bounding_region: "georef:OSGB36/coverage"
+            # (as its reference frame: the grid is within its area of use)
+            approximate_bounding_region: osgb_area_of_use
         }
     ),
 
@@ -188,14 +194,19 @@ import "./mapping/jsonld" as JSONLD;
             label: "Ordnance Survey of Great Britain (OSGB)",
             comment: "OSGB is a coordinate reference system for Great Britain.",
             based_on_ds: "dimension:geodetic",
-            exact_bounding_region: {
-                "@id": "georef:OSGB36/coverage",
-                "@type": "data:GeodeticRegion",
-                region_of: "georef:OSGB36",
-                label: "Region covered by the Ordnance Survey of Great Britain (OSGB)",
-                comment: "Area of use of the OSGB36 / British National Grid coordinate reference system (EPSG:27700): Great Britain and the UK continental shelf between 49.75°N and 61.01°N, 9.01°W and 2.01°E, as a rectangle in WGS84 longitude and latitude.",
-                wkt: "POLYGON((-9.01 49.75,-9.01 61.01,2.01 61.01,2.01 49.75,-9.01 49.75))"
-            }
+            approximate_bounding_region: osgb_area_of_use
+        },
+        # The area of use of OSGB36 / British National Grid in the EPSG registry
+        # (EPSG:27700, extent 4390): a rectangle in WGS84 longitude and
+        # latitude, so a region of WGS84, which bounds OSGB36 (defined on
+        # another projection) only approximately
+        {
+            "@id": osgb_area_of_use,
+            "@type": "data:GeodeticRegion",
+            region_of: "georef:WGS84",
+            label: "Rectangular geodetic region -9.01° 49.75° : 2.01° 61.01°",
+            comment: "Rectangular geodetic region comprised between lower left coordinates -9.01° 49.75° and upper right coordinates 2.01° 61.01°: the area of use of the OSGB36 / British National Grid coordinate reference system (EPSG:27700), Great Britain and the UK continental shelf.",
+            wkt: "POLYGON((-9.01 49.75,-9.01 61.01,2.01 61.01,2.01 49.75,-9.01 49.75))"
         },
         ($grids | map(del(.resolution_id) | del(.for_domain)))
     ],

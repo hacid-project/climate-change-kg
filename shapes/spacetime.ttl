@@ -121,11 +121,13 @@ shape:Grid a sh:NodeShape ;
     rdfs:comment """A dimensional space defined on another one (a grid on a reference frame, a reference frame on a
 dimension): what it is based on, its bounding regions and reference points are described as such, and it adopts at
 most one quantization."""@en ;
-    sh:targetSubjectsOf data:basedOnDimensionalSpace , data:adoptsQuantization , data:hasExactBoundingRegion ;
+    sh:targetSubjectsOf data:basedOnDimensionalSpace , data:adoptsQuantization , data:hasExactBoundingRegion ,
+        data:hasApproximateBoundingRegion ;
     sh:class data:DimensionalSpace ;
     sh:property
         shape:Grid-basis ,
         shape:Grid-boundingRegion ,
+        shape:Grid-approximateBoundingRegion ,
         shape:Grid-quantization ,
         shape:Grid-referencePoint ,
         shape:Grid-subspace .
@@ -141,6 +143,12 @@ shape:Grid-boundingRegion a sh:PropertyShape ;
     sh:maxCount 1 ;
     sh:class data:Region ;
     sh:message "A dimensional space has at most one exact bounding region, a data:Region."@en .
+
+shape:Grid-approximateBoundingRegion a sh:PropertyShape ;
+    rdfs:comment "A region that bounds the space only approximately, e.g. one given in the coordinates of another reference frame."@en ;
+    sh:path data:hasApproximateBoundingRegion ;
+    sh:class data:Region ;
+    sh:message "The approximate bounding region of a dimensional space is a data:Region."@en .
 
 shape:Grid-quantization a sh:PropertyShape ;
     sh:path data:adoptsQuantization ;

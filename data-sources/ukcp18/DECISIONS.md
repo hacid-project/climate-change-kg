@@ -300,10 +300,15 @@ extracted for review in `analysis/unmapped-variables.json.gz` (currently none).
 
 ## Spatial grids (`mapping/spatial-grids.jq`)
 
-- **Region covered by OSGB.** The bounding region of the OSGB36 reference frame
-  and of its grids (`.../OSGB36/coverage`) had no geometry (found by the
-  validation, `shape:GeodeticRegion-wkt`). It is the area of use of OSGB36 /
+- **Region covered by OSGB.** The OSGB36 reference frame and its grids had as
+  exact bounding region a region without geometry (found by the validation,
+  `shape:GeodeticRegion-wkt`). The region is now the area of use of OSGB36 /
   British National Grid in the EPSG registry (EPSG:27700, extent 4390):
-  49.75°N to 61.01°N, 9.01°W to 2.01°E, as a closed rectangle in WGS84 longitude
-  and latitude. It is the area where the reference frame is valid, not the
-  extent of the UKCP18 grids, which is not in the metadata of the datasets.
+  49.75°N to 61.01°N, 9.01°W to 2.01°E, a closed rectangle in WGS84 longitude
+  and latitude. As it is given in WGS84 coordinates it is a region of WGS84
+  (`.../WGS84/regions/rectangle/-9.01,49.75:2.01,61.01`, named as the rectangles
+  of the CORDEX domains), and as OSGB36 is defined on another projection it
+  bounds the reference frame and its grids only approximately
+  (`data:hasApproximateBoundingRegion`, not `data:hasExactBoundingRegion`). It
+  is the area where the reference frame is valid, not the extent of the UKCP18
+  grids, which is not in the metadata of the datasets.

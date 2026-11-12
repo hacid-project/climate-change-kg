@@ -174,7 +174,7 @@ All the resources are in the namespace `https://w3id.org/hacid/data/cs/` (below,
 | **Space and time** | | |
 | Dimensions | `dimensions/<dimension>` | `dimensions/time`, `dimensions/geodetic` |
 | Reference frames | `dimensions/<dimension>/reference-frames/<frame>[/<pole>]` | `dimensions/geodetic/reference-frames/rotated-WGS84/-162.0,39.25` |
-| Points, regions | `<frame>/points/<lon>,<lat>`, `<frame>/regions/rectangle/<lon>,<lat>:<lon>,<lat>`, `dimensions/geodetic/all`, `<frame>/coverage` | `dimensions/geodetic/reference-frames/WGS84/points/-162.0,39.25` |
+| Points, regions | `<frame>/points/<lon>,<lat>`, `<frame>/regions/rectangle/<lon>,<lat>:<lon>,<lat>`, `dimensions/geodetic/all` | `dimensions/geodetic/reference-frames/WGS84/points/-162.0,39.25` |
 | Time intervals | `dimensions/time/reference-frames/gregorian/regions/<start>-<end>` | `.../regions/1980-12-01T00:00:00Z-2080-12-01T00:00:00Z` |
 | Quantizations of time | `.../gregorian/quantizations/<type>/<durations>` | `.../quantizations/regular/P1M` |
 | Temporal grids | `<time interval>/quantized/<type>/<durations>` | `.../regions/<start>-<end>/quantized/regular/P1M` |
