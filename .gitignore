@@ -203,3 +203,10 @@ data-sources/cmip5/rdf
 kg/
 .snakemake/
 logs/
+
+# Jekyll (website)
+website/_site/
+website/.sass-cache/
+website/.jekyll-cache/
+website/.bundle/
+website/vendor/

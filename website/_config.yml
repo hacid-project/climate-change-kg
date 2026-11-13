@@ -1,0 +1,10 @@
+title: Climate Change Knowledge Graph
+description: A public knowledge base containing information about a variety of climate change data.
+theme: just-the-docs
+
+url: https://github.com/hacid-project/cckg
+
+just_the_docs:
+
+# aux_links:
+#   Template Repository: https://github.com/just-the-docs/just-the-docs-template
