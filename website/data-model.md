@@ -22,14 +22,14 @@ The ontologies are developed in the [knowledge-graph](https://github.com/hacid-p
 | `top:` | `https://w3id.org/hacid/onto/top-level/` | top-level ontology |
 | `data:` | `https://w3id.org/hacid/onto/data/` | data ontology module |
 | `ccso:` | `https://w3id.org/hacid/onto/ccso/` | climate services ontology |
-| | `https://w3id.org/hacid/data/cs/` | all the instances |
-| `cf:` | `https://w3id.org/hacid/data/cs/variables/cf/` | CF standard variables |
-| `mip:` | `https://w3id.org/hacid/data/cs/variables/mip/` | MIP variables (and, below `mip/<era>/<version>/`, previous variables) |
-| `ukcp:` | `https://w3id.org/hacid/data/cs/variables/ukcp/` | local variables of UKCP18 |
-| `sim:` | `https://w3id.org/hacid/data/cs/simulations/` | simulations and ensembles |
-| `dataset:` | `https://w3id.org/hacid/data/cs/datasets/` | CMIP5 and CORDEX-CMIP5 datasets and outputs |
-| `rcp:` | `https://w3id.org/hacid/data/cs/scenarios/RCP/` | RCP scenarios |
-| `dimension:` | `https://w3id.org/hacid/data/cs/dimensions/` | dimensional spaces (time, geodetic, ...) |
+| | `https://w3id.org/climate-change-kg/data/` | all the instances |
+| `cf:` | `https://w3id.org/climate-change-kg/data/variables/cf/` | CF standard variables |
+| `mip:` | `https://w3id.org/climate-change-kg/data/variables/mip/` | MIP variables (and, below `mip/<era>/<version>/`, previous variables) |
+| `ukcp:` | `https://w3id.org/climate-change-kg/data/variables/ukcp/` | local variables of UKCP18 |
+| `sim:` | `https://w3id.org/climate-change-kg/data/simulations/` | simulations and ensembles |
+| `dataset:` | `https://w3id.org/climate-change-kg/data/datasets/` | CMIP5 and CORDEX-CMIP5 datasets and outputs |
+| `rcp:` | `https://w3id.org/climate-change-kg/data/scenarios/RCP/` | RCP scenarios |
+| `dimension:` | `https://w3id.org/climate-change-kg/data/dimensions/` | dimensional spaces (time, geodetic, ...) |
 
 ## Main patterns
 
@@ -44,7 +44,7 @@ Other relations among variables are:
 - `data:isAnomalyOf`, for an anomaly with respect to a baseline period (`data:hasBaselineRegion`), either a `data:AbsoluteAnomaly` or a `data:RelativeAnomaly` (a percentage change);
 - `data:isProbabilisticRepresentationOf`, for the representation of the probability distribution of a variable, as a `data:ProbabilityDensityFunction`, a `data:QuantileFunction` (the values at given percentiles) or a `data:Sample`.
 
-Variables are grouped in collections (`top:isMemberOf`), e.g., `https://w3id.org/hacid/data/cs/variables/cf`, `.../variables/mip`, `.../climdex/indices`.
+Variables are grouped in collections (`top:isMemberOf`), e.g., `https://w3id.org/climate-change-kg/data/variables/cf`, `.../variables/mip`, `.../climdex/indices`.
 
 ### Dimensional spaces and quantisations
 

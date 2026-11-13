@@ -35,7 +35,7 @@ Overall, the knowledge graph has about 5.3 million triples (without inferred one
 ## Climate variables, indices and hazards
 
 - **Standard variables.** All the standard names of the [CF Metadata Conventions](https://cfconventions.org/) (version 95 of the table), with their description and units of measure. The aliases of the table are alternative names of the variables they stand for.
-- **MIP variables.** The variables of the current edition of the CMOR tables (CMIP6Plus), one for each output name, as specialisations of the CF variables (`data:isSpecializationOfVariable`). Earlier editions of the CMOR tables (CMIP5 and CMIP6) sometimes define a variable with the same name in other units, with the opposite sign or as another quantity: such definitions are kept as distinct *previous variables* (e.g., [the CMIP5 `tos`, in K](https://w3id.org/hacid/data/cs/variables/mip/cmip6/6.0.19/tos)), linked to the current variable by `data:isLinearTransformationOf` (change of units) or `data:hasOppositeValueOf` (change of sign). The variables of the datasets of all the projects are resolved to these variables from their definitions, not just their names.
+- **MIP variables.** The variables of the current edition of the CMOR tables (CMIP6Plus), one for each output name, as specialisations of the CF variables (`data:isSpecializationOfVariable`). Earlier editions of the CMOR tables (CMIP5 and CMIP6) sometimes define a variable with the same name in other units, with the opposite sign or as another quantity: such definitions are kept as distinct *previous variables* (e.g., [the CMIP5 `tos`, in K](https://w3id.org/climate-change-kg/data/variables/mip/cmip6/6.0.19/tos)), linked to the current variable by `data:isLinearTransformationOf` (change of units) or `data:hasOppositeValueOf` (change of sign). The variables of the datasets of all the projects are resolved to these variables from their definitions, not just their names.
 - **Local variables.** The variables of the datasets that are not in the CMOR tables are defined locally: for CMIP5, a few variables of single models (e.g., the CanESM2 `orograw`); for CORDEX-CMIP5, the variables of the CORDEX standard output at single pressure or height levels (e.g., `ta200`, `ua50m`) and some variables of single models; for UKCP18, 160 variables, including anomalies, return levels and representations of probability distributions (see below).
 - **Climate indices.** The indices of [Climdex](https://www.climdex.org/) (which extend the [ETCCDI indices](https://etccdi.pacificclimate.org/list_27_indices.shtml)), with their definition, the variable they are computed from and the suggested time granularities, classified by sector; and the indices of ETCCDI, [Climate-ADAPT](https://climate-adapt.eea.europa.eu/), [Copernicus C3S](https://climate.copernicus.eu/) and the [UK Climate Risk Indicators](https://uk-cri.org/), curated in the project, with the equivalences among indices of different catalogues.
 - **Hazard types.** A hierarchy of climate hazard types, based mostly on the [Hazard Information Profiles](https://www.preventionweb.net/drr-glossary/hips) of UNDRR, each linked to the indices that are indicators of it (`ccso:hasIndicator`).
@@ -60,17 +60,17 @@ Each source is loaded in its own named graph; the default graph of the SPARQL en
 | Named graph | Content | Triples |
 |:------------|:--------|--------:|
 | `https://w3id.org/hacid/onto/top-level`, `.../onto/data`, `.../onto/ccso` | the ontologies | 3,188 |
-| `https://w3id.org/hacid/data/cs` | collections, dimensions, scenarios, global warming levels | 202 |
-| `https://w3id.org/hacid/data/cs/cf` | CF standard names | 31,577 |
-| `https://w3id.org/hacid/data/cs/cmor-tables` | MIP variables and previous variables | 16,741 |
-| `https://w3id.org/hacid/data/cs/climdex` | Climdex indices and sectors | 1,549 |
-| `https://w3id.org/hacid/data/cs/mohc-cvs` | indices, hazards, operations and methods curated in HACID | 2,686 |
-| `https://w3id.org/hacid/data/cs/cmip5/cvs` | CMIP5 experiments and institutions | 693 |
-| `https://w3id.org/hacid/data/cs/cmip5/datasets` | CMIP5 datasets | 285,746 |
-| `https://w3id.org/hacid/data/cs/cordex/cvs` | CORDEX domains, grids and regional models | 1,555 |
-| `https://w3id.org/hacid/data/cs/cordex-cmip5/datasets` | CORDEX-CMIP5 datasets | 1,608,019 |
-| `https://w3id.org/hacid/data/cs/ukcp18` | UKCP18 datasets | 3,322,315 |
-| `https://w3id.org/hacid/data/cs/indices`, `.../cs/variables` | collections merged by the consolidation | 1,658 |
+| `https://w3id.org/climate-change-kg/data` | collections, dimensions, scenarios, global warming levels | 202 |
+| `https://w3id.org/climate-change-kg/data/cf` | CF standard names | 31,577 |
+| `https://w3id.org/climate-change-kg/data/cmor-tables` | MIP variables and previous variables | 16,741 |
+| `https://w3id.org/climate-change-kg/data/climdex` | Climdex indices and sectors | 1,549 |
+| `https://w3id.org/climate-change-kg/data/mohc-cvs` | indices, hazards, operations and methods curated in HACID | 2,686 |
+| `https://w3id.org/climate-change-kg/data/cmip5/cvs` | CMIP5 experiments and institutions | 693 |
+| `https://w3id.org/climate-change-kg/data/cmip5/datasets` | CMIP5 datasets | 285,746 |
+| `https://w3id.org/climate-change-kg/data/cordex/cvs` | CORDEX domains, grids and regional models | 1,555 |
+| `https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets` | CORDEX-CMIP5 datasets | 1,608,019 |
+| `https://w3id.org/climate-change-kg/data/ukcp18` | UKCP18 datasets | 3,322,315 |
+| `https://w3id.org/climate-change-kg/data/indices`, `.../cs/variables` | collections merged by the consolidation | 1,658 |
 
 ## Decisions on the sources
 
