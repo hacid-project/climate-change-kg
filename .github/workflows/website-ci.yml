@@ -3,9 +3,9 @@ name: Website CI
 on:
   push:
     branches: ["main"]
-    paths: ["website/**", ".github/workflows/website-*.yml"]
+    paths: ["website/**", "shapes/*.ttl", ".github/workflows/website-*.yml"]
   pull_request:
-    paths: ["website/**", ".github/workflows/website-ci.yml"]
+    paths: ["website/**", "shapes/*.ttl", ".github/workflows/website-ci.yml"]
 
 jobs:
   # Build job
@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+      - name: Collect the SHACL shapes
+        run: website/collect-shapes.sh
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:

@@ -210,3 +210,6 @@ website/.sass-cache/
 website/.jekyll-cache/
 website/.bundle/
 website/vendor/
+
+# Copied from /shapes by website/collect-shapes.sh
+/website/shapes/

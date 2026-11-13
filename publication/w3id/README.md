@@ -22,3 +22,12 @@ two branches of the fork [miguel76/w3id.org](https://github.com/miguel76/w3id.or
 
 The linked data front end and the SPARQL endpoint have to serve a build of the KG with the new IRIs for the new IRIs
 to be described.
+
+## Shapes
+
+The SHACL shapes of the KG (`shapes/`) are published at `https://w3id.org/climate-change-kg/shapes` (the shapes are in
+the namespace `https://w3id.org/climate-change-kg/shapes/`). The website workflow (`website/collect-shapes.sh`) copies
+them, with the combined `shapes.ttl`, to the `shapes/` folder of the GitHub Pages site, next to the landing page
+(`website/shapes.md`). The redirect rules, content negotiation between the Turtle file and the landing page, are drafted
+in [`shapes.htaccess`](shapes.htaccess), to add to `ids/climate-change-kg/.htaccess` in the pull request of the
+identifier.
