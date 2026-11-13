@@ -53,7 +53,7 @@ Open-Ended Decision Making)."""@en ;
         "climate model simulations"@en , "climate variables"@en , "climate indices"@en , "CMIP5"@en , "CORDEX"@en , "UKCP18"@en ;
     dcat:landingPage <https://w3id.org/climate-change-kg> ;
     dcat:distribution <kg/distributions/nquads> ;
-    dcterms:conformsTo <shapes> ;
+    dcterms:conformsTo <https://w3id.org/climate-change-kg/shapes> ;
     void:feature <http://www.w3.org/ns/formats/N-Quads> ;
     void:uriSpace "https://w3id.org/climate-change-kg/data/" ;
     void:vocabulary <https://w3id.org/hacid/onto/top-level/> , <https://w3id.org/hacid/onto/data/> , <https://w3id.org/hacid/onto/ccso/> ;
@@ -68,7 +68,7 @@ Open-Ended Decision Making)."""@en ;
     dcat:compressFormat <https://www.iana.org/assignments/media-types/application/gzip> ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> .
 
-<shapes> a dcterms:Standard ;
+<https://w3id.org/climate-change-kg/shapes> a dcterms:Standard ;
     dcterms:title "SHACL shapes of the Climate Change Knowledge Graph"@en ;
     dcat:landingPage <https://w3id.org/climate-change-kg/shapes> .
 

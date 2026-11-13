@@ -16,7 +16,7 @@
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix top:   <https://w3id.org/hacid/onto/top-level/> .
-@prefix shape: <https://w3id.org/climate-change-kg/data/shapes/> .
+@prefix shape: <https://w3id.org/climate-change-kg/shapes/> .
 
 shape:prefixes a owl:Ontology ;
     rdfs:label "Prefixes of the SPARQL-based shapes"@en ;
