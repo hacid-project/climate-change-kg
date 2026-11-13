@@ -8,5 +8,5 @@ The Climate Change Knowledge Graph is a public knowledge base containing informa
 
 It is accessible through standard semantic APIs: a SPARQL endpoint allowing to query the underlying data, linked data access to navigate the graph resources one at a time, and dumps of all the knowledge graph for off-line usage.
 
-The resource has been produced and is maintained in the context of the European project [Hybrid Human Artificial Collective Intelligence
-in Open-Ended Domains (HACID)](https://www.hacid-project.eu/).
+The resource was first developed in the European project [Hybrid Human Artificial Collective Intelligence
+in Open-Ended Domains (HACID)](https://www.hacid-project.eu/), as its knowledge graph for climate services, and is maintained by the [Institute for Cognitive Sciences and Technologies (ISTC) of CNR, Italy](https://www.istc.cnr.it/).

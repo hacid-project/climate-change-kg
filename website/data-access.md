@@ -10,25 +10,29 @@ The data can be accessed in multiple ways. The data are open, published under [C
 
 ## Query the SPARQL Endpoint
 
-A public SPARQL endpoint is available at [w3id.org/hacid/cs/sparql](https://w3id.org/hacid/cs/sparql).
+A public SPARQL endpoint is available at [w3id.org/climate-change-kg/sparql](https://w3id.org/climate-change-kg/sparql).
 It can be queried both programmatically and via browser using the user interface available at the same URL.
 
 You can start by checking the [example queries](example-queries).
+
+## Namespace
+
+The resources of the knowledge graph are in the namespace `https://w3id.org/climate-change-kg/data/`. Until November 2026 the namespace was `https://w3id.org/hacid/data/cs/` (and the endpoint `https://w3id.org/hacid/cs/sparql`): the old URIs redirect to the new ones. The ontologies keep their namespaces (`https://w3id.org/hacid/onto/`).
 
 ## Navigate as Linked Data
 
 All the URIs used in the knowledge graph can be dereferenced, either programmatically or via browser, in order to get information on that resource (namely, all triples having such resource as subject or object). This allows to navigate the knowledge graph going from one resource to another.
 
 Example resource URIs:
-- [air_temperature (CF variable)](https://w3id.org/hacid/data/cs/variables/cf/air_temperature);
-- [tasmax (MIP variable)](https://w3id.org/hacid/data/cs/variables/mip/tasmax);
-- [WSDI (Warm Spell Duration Indicator)](https://w3id.org/hacid/data/cs/climdex/indices/WSDI);
-- [HadCM3 (global climate model maintained by the MetOffice, UK)](https://w3id.org/hacid/data/cs/models/HadCM3);
-- [CMIP5 global simulation using the model HadCM3 for the RCP4.5 scenario (realization 1)](https://w3id.org/hacid/data/cs/simulations/cmip5.HadCM3.rcp45.r1i1p1);
-- [CORDEX regional downscaling for south-america considering the RCP8.5 scenario, using the model CanESM2 for the global simulation and the model WRF341I for downscaling](https://w3id.org/hacid/data/cs/simulations/cordex.SAM-44.CanESM2.rcp85.WRF341I.v2.r1i1p1);
-- [HadREM3-RA11M (convection-permitting model of the MetOffice, UK, used by the UKCP18 local projections)](https://w3id.org/hacid/data/cs/models/HadREM3-RA11M);
-- [anomaly of the near-surface air temperature with respect to 1981-2000 (UKCP18 variable)](https://w3id.org/hacid/data/cs/variables/ukcp/tasAnom/1981-2000);
-- [the CMIP5 definition of tos, in K, kept as a previous MIP variable](https://w3id.org/hacid/data/cs/variables/mip/cmip6/6.0.19/tos).
+- [air_temperature (CF variable)](https://w3id.org/climate-change-kg/data/variables/cf/air_temperature);
+- [tasmax (MIP variable)](https://w3id.org/climate-change-kg/data/variables/mip/tasmax);
+- [WSDI (Warm Spell Duration Indicator)](https://w3id.org/climate-change-kg/data/climdex/indices/WSDI);
+- [HadCM3 (global climate model maintained by the MetOffice, UK)](https://w3id.org/climate-change-kg/data/models/HadCM3);
+- [CMIP5 global simulation using the model HadCM3 for the RCP4.5 scenario (realization 1)](https://w3id.org/climate-change-kg/data/simulations/cmip5.HadCM3.rcp45.r1i1p1);
+- [CORDEX regional downscaling for south-america considering the RCP8.5 scenario, using the model CanESM2 for the global simulation and the model WRF341I for downscaling](https://w3id.org/climate-change-kg/data/simulations/cordex.SAM-44.CanESM2.rcp85.WRF341I.v2.r1i1p1);
+- [HadREM3-RA11M (convection-permitting model of the MetOffice, UK, used by the UKCP18 local projections)](https://w3id.org/climate-change-kg/data/models/HadREM3-RA11M);
+- [anomaly of the near-surface air temperature with respect to 1981-2000 (UKCP18 variable)](https://w3id.org/climate-change-kg/data/variables/ukcp/tasAnom/1981-2000);
+- [the CMIP5 definition of tos, in K, kept as a previous MIP variable](https://w3id.org/climate-change-kg/data/variables/mip/cmip6/6.0.19/tos).
 
 ## Download the Dumps
 
@@ -41,15 +45,15 @@ The data of each source are in their own named graph, while the default graph of
 | Named graph | Content |
 |:------------|:--------|
 | `https://w3id.org/hacid/onto/top-level`, `https://w3id.org/hacid/onto/data`, `https://w3id.org/hacid/onto/ccso` | the ontologies |
-| `https://w3id.org/hacid/data/cs` | scenarios, global warming levels, dimensions, collections |
-| `https://w3id.org/hacid/data/cs/cf` | CF standard variables |
-| `https://w3id.org/hacid/data/cs/cmor-tables` | MIP variables |
-| `https://w3id.org/hacid/data/cs/climdex` | Climdex indices |
-| `https://w3id.org/hacid/data/cs/mohc-cvs` | other indices, hazard types, climate service operations and methods |
-| `https://w3id.org/hacid/data/cs/cmip5/cvs`, `https://w3id.org/hacid/data/cs/cmip5/datasets` | CMIP5 experiments, institutions, models, simulations and datasets |
-| `https://w3id.org/hacid/data/cs/cordex/cvs`, `https://w3id.org/hacid/data/cs/cordex-cmip5/datasets` | CORDEX domains, regional models, simulations and datasets |
-| `https://w3id.org/hacid/data/cs/ukcp18` | UKCP18 models, simulations and datasets |
-| `https://w3id.org/hacid/data/cs/indices`, `https://w3id.org/hacid/data/cs/variables` | collections of all the indices and variables |
+| `https://w3id.org/climate-change-kg/data` | scenarios, global warming levels, dimensions, collections |
+| `https://w3id.org/climate-change-kg/data/cf` | CF standard variables |
+| `https://w3id.org/climate-change-kg/data/cmor-tables` | MIP variables |
+| `https://w3id.org/climate-change-kg/data/climdex` | Climdex indices |
+| `https://w3id.org/climate-change-kg/data/mohc-cvs` | other indices, hazard types, climate service operations and methods |
+| `https://w3id.org/climate-change-kg/data/cmip5/cvs`, `https://w3id.org/climate-change-kg/data/cmip5/datasets` | CMIP5 experiments, institutions, models, simulations and datasets |
+| `https://w3id.org/climate-change-kg/data/cordex/cvs`, `https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets` | CORDEX domains, regional models, simulations and datasets |
+| `https://w3id.org/climate-change-kg/data/ukcp18` | UKCP18 models, simulations and datasets |
+| `https://w3id.org/climate-change-kg/data/indices`, `https://w3id.org/climate-change-kg/data/variables` | collections of all the indices and variables |
 
 ## Build the Knowledge Graph
 
