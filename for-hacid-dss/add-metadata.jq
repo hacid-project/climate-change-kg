@@ -15,7 +15,7 @@ walk(
     if type == "object" and .Label then
         .Label as $task_label |
         if $task_label | in($excluded_ops) then empty end |
-        "https://w3id.org/cckg/data/wf/ops/\(."@id" | .[4:])" as $task_uri |
+        "https://w3id.org/climate-change-kg/data/wf/ops/\(."@id" | .[4:])" as $task_uri |
         $METADATA[0].[$task_label] as $task_metadata |
         {
             $task_label,
@@ -55,10 +55,10 @@ walk(
     # {
     #     "task_label": "Task - Optional Duration Range",
     #     "task_description": "The task of looking for additional information from existing literature.",
-    #     "task_uri": "https://w3id.org/cckg/data/wf/ops/PerformLiteratureReview",
+    #     "task_uri": "https://w3id.org/climate-change-kg/data/wf/ops/PerformLiteratureReview",
     #     "children": [],
     #     "parent_task_label": "Search additional Information",
-    #     "parent_task_uri": "https://w3id.org/cckg/data/wf/ops/SearchAdditionalInformation",
+    #     "parent_task_uri": "https://w3id.org/climate-change-kg/data/wf/ops/SearchAdditionalInformation",
     #     "data": "duration_range",
     #     "metadata": {
     #         "gui_label": "Select temporal resolution",

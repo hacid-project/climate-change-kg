@@ -3,7 +3,7 @@
 
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix top: <https://w3id.org/hacid/onto/top-level/> .
-@base <https://w3id.org/cckg/data/> .
+@base <https://w3id.org/climate-change-kg/data/> .
 
 <person/miguel-ceriani> a top:Person ;
     rdfs:label "Miguel Ceriani" ;

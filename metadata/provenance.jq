@@ -28,7 +28,7 @@ def git_source($id; $repo; $ref):
 "https://github.com/hacid-project/climate-services-kg" as $workflow
 | {
   "@context": {
-    "@base": "https://w3id.org/cckg/data/",
+    "@base": "https://w3id.org/climate-change-kg/data/",
     "dcterms": "http://purl.org/dc/terms/",
     "dcat": "http://www.w3.org/ns/dcat#",
     "void": "http://rdfs.org/ns/void#",

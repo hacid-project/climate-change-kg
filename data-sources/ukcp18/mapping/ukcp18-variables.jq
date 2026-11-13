@@ -1,5 +1,5 @@
 # Variables of the UKCP18 datasets: the local variables
-# (https://w3id.org/cckg/data/variables/ukcp/...), generated from their
+# (https://w3id.org/climate-change-kg/data/variables/ukcp/...), generated from their
 # specification in mapping/ukcp-variables.json (see DECISIONS.md), and
 # otherwise the MIP variables resolved through
 # data-sources/cmor-tables/mapping/mip-mapping.json (the modules of
@@ -12,7 +12,7 @@ import "./mapping/ukcp18-time" as UKCP18_TIME;
 
 def _spec: $UKCP_VARIABLES::UKCP_VARIABLES[0];
 
-def _ukcp_variables_base: "https://w3id.org/cckg/data/variables/ukcp/";
+def _ukcp_variables_base: "https://w3id.org/climate-change-kg/data/variables/ukcp/";
 
 # IRI of a local variable (input: its path, e.g. ["tasAnom", "1981-2000"])
 def _local_iri: _ukcp_variables_base + (map(@uri) | join("/"));
@@ -140,7 +140,7 @@ def _variable_renames:
         "subsurface_runoff_flux": "mrrob"
     };
 
-def _ukcp_variables_collection: "https://w3id.org/cckg/data/variables/ukcp";
+def _ukcp_variables_collection: "https://w3id.org/climate-change-kg/data/variables/ukcp";
 
 # The MIP variable of a dataset (input: its metadata): the MIP variable of its
 # name in the CMIP5 era (UKCP18 is based on CMIP5 models), with its units and,
@@ -248,7 +248,7 @@ def variable_key: [.variable, .units, .cmip5_table_id, .collection, .return_peri
 # Nodes of the local variables (generated from mapping/ukcp-variables.json), with the terms of
 # the context of variables.jq; and the nodes of their units and baseline periods
 def ukcp_variable_nodes:
-    def unit: "https://w3id.org/cckg/data/unitsofmeasure/\(@uri)";
+    def unit: "https://w3id.org/climate-change-kg/data/unitsofmeasure/\(@uri)";
     [
         _local_variables[] |
         (.baseline | if . then UKCP18_TIME::str_to_interval else null end) as $baseline |
@@ -275,6 +275,6 @@ def ukcp_variable_nodes:
         map({
             "@id": .,
             "@type": ["top:UnitOfMeasure", "data:DimensionalSpace"],
-            "rdfs:label": (ltrimstr("https://w3id.org/cckg/data/unitsofmeasure/") | @urid)
+            "rdfs:label": (ltrimstr("https://w3id.org/climate-change-kg/data/unitsofmeasure/") | @urid)
         })
     );

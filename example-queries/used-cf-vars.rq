@@ -1,6 +1,6 @@
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
-PREFIX dimension: <https://w3id.org/cckg/data/dimensions/>
+PREFIX dimension: <https://w3id.org/climate-change-kg/data/dimensions/>
 
 # Get 2nd level variables (CF) used in simulations
 

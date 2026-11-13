@@ -4,7 +4,7 @@
 # class and by property, of the whole KG and of each named graph.
 #
 # The description of the named graph <g> is the void:Dataset <g#graph>. The
-# graph of the metadata itself (<https://w3id.org/cckg/data/kg>) is left
+# graph of the metadata itself (<https://w3id.org/climate-change-kg/data/kg>) is left
 # out, so that the statistics do not depend on a previous build.
 #
 # Run on the TDB2 dataset (rule metadata_statistics).
@@ -13,7 +13,7 @@ PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 PREFIX void: <http://rdfs.org/ns/void#>
 PREFIX sd:   <http://www.w3.org/ns/sparql-service-description#>
-PREFIX kg:   <https://w3id.org/cckg/data/kg>
+PREFIX kg:   <https://w3id.org/climate-change-kg/data/kg>
 
 CONSTRUCT {
     kg: a sd:Dataset ;

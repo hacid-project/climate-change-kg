@@ -2,7 +2,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
 PREFIX jdg: <https://w3id.org/hacid/onto/core/judgement/>
-PREFIX contribs: <https://w3id.org/cckg/data/dss/contributions/>
+PREFIX contribs: <https://w3id.org/climate-change-kg/data/dss/contributions/>
 
 select * where {
   	?rating jdg:isJudgementOn contribs:40;

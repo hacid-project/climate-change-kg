@@ -1,4 +1,4 @@
-@prefix : <https://w3id.org/cckg/data/> .
+@prefix : <https://w3id.org/climate-change-kg/data/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -7,10 +7,10 @@
 @prefix top: <https://w3id.org/hacid/onto/top-level/> .
 @prefix ccso: <https://w3id.org/hacid/onto/ccso/> .
 @prefix data: <https://w3id.org/hacid/onto/data/> .
-@prefix dimension: <https://w3id.org/cckg/data/dimensions/> .
-@prefix time: <https://w3id.org/cckg/data/dimensions/time/reference-frames/> .
-@prefix geodetic: <https://w3id.org/cckg/data/dimensions/geodetic/reference-frames/> .
-@base <https://w3id.org/cckg/data/> .
+@prefix dimension: <https://w3id.org/climate-change-kg/data/dimensions/> .
+@prefix time: <https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/> .
+@prefix geodetic: <https://w3id.org/climate-change-kg/data/dimensions/geodetic/reference-frames/> .
+@base <https://w3id.org/climate-change-kg/data/> .
 
 <mips/cmip> a top:Action ;
     rdfs:label "CMIP";

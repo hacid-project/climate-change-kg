@@ -4,7 +4,7 @@ PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/> 
 
 select ?role ?item_class (COUNT(DISTINCT ?instance) AS ?num_instances) where {
-    <https://w3id.org/cckg/data/wf/ops/HandleCase> top:isSpecializedBy ?op.
+    <https://w3id.org/climate-change-kg/data/wf/ops/HandleCase> top:isSpecializedBy ?op.
     ?op top:definesRole $role.
     OPTIONAL{
         $role top:hasExpectedType ?expected_type.

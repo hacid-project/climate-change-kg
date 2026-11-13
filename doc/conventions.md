@@ -3,7 +3,7 @@
 This document records the conventions followed by the mappings for the text properties of the resources
 (`rdfs:label`, `top:acronym`, `rdfs:comment`) and for their IRIs, as found in the consolidated KG, together with the
 variations and the open cases left for a future review. It describes the data graphs (namespace
-`https://w3id.org/cckg/data/`), not the ontologies, which are loaded as published.
+`https://w3id.org/climate-change-kg/data/`), not the ontologies, which are loaded as published.
 
 ## Text properties
 
@@ -129,7 +129,7 @@ Open cases:
 
 ## IRIs
 
-All the resources are in the namespace `https://w3id.org/cckg/data/` (below, IRIs are relative to it), with
+All the resources are in the namespace `https://w3id.org/climate-change-kg/data/` (below, IRIs are relative to it), with
 `/` as the only separator: there are no fragment identifiers but in the metadata of the KG (`<graph>#graph`, see
 `metadata/kg.ttl`). The local names are percent-encoded by the mappings (`@uri` in jq).
 

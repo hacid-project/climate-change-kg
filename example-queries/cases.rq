@@ -1,5 +1,5 @@
 PREFIX top: <https://w3id.org/hacid/onto/top-level/> 
-PREFIX wf: <https://w3id.org/cckg/data/wf/>
+PREFIX wf: <https://w3id.org/climate-change-kg/data/wf/>
 
 # Return all climate cases (executions of the climate process wf) in the KG
 

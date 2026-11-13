@@ -9,7 +9,7 @@
 @prefix geo:   <http://www.opengis.net/ont/geosparql#> .
 @prefix top:   <https://w3id.org/hacid/onto/top-level/> .
 @prefix data:  <https://w3id.org/hacid/onto/data/> .
-@prefix shape: <https://w3id.org/cckg/data/shapes/> .
+@prefix shape: <https://w3id.org/climate-change-kg/data/shapes/> .
 
 
 shape:TemporalRegion a sh:NodeShape ;

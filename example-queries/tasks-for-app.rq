@@ -1,7 +1,7 @@
-BASE <https://w3id.org/cckg/data/wf/>
+BASE <https://w3id.org/climate-change-kg/data/wf/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/>
-PREFIX wf: <https://w3id.org/cckg/data/wf/>
+PREFIX wf: <https://w3id.org/climate-change-kg/data/wf/>
 PREFIX info_prep_task: <plans/ClimateInformationStudyPlan/tasks/ClimateInformationPreparation>
 PREFIX data_sel_task: <plans/ClimateDataCollectionPlan/tasks/BaseClimateProjectionSelection>
 PREFIX method_role: <app-profile/roles/Method>

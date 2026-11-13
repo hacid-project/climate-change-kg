@@ -28,8 +28,8 @@
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix dqv:     <http://www.w3.org/ns/dqv#> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
-@prefix quality: <https://w3id.org/cckg/data/kg/quality/> .
-@base <https://w3id.org/cckg/data/> .
+@prefix quality: <https://w3id.org/climate-change-kg/data/kg/quality/> .
+@base <https://w3id.org/climate-change-kg/data/> .
 
 
 # --- The knowledge graph
@@ -55,7 +55,7 @@ Open-Ended Decision Making)."""@en ;
     dcat:distribution <kg/distributions/nquads> ;
     dcterms:conformsTo <shapes> ;
     void:feature <http://www.w3.org/ns/formats/N-Quads> ;
-    void:uriSpace "https://w3id.org/cckg/data/" ;
+    void:uriSpace "https://w3id.org/climate-change-kg/data/" ;
     void:vocabulary <https://w3id.org/hacid/onto/top-level/> , <https://w3id.org/hacid/onto/data/> , <https://w3id.org/hacid/onto/ccso/> ;
     void:exampleResource <variables/mip/tas> , <models/HadGEM2-ES> , <scenarios/RCP/RCP8.5> ,
         <simulations/cmip5.HadGEM2-ES.rcp85.r1i1p1> .
@@ -99,7 +99,7 @@ Open-Ended Decision Making)."""@en ;
     dcterms:description "The Core Climate Services Ontology: climate models, simulations, projections, scenarios, hazards."@en ;
     prov:wasDerivedFrom <sources/ontologies> .
 
-<https://w3id.org/cckg/data#graph> a void:Dataset ;
+<https://w3id.org/climate-change-kg/data#graph> a void:Dataset ;
     dcterms:title "Common entities"@en ;
     dcterms:description "Entities shared by the sources, written by hand: space and time dimensions and their reference frames, collections, model intercomparison projects, emission scenarios (RCP, SSP) and global warming levels."@en .
 

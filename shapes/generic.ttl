@@ -16,7 +16,7 @@
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 @prefix top:   <https://w3id.org/hacid/onto/top-level/> .
-@prefix shape: <https://w3id.org/cckg/data/shapes/> .
+@prefix shape: <https://w3id.org/climate-change-kg/data/shapes/> .
 
 shape:prefixes a owl:Ontology ;
     rdfs:label "Prefixes of the SPARQL-based shapes"@en ;
@@ -31,7 +31,7 @@ shape:prefixes a owl:Ontology ;
 
 shape:Resource a sh:NodeShape ;
     rdfs:label "Resource of the KG"@en ;
-    rdfs:comment """Every IRI in the namespace of the KG (https://w3id.org/cckg/data/), used as subject or as
+    rdfs:comment """Every IRI in the namespace of the KG (https://w3id.org/climate-change-kg/data/), used as subject or as
 object of a triple, is described: it has at least one type. An untyped resource is either a dangling reference (an IRI
 minted by a mapping for something no mapping describes) or a malformed IRI."""@en ;
     sh:target [
@@ -40,7 +40,7 @@ minted by a mapping for something no mapping describes) or a malformed IRI."""@e
         sh:select """
             SELECT DISTINCT ?this WHERE {
                 { ?this ?p ?o } UNION { ?s ?p ?this }
-                FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/cckg/data/"))
+                FILTER (isIRI(?this) && STRSTARTS(STR(?this), "https://w3id.org/climate-change-kg/data/"))
             }""" ;
     ] ;
     sh:property shape:Resource-type , shape:Resource-label , shape:Resource-acronym , shape:Resource-comment ,
