@@ -1,7 +1,0 @@
-# To be added to hacid/.htaccess of perma-id/w3id.org, BEFORE the existing
-# rules for data/ and cs/sparql: the climate services KG of HACID is now the
-# Climate Change Knowledge Graph, in its own namespace.
-
-RewriteRule ^cs/sparql/?$ https://w3id.org/climate-change-kg/sparql [R=301,NE,L]
-RewriteRule ^data/cs$ https://w3id.org/climate-change-kg/data [R=301,NE,L]
-RewriteRule ^data/cs/(.*)$ https://w3id.org/climate-change-kg/data/$1 [R=301,NE,L]

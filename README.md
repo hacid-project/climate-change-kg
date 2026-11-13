@@ -6,7 +6,7 @@ first developed, as the climate services knowledge graph, in the European projec
 [HACID](https://www.hacid-project.eu/).
 
 The resources of the KG are in the namespace `https://w3id.org/climate-change-kg/data/` (until November 2026
-`https://w3id.org/hacid/data/cs/`, whose IRIs redirect to the new ones: see [`publication/w3id/`](publication/w3id/)).
+`https://w3id.org/hacid/data/cs/`, whose IRIs are to redirect to the new ones: see [`publication/w3id/`](publication/w3id/)).
 The ontologies keep their HACID namespaces (`https://w3id.org/hacid/onto/`).
 
 ## Snakemake workflow
