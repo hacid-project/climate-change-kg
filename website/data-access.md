@@ -57,6 +57,6 @@ The data of each source are in their own named graph, while the default graph of
 
 ## Build the Knowledge Graph
 
-The knowledge graph can also be rebuilt from its sources with the [ingestion workflow](https://github.com/hacid-project/climate-services-kg) (a [Snakemake](https://snakemake.github.io/) workflow, with the mappings written in jq): every source is taken at a fixed version, so the same inputs give the same graph.
+The knowledge graph can also be rebuilt from its sources with the [ingestion workflow](https://github.com/hacid-project/climate-change-kg) (a [Snakemake](https://snakemake.github.io/) workflow, with the mappings written in jq): every source is taken at a fixed version, so the same inputs give the same graph.
 The workflow loads the mapped sources into an [Apache Jena](https://jena.apache.org/) TDB2 dataset, applies the consolidation updates and exports the dataset as N-Quads; the dataset can then be queried locally with Fuseki.
 Note that the local endpoint applies no inference: the [example queries](example-queries) that rely on subclasses, subproperties or inverse properties (see [Data Model](data-model#inference)) need an endpoint with inference.

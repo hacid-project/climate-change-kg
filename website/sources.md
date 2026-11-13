@@ -11,7 +11,7 @@ This page gives the technical details of how each data source is integrated in t
 
 Every source is taken at a fixed version (a release, a git commit or a snapshot published on Zenodo), so that each version of the knowledge graph can be rebuilt from the same inputs.
 
-The figures below refer to the current build of the knowledge graph, made by the [ingestion workflow](https://github.com/hacid-project/climate-services-kg) from the inputs listed for each source.
+The figures below refer to the current build of the knowledge graph, made by the [ingestion workflow](https://github.com/hacid-project/climate-change-kg) from the inputs listed for each source.
 
 ## Overview
 
@@ -74,4 +74,4 @@ Each source is loaded in its own named graph; the default graph of the SPARQL en
 
 ## Decisions on the sources
 
-The issues, inconsistencies and conflicting versions found in each source, and the decisions taken on them (including the cases left for further analysis), are documented with the source in the [ingestion repository](https://github.com/hacid-project/climate-services-kg) (`data-sources/<source>/DECISIONS.md`).
+The issues, inconsistencies and conflicting versions found in each source, and the decisions taken on them (including the cases left for further analysis), are documented with the source in the [ingestion repository](https://github.com/hacid-project/climate-change-kg) (`data-sources/<source>/DECISIONS.md`).

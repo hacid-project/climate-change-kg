@@ -1,6 +1,6 @@
 # Requirements log: declarative dataflow for KG construction
 
-Pipeline: `hacid-project/climate-services-kg` (CCKG population). Started: 2026-10-19.
+Pipeline: `hacid-project/climate-change-kg` (CCKG population). Started: 2026-10-19.
 
 ## Categories (fixed)
 

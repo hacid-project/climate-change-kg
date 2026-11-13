@@ -51,7 +51,7 @@ Open-Ended Decision Making)."""@en ;
         <http://publications.europa.eu/resource/authority/data-theme/TECH> ;
     dcat:keyword "climate change"@en , "climate projections"@en , "climate services"@en , "climate models"@en ,
         "climate model simulations"@en , "climate variables"@en , "climate indices"@en , "CMIP5"@en , "CORDEX"@en , "UKCP18"@en ;
-    dcat:landingPage <https://github.com/hacid-project/climate-services-kg> ;
+    dcat:landingPage <https://w3id.org/climate-change-kg> ;
     dcat:distribution <kg/distributions/nquads> ;
     dcterms:conformsTo <shapes> ;
     void:feature <http://www.w3.org/ns/formats/N-Quads> ;
@@ -70,7 +70,7 @@ Open-Ended Decision Making)."""@en ;
 
 <shapes> a dcterms:Standard ;
     dcterms:title "SHACL shapes of the Climate Change Knowledge Graph"@en ;
-    dcat:landingPage <https://github.com/hacid-project/climate-services-kg/tree/main/shapes> .
+    dcat:landingPage <https://w3id.org/climate-change-kg/shapes> .
 
 <organizations/CNR-ISTC> a foaf:Agent , foaf:Organization ;
     foaf:name "Institute of Cognitive Sciences and Technologies, National Research Council of Italy (CNR-ISTC)" .
