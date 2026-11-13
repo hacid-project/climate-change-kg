@@ -1,6 +1,13 @@
-# climate-services-kg
+# Climate Change Knowledge Graph (CCKG): ingestion workflow
 
-Code and data used to populate the climate services knowledge graph for the HACID project
+Code and data used to build the [Climate Change Knowledge Graph](https://w3id.org/climate-change-kg) (CCKG), a knowledge graph of
+climate variables, indices, hazards, models, simulations and projection datasets (CMIP5, CORDEX-CMIP5, UKCP18). It was
+first developed, as the climate services knowledge graph, in the European project
+[HACID](https://www.hacid-project.eu/).
+
+The resources of the KG are in the namespace `https://w3id.org/climate-change-kg/data/` (until November 2026
+`https://w3id.org/hacid/data/cs/`, whose IRIs are to redirect to the new ones: see [`publication/w3id/`](publication/w3id/)).
+The ontologies keep their HACID namespaces (`https://w3id.org/hacid/onto/`).
 
 ## Snakemake workflow
 
@@ -78,7 +85,7 @@ The KG is described as a dataset (`snakemake --cores 4 metadata`, `workflow/rule
 [DCAT](https://www.w3.org/TR/vocab-dcat-3/), [VoID](https://www.w3.org/TR/void/), the
 [SPARQL service description](https://www.w3.org/TR/sparql11-service-description/),
 [PROV-O](https://www.w3.org/TR/prov-o/), Dublin Core terms and the
-[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The description, `https://w3id.org/hacid/data/cs/kg`, is
+[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The description, `https://w3id.org/climate-change-kg/data/kg`, is
 assembled in `kg/export/void.ttl` from:
 
 1. `metadata/kg.ttl`, written by hand: title, description, creators, publisher, license, keywords, themes and
@@ -97,7 +104,7 @@ assembled in `kg/export/void.ttl` from:
 
 It is checked with its own shapes (`metadata/shapes.ttl`: e.g. every named graph of the KG has a title and a
 description, so a graph added to `graph_names.csv` is to be described in `metadata/kg.ttl`, and every graph described
-is in the KG) and loaded in the KG as the named graph `https://w3id.org/hacid/data/cs/kg` (`config/config.yaml`,
+is in the KG) and loaded in the KG as the named graph `https://w3id.org/climate-change-kg/data/kg` (`config/config.yaml`,
 `metadata.graph`), replacing that of a previous build. The graph of the metadata is left out of the statistics and of
 the validation of the KG.
 
@@ -252,7 +259,7 @@ The metadata of the UKCP18 datasets (from CEDA) is downloaded from Zenodo
 
 1. `rdf/spatial-grids.jsonld` and `data/spatial-grid-map.json`: the spatial grids of the UKCP18 resolutions;
 2. `data/model-variants.json`: the variants of the models of the land-gcm datasets;
-3. `rdf/variables.jsonld`: the local variables of the datasets (`https://w3id.org/hacid/data/cs/variables/ukcp/...`),
+3. `rdf/variables.jsonld`: the local variables of the datasets (`https://w3id.org/climate-change-kg/data/variables/ukcp/...`),
    with their units and baseline periods, generated from the specification `mapping/ukcp-variables.json` (see below);
 4. `rdf/models.jsonld`: the models of the Met Office Hadley Centre;
 5. `rdf/datasets/datasets-NNNN.jsonld`: the datasets, with their simulations and grids

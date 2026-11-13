@@ -3,7 +3,7 @@
 # mapping/variables.json): each variable, in the format of the CMOR tables, is
 # mapped as those (variables_jsonld in
 # data-sources/cmor-tables/mapping/variables-jsonld.jq), as
-# https://w3id.org/hacid/data/cs/variables/cmip5/<model>/<name>, member of the
+# https://w3id.org/climate-change-kg/data/variables/cmip5/<model>/<name>, member of the
 # collection of the variables of the model (associated with the model), with
 # the label "<long name> (<name>, <model>)".
 #

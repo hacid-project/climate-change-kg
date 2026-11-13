@@ -6,7 +6,7 @@
 # (to the region), and the rotated dimensional spaces (by their pole) of the
 # rotated grids.
 
-def cs: "https://w3id.org/hacid/data/cs/";
+def cs: "https://w3id.org/climate-change-kg/data/";
 def geodetic: cs + "dimensions/geodetic";
 def wgs84: geodetic + "/reference-frames/WGS84";
 def float: {"@value": ., "@type": "xsd:float"};

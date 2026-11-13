@@ -109,16 +109,16 @@ metadata:
   # Named graph of the metadata of the KG: also the IRI of the KG as a dataset
   # in metadata/kg.ttl and in the queries leaving its graph out
   # (metadata/statistics.rq, shapes/queries/data.rq)
-  graph: https://w3id.org/hacid/data/cs/kg
+  graph: https://w3id.org/climate-change-kg/data/kg
   # Where the KG is published, if anywhere (each may be left empty):
   # - the URL of its public SPARQL endpoint (void:sparqlEndpoint, and a
   #   dcat:DataService serving the KG);
   # - the DOI (as a URL) of the record holding its dumps, from which they are
   #   accessed (dcat:accessURL of the distribution: not the URL of a file);
   # - the URL of the website documenting it (dcat:landingPage)
-  sparql_endpoint: "https://w3id.org/hacid/cs/sparql"
+  sparql_endpoint: "https://w3id.org/climate-change-kg/sparql"
   dumps_figshare_url: "https://doi.org/10.6084/m9.figshare.29066711"
-  website_url: "https://hacid-project.github.io/cckg/"
+  website_url: "https://w3id.org/climate-change-kg"
 
 ukcp18:
   # Number of nodes of each JSON-LD document of the UKCP18 datasets

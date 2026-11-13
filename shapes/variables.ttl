@@ -14,7 +14,7 @@
 @prefix top:   <https://w3id.org/hacid/onto/top-level/> .
 @prefix data:  <https://w3id.org/hacid/onto/data/> .
 @prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
-@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+@prefix shape: <https://w3id.org/climate-change-kg/data/shapes/> .
 
 
 shape:Variable a sh:NodeShape ;
@@ -82,7 +82,7 @@ categories and identifiers (e.g. area_type, region, institution) have no canonic
                 ?this rdf:type/rdfs:subClassOf* data:Variable .
                 FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:Dataset }
                 FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* data:DimensionalSpace }
-                FILTER NOT EXISTS { ?this top:isMemberOf <https://w3id.org/hacid/data/cs/variables/cf> }
+                FILTER NOT EXISTS { ?this top:isMemberOf <https://w3id.org/climate-change-kg/data/variables/cf> }
             }""" ;
     ] ;
     sh:property shape:Variable-unitRequired .
@@ -135,7 +135,7 @@ acronym, and the CF variable it specializes, if any, is a member of cs:variables
     sh:target [
         a sh:SPARQLTarget ;
         sh:prefixes shape:prefixes ;
-        sh:select "SELECT ?this WHERE { ?this top:isMemberOf <https://w3id.org/hacid/data/cs/variables/mip> }" ;
+        sh:select "SELECT ?this WHERE { ?this top:isMemberOf <https://w3id.org/climate-change-kg/data/variables/mip> }" ;
     ] ;
     sh:property shape:MIPVariable-acronym , shape:MIPVariable-cf .
 
@@ -147,7 +147,7 @@ shape:MIPVariable-acronym a sh:PropertyShape ;
 
 shape:MIPVariable-cf a sh:PropertyShape ;
     sh:path data:isSpecializationOfVariable ;
-    sh:node [ sh:property [ sh:path top:isMemberOf ; sh:hasValue <https://w3id.org/hacid/data/cs/variables/cf> ] ] ;
+    sh:node [ sh:property [ sh:path top:isMemberOf ; sh:hasValue <https://w3id.org/climate-change-kg/data/variables/cf> ] ] ;
     sh:severity sh:Warning ;
     sh:message "The variable specialized by a MIP variable is not a CF variable."@en .
 

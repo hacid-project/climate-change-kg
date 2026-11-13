@@ -28,7 +28,7 @@ $spatial_grid_maps as [$spatial_grid_map] |
     with_entries(
         .value |= with_entries(
             select(.value | contains("WGS84") | not) |
-            .value |= ltrimstr("https://w3id.org/hacid/data/cs/")
+            .value |= ltrimstr("https://w3id.org/climate-change-kg/data/")
         )
     )
 ) as $rescale_map |
@@ -121,7 +121,7 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
 
 (
     {
-        "@id": @uri "https://w3id.org/hacid/data/cs/ukcp18/datasets/\(.id)",
+        "@id": @uri "https://w3id.org/climate-change-kg/data/ukcp18/datasets/\(.id)",
         "@type": [
             if $collection == "land-prob"
                 then "ccso:ProbabilisticProjection"
@@ -167,7 +167,7 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
     if $rescale then
         ($simulation | SIMULATIONS::nodes),
         {
-            "@id": @uri "https://w3id.org/hacid/data/cs/ukcp18/datasets/\(.id)",
+            "@id": @uri "https://w3id.org/climate-change-kg/data/ukcp18/datasets/\(.id)",
             is_rescaled_version_of: ($simulation | SIMULATIONS::simulation_output),
             is_part_of: (
                 ($simulation | SIMULATIONS::simulation_ensemble)?.has_output |
@@ -184,7 +184,7 @@ UKCP18_TIME::dataset_to_interval as $time_interval |
         {
             "@id": ($simulation | SIMULATIONS::simulation_output),
             sub_dataset: {
-                "@id": @uri "https://w3id.org/hacid/data/cs/ukcp18/datasets/\(.id)",
+                "@id": @uri "https://w3id.org/climate-change-kg/data/ukcp18/datasets/\(.id)",
             }
         }
     end

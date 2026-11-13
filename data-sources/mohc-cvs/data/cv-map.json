@@ -15,7 +15,7 @@
         }
     },
     "Sector": {
-        "scheme": "https://w3id.org/hacid/data/cs/climdex/sectors"
+        "scheme": "https://w3id.org/climate-change-kg/data/climdex/sectors"
     },
     "Hazard": {
         "class": "ccso:HazardType"
@@ -33,10 +33,10 @@
     "Index; variable": {
         "union": [
             {
-                "collection": "https://w3id.org/hacid/data/cs/variables"
+                "collection": "https://w3id.org/climate-change-kg/data/variables"
             },
             {
-                "collection": "https://w3id.org/hacid/data/cs/indices"
+                "collection": "https://w3id.org/climate-change-kg/data/indices"
             }
         ]
     },

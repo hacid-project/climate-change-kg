@@ -37,7 +37,7 @@ To look at the results of a shape in the report:
 arq --data kg/validation/report.ttl \
     'PREFIX sh: <http://www.w3.org/ns/shacl#>
      SELECT ?focusNode ?value ?message WHERE {
-       ?result sh:sourceShape <https://w3id.org/hacid/data/cs/shapes/Variable-unitRequired> ;
+       ?result sh:sourceShape <https://w3id.org/climate-change-kg/data/shapes/Variable-unitRequired> ;
                sh:focusNode ?focusNode .
        OPTIONAL { ?result sh:value ?value }
        OPTIONAL { ?result sh:resultMessage ?message }
@@ -56,7 +56,7 @@ arq --data kg/validation/report.ttl \
 
 Each node shape has a label and a description (`rdfs:label`, `rdfs:comment`), and each of its property shapes an IRI
 (`shape:<Node shape>-<aspect>`) and a message, so that the results of the report can be traced to the constraint
-(`sh:sourceShape`) and grouped by it. The namespace of the shapes is `https://w3id.org/hacid/data/cs/shapes/`.
+(`sh:sourceShape`) and grouped by it. The namespace of the shapes is `https://w3id.org/climate-change-kg/data/shapes/`.
 
 | File | Node shapes | What they check |
 | --- | --- | --- |

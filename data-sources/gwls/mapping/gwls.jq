@@ -3,7 +3,7 @@
         rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         ccso: "https://w3id.org/hacid/onto/ccso/",
-        gwl: "https://w3id.org/hacid/data/cs/GWLs/",
+        gwl: "https://w3id.org/climate-change-kg/data/GWLs/",
         label: "rdfs:label",
         comment: {
             "@id": "rdfs:comment",

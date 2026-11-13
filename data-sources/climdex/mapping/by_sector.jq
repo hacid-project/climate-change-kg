@@ -5,7 +5,7 @@
     {
         "@id": @uri "index:\(.key)",
         isClassifiedBy: [.value.[] | {"@id": @uri "sector:\(.)"} ],
-        isMemberOf: {"@id": "https://w3id.org/hacid/data/cs/climdex/indices"}
+        isMemberOf: {"@id": "https://w3id.org/climate-change-kg/data/climdex/indices"}
     }
 ] as $indices |
 
@@ -15,7 +15,7 @@
         "@id": @uri "sector:\(.)",
         "@type": "top:Concept",
         label: .,
-        isDefinedIn: {"@id": "https://w3id.org/hacid/data/cs/climdex/sectors"}
+        isDefinedIn: {"@id": "https://w3id.org/climate-change-kg/data/climdex/sectors"}
     }
 ] as $sectors |
 
@@ -24,8 +24,8 @@
         rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         top: "https://w3id.org/hacid/onto/top-level/",
-        index: "https://w3id.org/hacid/data/cs/climdex/indices/",
-        sector: "https://w3id.org/hacid/data/cs/climdex/sectors/",
+        index: "https://w3id.org/climate-change-kg/data/climdex/indices/",
+        sector: "https://w3id.org/climate-change-kg/data/climdex/sectors/",
         label: {"@id": "rdfs:label", "@language": "en"},
         comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
@@ -44,7 +44,7 @@
         $indices.[],
         $sectors.[],
         {
-            "@id": "https://w3id.org/hacid/data/cs/climdex/sectors",
+            "@id": "https://w3id.org/climate-change-kg/data/climdex/sectors",
             "@type": "top:Description",
             label: "Sectors according to climdex.org",
             comment: "Economic sectors defined to classify climate indices according to climdex.org"

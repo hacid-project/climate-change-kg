@@ -1,4 +1,4 @@
-@prefix : <https://w3id.org/hacid/data/cs/> .
+@prefix : <https://w3id.org/climate-change-kg/data/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -6,12 +6,12 @@
 @prefix gml: <http://www.opengis.net/ont/gml#> .
 @prefix ccso: <https://w3id.org/hacid/onto/ccso/> .
 @prefix data: <https://w3id.org/hacid/onto/data/> .
-@prefix dimension: <https://w3id.org/hacid/data/cs/dimensions/> .
-@prefix time: <https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/> .
-@prefix geodetic: <https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/> .
-@prefix geodetic_long: <https://w3id.org/hacid/data/cs/dimensions/geodetic-long/reference-frames/> .
-@prefix geodetic_lat: <https://w3id.org/hacid/data/cs/dimensions/geodetic-lat/reference-frames/> .
-@base <https://w3id.org/hacid/data/cs/> .
+@prefix dimension: <https://w3id.org/climate-change-kg/data/dimensions/> .
+@prefix time: <https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/> .
+@prefix geodetic: <https://w3id.org/climate-change-kg/data/dimensions/geodetic/reference-frames/> .
+@prefix geodetic_long: <https://w3id.org/climate-change-kg/data/dimensions/geodetic-long/reference-frames/> .
+@prefix geodetic_lat: <https://w3id.org/climate-change-kg/data/dimensions/geodetic-lat/reference-frames/> .
+@base <https://w3id.org/climate-change-kg/data/> .
 
 dimension:spacetime a data:Continuum;
     rdfs:label "Spacetime"@en ;
@@ -63,14 +63,14 @@ time:gregorian a data:Continuum;
     rdfs:comment "Calendar used in most parts of the world. Represents time intervals using as unit of measure the second (with arbitrary decimal precision) along with some time-dependent multiples (hours, days, months, years). It has as reference (epoch) the traditionally reckoned year of the conception or birth of Jesus. Multiples of seconds (hours, days, months, years) have variable length in terms of corresponding seconds, due to the need to align those multiples to different natural phenomena (specifically Earth's rotation and revolution cycles)."@en;
     data:basedOnDimensionalSpace dimension:time.
 
-<https://w3id.org/hacid/data/cs/dimensions/geodetic/all> a data:GeodeticRegion;
+<https://w3id.org/climate-change-kg/data/dimensions/geodetic/all> a data:GeodeticRegion;
     rdfs:label "World"@en;
     geo:asWKT "POLYGON((-180 -90,-180 90,180 90,180 -90,-180 -90))"^^geo:wktLiteral;
     data:isRegionOf geodetic:WGS84;
     rdfs:comment "Geographic region covering the whole Earth surface, as reference for global simulations."@en.
 
-<https://w3id.org/hacid/data/cs/dimensions/geodetic/all/specialization> a data:VariableSpecialization;
+<https://w3id.org/climate-change-kg/data/dimensions/geodetic/all/specialization> a data:VariableSpecialization;
     rdfs:label "Geodetically global (the whole world)"@en;
     data:isSpecializationOn dimension:geodetic;
-    data:hasSelectedRegion <https://w3id.org/hacid/data/cs/dimensions/geodetic/all>;
+    data:hasSelectedRegion <https://w3id.org/climate-change-kg/data/dimensions/geodetic/all>;
     rdfs:comment "Specialization of the default geodetic variable to the whole Earth surface, as reference for global simulations (defined for uniformity, albeit it does not correspond to an actual specialization of the geodetic range)."@en .

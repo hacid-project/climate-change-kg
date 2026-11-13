@@ -28,32 +28,34 @@
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix dqv:     <http://www.w3.org/ns/dqv#> .
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
-@prefix quality: <https://w3id.org/hacid/data/cs/kg/quality/> .
-@base <https://w3id.org/hacid/data/cs/> .
+@prefix quality: <https://w3id.org/climate-change-kg/data/kg/quality/> .
+@base <https://w3id.org/climate-change-kg/data/> .
 
 
 # --- The knowledge graph
 
 <kg> a dcat:Dataset , void:Dataset ;
-    dcterms:title "HACID climate services knowledge graph"@en ;
-    dcterms:description """Knowledge graph of the HACID project for climate services: the climate variables (CF standard
-names, MIP variables of the CMOR tables, climate indices), the climate models and the simulations of CMIP5 and
-CORDEX-CMIP5 with their datasets, the UKCP18 datasets, the emission scenarios and global warming levels, and the
-controlled vocabularies of hazards, methods and operations of climate services, described with the HACID ontologies
-(top-level, data and CCSO)."""@en ;
+    dcterms:title "Climate Change Knowledge Graph"@en ;
+    dcterms:alternative "CCKG" ;
+    dcterms:description """The Climate Change Knowledge Graph (CCKG): the climate variables (CF standard names, MIP
+variables of the CMOR tables, climate indices), the climate models and the simulations of CMIP5 and CORDEX-CMIP5 with
+their datasets, the UKCP18 datasets, the emission scenarios and global warming levels, and the controlled vocabularies
+of hazards, methods and operations of climate services, described with the HACID ontologies (top-level, data and
+CCSO). It was first developed in the European project HACID (Hybrid Human Artificial Collective Intelligence in
+Open-Ended Decision Making)."""@en ;
     dcterms:creator <person/miguel-ceriani> , <person/andrea-giovanni-nuzzolese> ;
-    dcterms:publisher <organizations/HACID> ;
+    dcterms:publisher <organizations/CNR-ISTC> ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     dcterms:language <http://id.loc.gov/vocabulary/iso639-1/en> ;
     dcat:theme <http://publications.europa.eu/resource/authority/data-theme/ENVI> ,
         <http://publications.europa.eu/resource/authority/data-theme/TECH> ;
-    dcat:keyword "climate services"@en , "climate models"@en , "climate model simulations"@en ,
-        "climate variables"@en , "climate indices"@en , "CMIP5"@en , "CORDEX"@en , "UKCP18"@en ;
+    dcat:keyword "climate change"@en , "climate projections"@en , "climate services"@en , "climate models"@en ,
+        "climate model simulations"@en , "climate variables"@en , "climate indices"@en , "CMIP5"@en , "CORDEX"@en , "UKCP18"@en ;
     dcat:landingPage <https://github.com/hacid-project/climate-services-kg> ;
     dcat:distribution <kg/distributions/nquads> ;
     dcterms:conformsTo <shapes> ;
     void:feature <http://www.w3.org/ns/formats/N-Quads> ;
-    void:uriSpace "https://w3id.org/hacid/data/cs/" ;
+    void:uriSpace "https://w3id.org/climate-change-kg/data/" ;
     void:vocabulary <https://w3id.org/hacid/onto/top-level/> , <https://w3id.org/hacid/onto/data/> , <https://w3id.org/hacid/onto/ccso/> ;
     void:exampleResource <variables/mip/tas> , <models/HadGEM2-ES> , <scenarios/RCP/RCP8.5> ,
         <simulations/cmip5.HadGEM2-ES.rcp85.r1i1p1> .
@@ -67,11 +69,11 @@ controlled vocabularies of hazards, methods and operations of climate services, 
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> .
 
 <shapes> a dcterms:Standard ;
-    dcterms:title "SHACL shapes of the HACID climate services knowledge graph"@en ;
+    dcterms:title "SHACL shapes of the Climate Change Knowledge Graph"@en ;
     dcat:landingPage <https://github.com/hacid-project/climate-services-kg/tree/main/shapes> .
 
-<organizations/HACID> a foaf:Agent , foaf:Organization ;
-    foaf:name "HACID - Hybrid Human Artificial Collective Intelligence in Open-Ended Decision Making" .
+<organizations/CNR-ISTC> a foaf:Agent , foaf:Organization ;
+    foaf:name "Institute of Cognitive Sciences and Technologies, National Research Council of Italy (CNR-ISTC)" .
 
 <person/miguel-ceriani> a foaf:Agent , foaf:Person ;
     foaf:name "Miguel Ceriani" .
@@ -97,7 +99,7 @@ controlled vocabularies of hazards, methods and operations of climate services, 
     dcterms:description "The Core Climate Services Ontology: climate models, simulations, projections, scenarios, hazards."@en ;
     prov:wasDerivedFrom <sources/ontologies> .
 
-<https://w3id.org/hacid/data/cs#graph> a void:Dataset ;
+<https://w3id.org/climate-change-kg/data#graph> a void:Dataset ;
     dcterms:title "Common entities"@en ;
     dcterms:description "Entities shared by the sources, written by hand: space and time dimensions and their reference frames, collections, model intercomparison projects, emission scenarios (RCP, SSP) and global warming levels."@en .
 

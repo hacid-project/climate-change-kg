@@ -5,7 +5,7 @@
 #
 # Each variable is mapped as in variables.jq, except that:
 # - its IRI is the one of a previous variable (see mip-variables.jq), e.g.
-#   https://w3id.org/hacid/data/cs/variables/mip/cmip6/6.0.19/tos;
+#   https://w3id.org/climate-change-kg/data/variables/mip/cmip6/6.0.19/tos;
 # - its label names the era and version, e.g. "Sea Surface Temperature (tos, CMIP6 6.0.19)";
 # - its quantity is the new_quantity of the entry, if any;
 # - for a sign_change or unit_change entry, it is related to the variables that

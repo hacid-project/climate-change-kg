@@ -1,7 +1,7 @@
-BASE <https://w3id.org/hacid/data/cs/wf/>
+BASE <https://w3id.org/climate-change-kg/data/wf/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/>
-PREFIX methods: <https://w3id.org/hacid/data/cs/wf/methods/>
+PREFIX methods: <https://w3id.org/climate-change-kg/data/wf/methods/>
 
 SELECT ?method ?method_label
 WHERE {

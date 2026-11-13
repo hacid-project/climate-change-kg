@@ -3,7 +3,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/> 
-PREFIX deriv: <https://w3id.org/hacid/data/cs/derivations/> 
+PREFIX deriv: <https://w3id.org/climate-change-kg/data/derivations/> 
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
 
 SELECT DISTINCT ?id
@@ -17,8 +17,8 @@ WHERE {
     ?s a ?st
   }
   BIND(REPLACE(STR(?o),"[^/]+$","") AS ?prefix)
-  FILTER(STRSTARTS(STR(?o),"https://w3id.org/hacid/data/cs/datasets/cordex."))
-  BIND(STRAFTER(STR(?o),"https://w3id.org/hacid/data/cs/datasets/cordex.") as ?id)
+  FILTER(STRSTARTS(STR(?o),"https://w3id.org/climate-change-kg/data/datasets/cordex."))
+  BIND(STRAFTER(STR(?o),"https://w3id.org/climate-change-kg/data/datasets/cordex.") as ?id)
   FILTER (?st NOT IN (owl:Ontology))
   FILTER NOT EXISTS {
     ?o a ?ot

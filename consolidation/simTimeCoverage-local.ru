@@ -4,8 +4,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
 PREFIX top: <https://w3id.org/hacid/onto/top-level/> 
-PREFIX dimension: <https://w3id.org/hacid/data/cs/dimensions/>
-PREFIX time: <https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/>
+PREFIX dimension: <https://w3id.org/climate-change-kg/data/dimensions/>
+PREFIX time: <https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/>
 
 INSERT {
     GRAPH ?simulationGraph {
@@ -95,7 +95,7 @@ WHERE {
     BIND("(.*) (.*)" AS ?re)
     BIND(
         IRI(REPLACE(?simInterval, ?re,
-            "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/$1-$2"
+            "https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/gregorian/regions/$1-$2"
         )) AS ?simulationTemporalRegion
     ).
     BIND(
@@ -110,7 +110,7 @@ WHERE {
     ).
     BIND(
         IRI(REPLACE(?simInterval, ?re,
-            "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/$1-$2/specialization"
+            "https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/gregorian/regions/$1-$2/specialization"
         )) AS ?simulationTemporalSpecialization
     ).
     # Without a resolution (no component with a regular temporal grid), the
@@ -133,7 +133,7 @@ WHERE {
             CONCAT(
                 REPLACE(
                     ?simInterval, ?re,
-                    "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/regions/$1-$2/quantized/"
+                    "https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/gregorian/regions/$1-$2/quantized/"
                 ),
                 ?gridTypeId
             )
@@ -142,7 +142,7 @@ WHERE {
     BIND(
         IRI(
             CONCAT(
-                "https://w3id.org/hacid/data/cs/dimensions/time/reference-frames/gregorian/quantizations/",
+                "https://w3id.org/climate-change-kg/data/dimensions/time/reference-frames/gregorian/quantizations/",
                 ?gridTypeId
             )
         ) AS ?simulationQuantization

@@ -1,6 +1,6 @@
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
-PREFIX dimension: <https://w3id.org/hacid/data/cs/dimensions/>
+PREFIX dimension: <https://w3id.org/climate-change-kg/data/dimensions/>
 
 # Get temporal coverage for simulations
 

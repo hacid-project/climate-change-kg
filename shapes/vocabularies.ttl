@@ -9,7 +9,7 @@
 @prefix top:   <https://w3id.org/hacid/onto/top-level/> .
 @prefix data:  <https://w3id.org/hacid/onto/data/> .
 @prefix ccso:  <https://w3id.org/hacid/onto/ccso/> .
-@prefix shape: <https://w3id.org/hacid/data/cs/shapes/> .
+@prefix shape: <https://w3id.org/climate-change-kg/data/shapes/> .
 
 
 shape:HazardType a sh:NodeShape ;

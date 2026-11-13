@@ -13,7 +13,7 @@
 @prefix prov:    <http://www.w3.org/ns/prov#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix dqv:     <http://www.w3.org/ns/dqv#> .
-@prefix shape:   <https://w3id.org/hacid/data/cs/kg/shapes/> .
+@prefix shape:   <https://w3id.org/climate-change-kg/data/kg/shapes/> .
 
 
 shape:KnowledgeGraph a sh:NodeShape ;
@@ -21,7 +21,7 @@ shape:KnowledgeGraph a sh:NodeShape ;
     rdfs:comment """The KG has what DCAT recommends for a dataset in a catalogue (title, description, creators,
 publisher, license, keywords, themes, landing page, a distribution), the date and version of its build, and its named
 graphs as VoID subsets."""@en ;
-    sh:targetNode <https://w3id.org/hacid/data/cs/kg> ;
+    sh:targetNode <https://w3id.org/climate-change-kg/data/kg> ;
     sh:class dcat:Dataset , void:Dataset , sd:Dataset ;
     sh:property
         [ sh:path dcterms:creator ; sh:minCount 1 ; sh:class foaf:Agent ] ,

@@ -57,20 +57,20 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
         {
             resolution_id: $id,
             for_domain: "uk",
-            "@id": "https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/OSGB36/grids/\($id)",
+            "@id": "https://w3id.org/climate-change-kg/data/dimensions/geodetic/reference-frames/OSGB36/grids/\($id)",
             "@type": "data:DiscreteDimensionalSpace",
             label: "\($id) geodetic grid based on OSGB",
             comment: "A geodetic grid of resolution \($km)km x \($km)km, based on Ordnance Survey of Great Britain (OSGB).",
             based_on_ds: "georef:OSGB36",
             discretization: {
-                "@id": "https://w3id.org/hacid/data/cs/geodeticgrid/km/\($km)",
+                "@id": "https://w3id.org/climate-change-kg/data/geodeticgrid/km/\($km)",
                 based_on_ds: "dimension:geodetic",
                 "@type": "data:SimpleRegularBinning",
                 resolution: {
-                    "@id": @uri "https://w3id.org/hacid/data/cs/value/m/\($m)",
+                    "@id": @uri "https://w3id.org/climate-change-kg/data/value/m/\($m)",
                     "@type": "top:Amount",
                     value: "\($m)",
-                    uom: "https://w3id.org/hacid/data/cs/unitsofmeasure/m"
+                    uom: "https://w3id.org/climate-change-kg/data/unitsofmeasure/m"
                 }
             },
             # (as its reference frame: the grid is within its area of use)
@@ -83,12 +83,12 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
     {
         resolution_id: "n216",
         for_domain: "uk",
-        "@id": "https://w3id.org/hacid/data/cs/ukcp18/grids/N216",
+        "@id": "https://w3id.org/climate-change-kg/data/ukcp18/grids/N216",
         "@type": "data:DiscreteDimensionalSpace",
         label: "N216 geodetic grid",
         comment: "A global geodetic grid of approximate resolution 60km x 60km, developed by the UK Met Office.",
         based_on_ds: "dimension:geodetic",
-        discretization: "https://w3id.org/hacid/data/cs/geodeticgrid/km/60",
+        discretization: "https://w3id.org/climate-change-kg/data/geodeticgrid/km/60",
         exact_bounding_region: "dimension:geodetic/all"
     },
 
@@ -96,12 +96,12 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
     {
         resolution_id: "60km",
         for_domain: "global",
-        "@id": "https://w3id.org/hacid/data/cs/ukcp18/grids/WGS84/60km",
+        "@id": "https://w3id.org/climate-change-kg/data/ukcp18/grids/WGS84/60km",
         "@type": "data:DiscreteDimensionalSpace",
         label: "UKCP18 global geodetic grid",
         comment: "A global geodetic grid of approximate resolution 60km x 60km, based on WGS84.",
         based_on_ds: "georef:WGS84",
-        discretization: "https://w3id.org/hacid/data/cs/geodeticgrid/km/60",
+        discretization: "https://w3id.org/climate-change-kg/data/geodeticgrid/km/60",
         exact_bounding_region: "dimension:geodetic/all"
     },
 
@@ -109,7 +109,7 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
     {
         resolution_id: "12km",
         for_domain: "eur",
-        "@id": "https://w3id.org/hacid/data/cs/cordex/grids/EUR-11/ds"
+        "@id": "https://w3id.org/climate-change-kg/data/cordex/grids/EUR-11/ds"
     },
 
     # Rotated pole coordinates grids
@@ -119,7 +119,7 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
         {
             resolution_id: "\(.km)km",
             for_domain: "uk", #if .km == 12 then "eur" else "uk" end,
-            "@id": "https://w3id.org/hacid/data/cs/ukcp18/grids/rotated-WGS84/\(.km)km",
+            "@id": "https://w3id.org/climate-change-kg/data/ukcp18/grids/rotated-WGS84/\(.km)km",
             "@type": "data:DiscreteDimensionalSpace",
             label: "UKCP18 \(.km)km grid on rotated pole coordinates",
             comment: "A geodetic grid of approximate resolution \(.km)km x \(.km)km, based on a rotated pole coordinate system.",
@@ -139,16 +139,16 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
                 }
             }),
             discretization: {
-                "@id": "https://w3id.org/hacid/data/cs/ukcp18/grids/rotated-WGS84/\(.km)km/discretization",
+                "@id": "https://w3id.org/climate-change-kg/data/ukcp18/grids/rotated-WGS84/\(.km)km/discretization",
                 based_on_ds: "dimension:geodetic",
                 "@type": "data:SimpleRegularBinning",
                 resolution: (
                     (.km * 1000) as $m |
                     {
-                        "@id": @uri "https://w3id.org/hacid/data/cs/value/m/\($m)",
+                        "@id": @uri "https://w3id.org/climate-change-kg/data/value/m/\($m)",
                         "@type": "top:Amount",
                         value: "\($m)",
-                        uom: "https://w3id.org/hacid/data/cs/unitsofmeasure/m"
+                        uom: "https://w3id.org/climate-change-kg/data/unitsofmeasure/m"
                     }
                 )
             }
@@ -166,7 +166,7 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
         {
             resolution_id: "\(.id)",
             for_domain: "uk",
-            "@id": "https://w3id.org/hacid/data/cs/ukcp18/regional-splits/\(.id)",
+            "@id": "https://w3id.org/climate-change-kg/data/ukcp18/regional-splits/\(.id)",
             "@type": "data:DiscreteDimensionalSpace",
             label: "UKCP18 \(.items_label)",
             comment: "Subdivision of UK by \(.items_label) as adopted in UKCP18.",
@@ -182,8 +182,8 @@ def osgb_area_of_use: "georef:WGS84/regions/rectangle/-9.01,49.75:2.01,61.01";
         top: "https://w3id.org/hacid/onto/top-level/",
         data: "https://w3id.org/hacid/onto/data/",
         geo: "http://www.opengis.net/ont/geosparql#",
-        dimension: "https://w3id.org/hacid/data/cs/dimensions/",
-        georef: "https://w3id.org/hacid/data/cs/dimensions/geodetic/reference-frames/"
+        dimension: "https://w3id.org/climate-change-kg/data/dimensions/",
+        georef: "https://w3id.org/climate-change-kg/data/dimensions/geodetic/reference-frames/"
     } + 
     ($properties | JSONLD::unpack),
     "@graph": [

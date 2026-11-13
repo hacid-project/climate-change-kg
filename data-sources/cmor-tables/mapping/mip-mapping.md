@@ -133,11 +133,11 @@ Notes:
 
 ## Variable IRIs
 
-- Variable of the last edition: `https://w3id.org/hacid/data/cs/variables/mip/<out_name>`
+- Variable of the last edition: `https://w3id.org/climate-change-kg/data/variables/mip/<out_name>`
   (as in `variables.jq`), e.g. `.../variables/mip/hus19`;
 - Variable of a previous era or version (resolved with a `keep`,
   `sign_change` or `unit_change` entry):
-  `https://w3id.org/hacid/data/cs/variables/mip/<era>/<version>/<out_name>`,
+  `https://w3id.org/climate-change-kg/data/variables/mip/<era>/<version>/<out_name>`,
   or `.../mip/<era>/<out_name>` if the era has no versions, e.g.
   `.../variables/mip/cmip6/6.0.19/tos`, `.../variables/mip/cmip5/tossq`.
 
@@ -146,7 +146,7 @@ Notes:
 ```bash
 jq -L data-sources/cmor-tables/mapping -f data-sources/cmor-tables/mapping/mip-variable-iri.jq <<< '
     {"out_name": "hus", "era": "CMIP6", "table": "Amon", "dimensions": "longitude latitude plev19 time"}'
-# "https://w3id.org/hacid/data/cs/variables/mip/hus19"
+# "https://w3id.org/climate-change-kg/data/variables/mip/hus19"
 ```
 
 The input is an `out_name` or an object with `out_name` and, optionally,
@@ -160,7 +160,7 @@ Other jq programs can use the module `mip-variables.jq`, which reads
 ```jq
 include "mip-variables";   # jq -L data-sources/cmor-tables/mapping
 {"out_name": "tossq", "era": "cmip5"} | mip_variable_iri
-# "https://w3id.org/hacid/data/cs/variables/mip/cmip5/tossq"
+# "https://w3id.org/climate-change-kg/data/variables/mip/cmip5/tossq"
 ```
 
 It defines `mip_variable_iri`, `mip_variable_resolution` (and the same with a

@@ -26,7 +26,7 @@ def member_spec($scheme_id):
     "@context": {
         rdfs: "http://www.w3.org/2000/01/rdf-schema#",
         top: "https://w3id.org/hacid/onto/top-level/",
-        schemes: "https://w3id.org/hacid/data/cs/wf/schemes/",
+        schemes: "https://w3id.org/climate-change-kg/data/wf/schemes/",
         label: {"@id": "rdfs:label", "@language": "en"},
         members: {
             "@reverse": "top:inScheme"

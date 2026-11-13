@@ -28,7 +28,7 @@ def git_source($id; $repo; $ref):
 "https://github.com/hacid-project/climate-services-kg" as $workflow
 | {
   "@context": {
-    "@base": "https://w3id.org/hacid/data/cs/",
+    "@base": "https://w3id.org/climate-change-kg/data/",
     "dcterms": "http://purl.org/dc/terms/",
     "dcat": "http://www.w3.org/ns/dcat#",
     "void": "http://rdfs.org/ns/void#",
@@ -49,7 +49,7 @@ def git_source($id; $repo; $ref):
         "prov:used": {
           "@id": "\($workflow)/tree/\($commit)",
           "@type": ["prov:Entity", "prov:Plan"],
-          "dcterms:title": {"@language": "en", "@value": "Workflow of the HACID climate services knowledge graph"},
+          "dcterms:title": {"@language": "en", "@value": "Workflow of the Climate Change Knowledge Graph"},
           "dcat:landingPage": {"@id": $workflow},
           "dcat:version": $commit
         }
@@ -62,7 +62,7 @@ def git_source($id; $repo; $ref):
       {
         "@id": "kg/services/sparql",
         "@type": ["dcat:DataService", "sd:Service"],
-        "dcterms:title": {"@language": "en", "@value": "SPARQL endpoint of the HACID climate services knowledge graph"},
+        "dcterms:title": {"@language": "en", "@value": "SPARQL endpoint of the Climate Change Knowledge Graph"},
         "dcat:endpointURL": {"@id": .},
         "sd:endpoint": {"@id": .},
         "dcterms:conformsTo": {"@id": "https://www.w3.org/TR/sparql11-protocol/"},

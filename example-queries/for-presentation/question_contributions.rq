@@ -3,7 +3,7 @@ PREFIX top: <https://w3id.org/hacid/onto/top-level/>
 PREFIX data: <https://w3id.org/hacid/onto/data/>
 PREFIX jdg: <https://w3id.org/hacid/onto/core/judgement/>
 PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
-PREFIX questions: <https://w3id.org/hacid/data/cs/dss/questions/>
+PREFIX questions: <https://w3id.org/climate-change-kg/data/dss/questions/>
 
 SELECT
     ?contrib ?contrib_author (COUNT(?task) AS ?num_tasks)

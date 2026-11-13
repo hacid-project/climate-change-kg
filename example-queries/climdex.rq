@@ -7,7 +7,7 @@ PREFIX data: <https://w3id.org/hacid/onto/data/>
 SELECT 
 	*
 WHERE {
-    ?sector top:isDefinedIn <https://w3id.org/hacid/data/cs/climdex/sectors>;
+    ?sector top:isDefinedIn <https://w3id.org/climate-change-kg/data/climdex/sectors>;
     	top:classifies ?index.
     ?index data:derivedFromVariable ?mip_var.
     ?mip_var data:derivedFromVariable ?cf_var.

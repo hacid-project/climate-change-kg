@@ -22,7 +22,7 @@ import "./mapping/context" as CONTEXT;
             id_label: "HadREM3-RA11M",
             "@type": "ccso:ConvectionPermittingClimateModel"
         } |
-        ."@id" = @uri "https://w3id.org/hacid/data/cs/models/\(.id_label)" |
-        .maintained_by =  "https://w3id.org/hacid/data/cs/organizations/MOHC"
+        ."@id" = @uri "https://w3id.org/climate-change-kg/data/models/\(.id_label)" |
+        .maintained_by =  "https://w3id.org/climate-change-kg/data/organizations/MOHC"
     ]
 }

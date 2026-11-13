@@ -29,14 +29,14 @@ def to_camel_case:
         top: "https://w3id.org/hacid/onto/top-level/",
         ccso: "https://w3id.org/hacid/onto/ccso/",
         data: "https://w3id.org/hacid/onto/data/",
-        cs: "https://w3id.org/hacid/data/cs/",
-        mohcsector: "https://w3id.org/hacid/data/cs/mohc/sectors/",
-        sector: "https://w3id.org/hacid/data/cs/climdex/sectors/",
-        climdex: "https://w3id.org/hacid/data/cs/climdex/indices/",
-        variable: "https://w3id.org/hacid/data/cs/variables/mip/",
-        cfvariable: "https://w3id.org/hacid/data/cs/variables/cf/",
-        unit: "https://w3id.org/hacid/data/cs/unitsofmeasure/",
-        dimension: "https://w3id.org/hacid/data/cs/dimensions/",
+        cs: "https://w3id.org/climate-change-kg/data/",
+        mohcsector: "https://w3id.org/climate-change-kg/data/mohc/sectors/",
+        sector: "https://w3id.org/climate-change-kg/data/climdex/sectors/",
+        climdex: "https://w3id.org/climate-change-kg/data/climdex/indices/",
+        variable: "https://w3id.org/climate-change-kg/data/variables/mip/",
+        cfvariable: "https://w3id.org/climate-change-kg/data/variables/cf/",
+        unit: "https://w3id.org/climate-change-kg/data/unitsofmeasure/",
+        dimension: "https://w3id.org/climate-change-kg/data/dimensions/",
         label: {"@id": "rdfs:label", "@language": "en"},
         comment: {"@id": "rdfs:comment", "@language": "en"},
         acronym: "top:acronym",
@@ -87,7 +87,7 @@ def to_camel_case:
     },
     "@graph": [
         {
-            "@id": "https://w3id.org/hacid/data/cs/mohc/sectors",
+            "@id": "https://w3id.org/climate-change-kg/data/mohc/sectors",
             "@type": "top:ConceptScheme",
             label: "MOHC index sectors"
         },
@@ -97,7 +97,7 @@ def to_camel_case:
                 "@id": @uri "mohcsector:\(.)",
                 "@type": "top:Concept",
                 label: .,
-                isDefinedIn: {"@id": "https://w3id.org/hacid/data/cs/mohc/sectors"}
+                isDefinedIn: {"@id": "https://w3id.org/climate-change-kg/data/mohc/sectors"}
             }
         ),
         (

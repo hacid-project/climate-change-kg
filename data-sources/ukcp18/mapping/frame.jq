@@ -15,12 +15,12 @@ include "paginate";
 import "./mapping/context" as CONTEXT;
 
 [
-    "https://w3id.org/hacid/data/cs/simulations/cmip5.",
-    "https://w3id.org/hacid/data/cs/simulations/cordex.",
-    "https://w3id.org/hacid/data/cs/datasets/cmip5.",
-    "https://w3id.org/hacid/data/cs/datasets/cordex.",
-    "https://w3id.org/hacid/data/cs/mips/",
-    "https://w3id.org/hacid/data/cs/models/"
+    "https://w3id.org/climate-change-kg/data/simulations/cmip5.",
+    "https://w3id.org/climate-change-kg/data/simulations/cordex.",
+    "https://w3id.org/climate-change-kg/data/datasets/cmip5.",
+    "https://w3id.org/climate-change-kg/data/datasets/cordex.",
+    "https://w3id.org/climate-change-kg/data/mips/",
+    "https://w3id.org/climate-change-kg/data/models/"
 ] as $repeated_prefixes |
 
 # The key of a repeated node (the node itself, as a string), null for the others
