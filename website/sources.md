@@ -23,14 +23,14 @@ The figures below refer to the current build of the knowledge graph, made by the
 | Climate indices and hazards (curated in HACID) | — | 90 indices from ETCCDI (4), Climate-ADAPT (32, and 24 anomalies of them with respect to a baseline or as change), Copernicus C3S (6), UK-CRI (48); 42 hazard types, with 292 links to 109 indices |
 | Climate service process (curated in HACID) | — | 81 operations, 60 methods, 11 schemes of values |
 | Emissions scenarios and global warming levels | — | 8 RCPs and SRES A1B, 5 SSPs, 10 global warming levels (1.5 to 6 °C) |
-| CMIP5 experiments and institutions ([ESGF publisher configuration](https://github.com/ESGF/config)) | commit `dc19f5b` | 102 experiments, 26 institutions |
+| CMIP5 experiments and institutions ([ESGF publisher configuration](https://github.com/ESGF/config)) | commit `dc19f5b` | 102 experiments, 27 institutions, 63 models |
 | CMIP5 datasets (ESGF search, [10.5281/zenodo.23363413](https://doi.org/10.5281/zenodo.23363413)) | snapshot | 6,365 datasets of 5 experiments, 641 simulations in 152 ensembles, 41 global models |
 | [CORDEX-CMIP5 domains and grids](https://github.com/WCRP-CORDEX/domain-tables) | commit `26696d7` | 14 domains, 53 grids (rotated and regular) |
 | CORDEX regional models ([IS-ENES Data](https://is-enes-data.github.io/CORDEX_RCMs_info.txt)) | commit `d9c78ec` | 101 regional models, 60 institutions |
 | CORDEX-CMIP5 datasets (ESGF search, [10.5281/zenodo.23477951](https://doi.org/10.5281/zenodo.23477951)) | snapshot | 145,232 datasets, 2,041 dynamical downscalings of 155 CMIP5 simulations, 45 regional models |
-| UKCP18 datasets (CEDA, [10.5281/zenodo.23515656](https://doi.org/10.5281/zenodo.23515656)) | snapshot | 416,260 datasets (56,453 probabilistic), 30 global, 16 regional and 16 convection-permitting simulations, linked to 47 CMIP5 and 128 CORDEX-CMIP5 simulations |
+| UKCP18 datasets (CEDA, [10.5281/zenodo.23515656](https://doi.org/10.5281/zenodo.23515656)) | snapshot | 461,954 datasets (56,453 probabilistic), 30 global, 16 regional and 16 convection-permitting simulations, linked to 47 CMIP5 and 128 CORDEX-CMIP5 simulations |
 
-Overall, the knowledge graph has about 5.3 million triples (without inferred ones), describing 2,775 simulations (696 global simulations and 2,079 dynamical downscalings) that use 94 climate models, and about 568,000 datasets.
+Overall, the knowledge graph has about 5.7 million triples (without inferred ones), describing 2,775 simulations (696 global simulations and 2,079 dynamical downscalings) that use 93 climate models, and about 613,000 datasets.
 
 ## Climate variables, indices and hazards
 
@@ -59,18 +59,19 @@ Each source is loaded in its own named graph; the default graph of the SPARQL en
 
 | Named graph | Content | Triples |
 |:------------|:--------|--------:|
-| `https://w3id.org/hacid/onto/top-level`, `.../onto/data`, `.../onto/ccso` | the ontologies | 3,188 |
-| `https://w3id.org/climate-change-kg/data` | collections, dimensions, scenarios, global warming levels | 202 |
-| `https://w3id.org/climate-change-kg/data/cf` | CF standard names | 31,577 |
-| `https://w3id.org/climate-change-kg/data/cmor-tables` | MIP variables and previous variables | 16,741 |
-| `https://w3id.org/climate-change-kg/data/climdex` | Climdex indices and sectors | 1,549 |
-| `https://w3id.org/climate-change-kg/data/mohc-cvs` | indices, hazards, operations and methods curated in HACID | 2,686 |
-| `https://w3id.org/climate-change-kg/data/cmip5/cvs` | CMIP5 experiments and institutions | 693 |
-| `https://w3id.org/climate-change-kg/data/cmip5/datasets` | CMIP5 datasets | 285,746 |
-| `https://w3id.org/climate-change-kg/data/cordex/cvs` | CORDEX domains, grids and regional models | 1,555 |
-| `https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets` | CORDEX-CMIP5 datasets | 1,608,019 |
-| `https://w3id.org/climate-change-kg/data/ukcp18` | UKCP18 datasets | 3,322,315 |
-| `https://w3id.org/climate-change-kg/data/indices`, `.../cs/variables` | collections merged by the consolidation | 1,658 |
+| `https://w3id.org/hacid/onto/top-level`, `.../onto/data`, `.../onto/ccso` | the ontologies | 3,197 |
+| `https://w3id.org/climate-change-kg/data` | collections, dimensions, scenarios, global warming levels | 209 |
+| `https://w3id.org/climate-change-kg/data/cf` | CF standard names | 31,578 |
+| `https://w3id.org/climate-change-kg/data/cmor-tables` | MIP variables and previous variables | 16,757 |
+| `https://w3id.org/climate-change-kg/data/climdex` | Climdex indices and sectors | 1,571 |
+| `https://w3id.org/climate-change-kg/data/mohc-cvs` | indices, hazards, operations and methods curated in HACID | 2,815 |
+| `https://w3id.org/climate-change-kg/data/cmip5/cvs` | CMIP5 experiments, institutions and models | 884 |
+| `https://w3id.org/climate-change-kg/data/cmip5/datasets` | CMIP5 datasets | 282,822 |
+| `https://w3id.org/climate-change-kg/data/cordex/cvs` | CORDEX domains, grids and regional models | 1,576 |
+| `https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets` | CORDEX-CMIP5 datasets | 1,557,129 |
+| `https://w3id.org/climate-change-kg/data/ukcp18` | UKCP18 datasets | 3,777,065 |
+| `https://w3id.org/climate-change-kg/data/indices`, `.../data/variables` | collections merged by the consolidation | 6,770 |
+| `https://w3id.org/climate-change-kg/data/kg` | metadata of the knowledge graph | 2,269 |
 
 ## Decisions on the sources
 

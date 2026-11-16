@@ -13,9 +13,9 @@ It brings together the descriptions of climate projections produced by internati
 
 | Content | Amount |
 |:--|:--|
-| Climate models | 94 (global, regional and convection-permitting) |
+| Climate models | 93 (global, regional and convection-permitting) |
 | Simulations | about 2,800 (global simulations and dynamical downscalings) |
-| Datasets | about 568,000 |
+| Datasets | about 613,000 |
 | Climate variables | about 6,900 (standard, MIP and project-specific variables) |
 | Climate indices | 153, from 5 catalogues |
 | Hazard types | 42 |
