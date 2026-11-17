@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: >-
+  If you use this workflow, please cite it with these metadata. To cite the
+  knowledge graph itself, cite its record on Zenodo, given in the README and on
+  the website.
+type: software
+title: Workflow of the Climate Change Knowledge Graph
+abstract: >-
+  The workflow (Snakemake, jq, Apache Jena) that builds the Climate Change
+  Knowledge Graph (CCKG) from its sources, with the mappings, the content
+  curated by hand, the SHACL shapes, the queries checking the KG and the
+  website documenting it. The CCKG describes the climate variables (CF
+  standard names, MIP variables of the CMOR tables, climate indices), the
+  climate models and the simulations of CMIP5 and CORDEX-CMIP5 with their
+  datasets, the UKCP18 datasets, the emissions scenarios and global warming
+  levels, and the controlled vocabularies of hazards, methods and operations
+  of climate services, described with the HACID ontologies (top-level, data
+  and CCSO). Every source is taken at a fixed version, so that each release
+  of the KG can be rebuilt from the same inputs. It was first developed in
+  the European project HACID (Hybrid Human Artificial Collective Intelligence
+  in Open-Ended Decision Making, Horizon Europe grant 101070588).
+authors:
+  - given-names: Miguel
+    family-names: Ceriani
+    affiliation: >-
+      Institute of Cognitive Sciences and Technologies, National Research
+      Council of Italy (CNR-ISTC)
+    orcid: https://orcid.org/0000-0002-5074-2112
+  - given-names: Anrijs
+    family-names: Abele
+    affiliation: Met Office, UK
+    orcid: https://orcid.org/0000-0002-6053-2629
+  - given-names: Andrea Giovanni
+    family-names: Nuzzolese
+    affiliation: >-
+      Institute of Cognitive Sciences and Technologies, National Research
+      Council of Italy (CNR-ISTC)
+    orcid: https://orcid.org/0000-0003-2928-9496
+version: 1.0.0
+license: MIT
+repository-code: https://github.com/hacid-project/climate-change-kg
+url: https://w3id.org/climate-change-kg
+keywords:
+  - knowledge graph
+  - linked data
+  - RDF
+  - SHACL
+  - Snakemake
+  - climate change
+  - climate projections
+  - climate services
+  - climate models
+  - climate model simulations
+  - CMIP5
+  - CORDEX
+  - UKCP18
