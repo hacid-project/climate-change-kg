@@ -75,10 +75,10 @@ def git_source($id; $repo; $ref):
       "dcat:landingPage": {"@id": .},
       "foaf:homepage": {"@id": .}
     }),
-    # The record of the dumps of the KG (a DOI): where the distribution is
+    # The record of the releases of the KG (its concept DOI): where the distribution is
     # accessed from, not the URL of a file (so neither dcat:downloadURL nor
     # void:dataDump)
-    ($config.metadata.dumps_figshare_url | present | {
+    ($config.metadata.dumps_record | present | {
       "@id": "kg/distributions/nquads",
       "dcat:accessURL": {"@id": .},
       "dcterms:identifier": (select(startswith("https://doi.org/")) | ltrimstr("https://doi.org/"))
