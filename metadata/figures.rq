@@ -17,7 +17,12 @@
 # - variables: the members of the collections of variables (CF, MIP, and those
 #   of the projects and models), not counting the collection merging them;
 # - index_catalogues, indices: the catalogues of climate indices (the
-#   collections .../<catalogue>/indices) and their distinct members;
+#   collections .../<catalogue>/indices) and their distinct indices, without
+#   the anomalies of an index, also members of its catalogue (derived from it
+#   and minted under its IRI, e.g. the 24 of Climate-ADAPT, as
+#   .../TotalPrecipitation/change-relative/1991-2020). The specialisations of
+#   an index are indices (e.g. R10mm of Rnnmm, or HWN_EHF, the heatwave number
+#   for one definition of the heatwaves, of HWN(EHF/Tx90/Tn90));
 # - hazard_types, operations, methods: the instances of these classes.
 
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -78,6 +83,12 @@ SELECT * WHERE {
     SELECT (COUNT(DISTINCT ?catalogue) AS ?index_catalogues) (COUNT(DISTINCT ?index) AS ?indices) WHERE {
       { ?catalogue top:hasMember ?index } UNION { ?index top:isMemberOf ?catalogue }
       FILTER(REGEX(STR(?catalogue), "^https://w3id.org/climate-change-kg/data/[^/]+/indices$"))
+      # Not an anomaly of another index of the catalogue
+      FILTER NOT EXISTS {
+        { ?catalogue top:hasMember ?other } UNION { ?other top:isMemberOf ?catalogue }
+        ?index data:derivedFromVariable ?other .
+        FILTER(STRSTARTS(STR(?index), CONCAT(STR(?other), "/")))
+      }
     }
   }
   {

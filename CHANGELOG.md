@@ -7,6 +7,15 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Workflow
+
+- The number of climate indices of the key figures (`metadata/figures.rq`) no longer counts the anomalies of an index
+  (the 24 of Climate-ADAPT, members of its catalogue): 169 indices in 5 catalogues, as on the Sources page of the
+  website (79 Climdex indices, 90 curated ones), instead of 193. The website shows 169 for releases 1.0.0 and 1.1.0
+  (`website/_data/releases.json`); the notes and the Zenodo record of release 1.1.0 say 193.
+- `doc/conventions.md` no longer reports the warning on the English alternative labels, gone since `top:altLabel` has
+  the range `rdfs:Literal` (release 1.1.0).
+
 ## 1.1.0 - 2026-11-25
 
 ### Knowledge graph
