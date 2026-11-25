@@ -20,9 +20,12 @@
 #   collections .../<catalogue>/indices) and their distinct indices, without
 #   the anomalies of an index, also members of its catalogue (derived from it
 #   and minted under its IRI, e.g. the 24 of Climate-ADAPT, as
-#   .../TotalPrecipitation/change-relative/1991-2020). The specialisations of
-#   an index are indices (e.g. R10mm of Rnnmm, or HWN_EHF, the heatwave number
-#   for one definition of the heatwaves, of HWN(EHF/Tx90/Tn90));
+#   .../TotalPrecipitation/change-relative/1991-2020). Both an index and its
+#   specialisations are counted: those that the catalogue lists as indices
+#   (e.g. R10mm of Rnnmm), and those by the method used to compute an index,
+#   which the catalogue does not count (e.g. HWN_EHF, the heatwave number by
+#   the Excess Heat Factor, of HWN(EHF/Tx90/Tn90): 15 for Climdex, whose 63
+#   indices are 79 in the KG with them and ETR);
 # - hazard_types, operations, methods: the instances of these classes.
 
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
