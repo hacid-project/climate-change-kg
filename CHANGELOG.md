@@ -7,6 +7,8 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+## 1.1.0 - 2026-11-25
+
 ### Knowledge graph
 
 - The ontologies are at commit `bfb0310` of hacid-project/knowledge-graph (CCSO 2.1), consistent with DOLCE+DnS
