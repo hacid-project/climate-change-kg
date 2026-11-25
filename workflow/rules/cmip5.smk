@@ -12,10 +12,10 @@ rule cmip5:
         "data-sources/cmip5/rdf/variables.jsonld",
 
 
-# Metadata of the CMIP5 datasets (https://doi.org/10.5281/zenodo.23363413)
+# Metadata of the CMIP5 datasets (Zenodo record of config.yaml, cmip5.snapshot)
 rule cmip5_metadata:
     input:
-        storage.zenodo("zenodo://record/23363413/cmip5.json.gz"),
+        storage.zenodo(f"zenodo://record/{config['cmip5']['snapshot']}/cmip5.json.gz"),
     output:
         "data-sources/cmip5/data/cmip5.json",
     shell:

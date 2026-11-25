@@ -9,11 +9,11 @@ rule cordex_cmip5:
         "data-sources/cordex-cmip5/rdf/variables.jsonld",
 
 
-# Metadata of the CORDEX-CMIP5 datasets (https://doi.org/10.5281/zenodo.23477951):
-# the pages of the ESGF search results, data/cordex-<n>.json
+# Metadata of the CORDEX-CMIP5 datasets (Zenodo record of config.yaml,
+# cordex_cmip5.snapshot): the pages of the ESGF search results, data/cordex-<n>.json
 rule cordex_cmip5_metadata:
     input:
-        storage.zenodo("zenodo://record/23477951/cordex-cmip5.tar.gz"),
+        storage.zenodo(f"zenodo://record/{config['cordex_cmip5']['snapshot']}/cordex-cmip5.tar.gz"),
     output:
         directory("data-sources/cordex-cmip5/data"),
     shell:

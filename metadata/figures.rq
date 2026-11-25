@@ -1,0 +1,98 @@
+# Key figures of the KG, quoted by the website, the release notes and the
+# description of the release on Zenodo (rule metadata_figures,
+# kg/metadata/figures.json). Run on the consolidated KG with the union of the
+# named graphs as default graph, without inference: the subclasses are followed
+# explicitly in the ontology graphs.
+#
+# - models: the climate models used by the simulations (not all those described);
+# - simulations: the single simulations (neither ensembles nor experiments),
+#   global ones and dynamical downscalings;
+# - datasets: the datasets of the records of each source, in its named graph
+#   (for UKCP18, those of .../data/ukcp18/datasets/): the projections that
+#   have no components (the outputs of simulations, ensembles and experiments
+#   group them) and that are not the output of a process (data:hasOutput, as
+#   the projections derived by the transformations of UKCP18). The CMIP5 and
+#   CORDEX-CMIP5 datasets described only in the UKCP18 graph (as inputs of its
+#   transformations, missing from the snapshots) are not counted;
+# - variables: the members of the collections of variables (CF, MIP, and those
+#   of the projects and models), not counting the collection merging them;
+# - index_catalogues, indices: the catalogues of climate indices (the
+#   collections .../<catalogue>/indices) and their distinct members;
+# - hazard_types, operations, methods: the instances of these classes.
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ccso: <https://w3id.org/hacid/onto/ccso/>
+PREFIX top:  <https://w3id.org/hacid/onto/top-level/>
+PREFIX data: <https://w3id.org/hacid/onto/data/>
+
+SELECT * WHERE {
+  {
+    SELECT (COUNT(DISTINCT ?model) AS ?models) WHERE {
+      ?simulation a ccso:SingleSimulation ; ccso:usesModel ?model .
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?simulation) AS ?simulations)
+           (COUNT(DISTINCT ?global) AS ?global_simulations)
+           (COUNT(DISTINCT ?downscaling) AS ?downscalings) WHERE {
+      ?simulation a ccso:SingleSimulation .
+      OPTIONAL {
+        ?simulation a/rdfs:subClassOf* ccso:GlobalClimateSimulation .
+        BIND(?simulation AS ?global)
+      }
+      OPTIONAL {
+        ?simulation a/rdfs:subClassOf* ccso:DynamicalDownscaling .
+        BIND(?simulation AS ?downscaling)
+      }
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?dataset) AS ?datasets)
+           (COUNT(DISTINCT ?cmip5) AS ?cmip5_datasets)
+           (COUNT(DISTINCT ?cordex) AS ?cordex_cmip5_datasets)
+           (COUNT(DISTINCT ?ukcp18) AS ?ukcp18_datasets) WHERE {
+      VALUES ?type { ccso:SingleProjection ccso:ProbabilisticProjection }
+      {
+        GRAPH <https://w3id.org/climate-change-kg/data/cmip5/datasets> { ?dataset a ?type }
+        BIND(?dataset AS ?cmip5)
+      } UNION {
+        GRAPH <https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets> { ?dataset a ?type }
+        BIND(?dataset AS ?cordex)
+      } UNION {
+        GRAPH <https://w3id.org/climate-change-kg/data/ukcp18> { ?dataset a ?type }
+        FILTER(STRSTARTS(STR(?dataset), "https://w3id.org/climate-change-kg/data/ukcp18/datasets/"))
+        BIND(?dataset AS ?ukcp18)
+      }
+      FILTER NOT EXISTS { ?dataset top:hasComponent ?component }
+      FILTER NOT EXISTS { ?process data:hasOutput ?dataset }
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?variable) AS ?variables) WHERE {
+      { ?collection top:hasMember ?variable } UNION { ?variable top:isMemberOf ?collection }
+      FILTER(STRSTARTS(STR(?collection), "https://w3id.org/climate-change-kg/data/variables/"))
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?catalogue) AS ?index_catalogues) (COUNT(DISTINCT ?index) AS ?indices) WHERE {
+      { ?catalogue top:hasMember ?index } UNION { ?index top:isMemberOf ?catalogue }
+      FILTER(REGEX(STR(?catalogue), "^https://w3id.org/climate-change-kg/data/[^/]+/indices$"))
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?hazard) AS ?hazard_types) WHERE {
+      ?hazard a/rdfs:subClassOf* ccso:HazardType .
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?operation) AS ?operations) WHERE {
+      ?operation a/rdfs:subClassOf* top:Operation .
+    }
+  }
+  {
+    SELECT (COUNT(DISTINCT ?method) AS ?methods) WHERE {
+      ?method a/rdfs:subClassOf* top:Method .
+    }
+  }
+}

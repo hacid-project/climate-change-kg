@@ -1,0 +1,71 @@
+# Descriptive metadata of the knowledge graph, written by hand, shared by:
+#
+# - its description as a dataset (kg/export/void.ttl, in the KG): the creators
+#   (rule metadata_creators, metadata/creators.jq);
+# - its record on Zenodo, of which each release is a version (rule release,
+#   workflow/scripts/release.py): all the fields below, with the description
+#   rendered from publication/templates/zenodo-description.md.
+#
+# The other fields of the Zenodo record are computed at each release: version,
+# publication date, date of the build, the files, and the related identifiers
+# given by the configuration (the workflow at the tag of the release, the
+# snapshots of the sources, the ontologies, the website).
+
+title: Climate Change Knowledge Graph (CCKG)
+
+# In the order of the citation. name: "Family, Given" (as on Zenodo); orcid:
+# without https://orcid.org/
+creators:
+  - name: Ceriani, Miguel
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0000-0002-5074-2112
+  - name: Ciroku, Fiorela
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0000-0002-3885-6280
+  - name: Russo, Alessandro
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0009-0006-9437-0249
+  - name: Schembri, Massimiliano
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0000-0001-9625-0052
+  - name: Abele, Anrijs Kristians
+    affiliation: Met Office
+    orcid: 0000-0002-6053-2629
+  - name: Fung, Fai
+    affiliation: Met Office
+    orcid: 0000-0003-4367-151X
+  - name: Mittal, Neha
+    affiliation: Met Office
+    orcid: 0000-0002-7875-9952
+  - name: Trianni, Vito
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0000-0002-9114-8486
+  - name: Nuzzolese, Andrea Giovanni
+    affiliation: Institute of Cognitive Sciences and Technologies
+    orcid: 0000-0003-2928-9496
+
+keywords:
+  - knowledge graph
+  - linked data
+  - RDF
+  - SPARQL
+  - climate projections
+  - climate variables
+  - climate indices
+  - CMIP5
+  - CORDEX
+  - UKCP18
+
+# Zenodo identifiers: licence, language (ISO 639-3), grants (funder DOI::award)
+license: cc-by-4.0
+language: eng
+grants:
+  - 10.13039/501100000780::101070588
+
+# Zenodo communities (identifiers), if any
+communities: []
+
+# Related identifiers added to every version, besides those computed (e.g.
+# the paper, once published: {identifier: <DOI>, relation: isSupplementTo,
+# resource_type: publication-article, scheme: doi})
+related_identifiers: []

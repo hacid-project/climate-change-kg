@@ -1,25 +1,21 @@
-# Data ingestion workflow for the climate services KG.
+# Workflow of the Climate Change Knowledge Graph (see the README).
 #
-# Run from the repository root, e.g.:
-#   snakemake --cores 1                       # mapping (default)
-#   snakemake --cores 1 mapping               # all the mappings to the KG
-#   snakemake --cores 1 sources_analysis      # all the analyses of the sources (not in the KG)
-#   snakemake --cores 1 consolidate           # the KG loaded, consolidated, described and exported (kg/)
-#   snakemake --cores 1 validate              # the consolidated KG validated with its SHACL shapes (shapes/)
-#   snakemake --cores 1 metadata              # the metadata of the KG (VoID, DCAT, PROV), loaded in it
-#   snakemake --cores 1 ontologies            # HACID ontologies (top-level, data, ccso)
-#   snakemake --cores 1 gwls                  # global warming levels
-#   snakemake --cores 1 cf_standard_names     # variables of the CF standard name table
-#   snakemake --cores 1 cmor_tables           # variables of the CMOR tables (MIP and previous variables)
-#   snakemake --cores 1 cmip5_cvs             # CMIP5 experiments and institutions
-#   snakemake --cores 1 cmip5                 # CMIP5 datasets
-#   snakemake --cores 1 cordex_domains        # CORDEX-CMIP5 domains and grids
-#   snakemake --cores 1 cordex_cmip5_cvs      # CORDEX RCMs and their institutes
-#   snakemake --cores 1 cordex_cmip5          # CORDEX-CMIP5 datasets
-#   snakemake --cores 1 ukcp18                # UKCP18 datasets
-#   snakemake --cores 1 climdex               # climate indices of Climdex/Climpact
-#   snakemake --cores 1 mohc_cvs              # controlled vocabularies of the Met Office Hadley Centre
-#   snakemake --cores 1 cmor_tables_analysis  # analysis of all the CMOR tables editions
+# Run from the repository root. The main targets:
+#   snakemake --cores 4                         # build (default): the whole KG, validated, with its metadata
+#   snakemake --cores 4 release --config version=X.Y.Z    # a release (rules/release.smk)
+#   snakemake --cores 4 release_preview --config version=X.Y.Z  # a release up to the draft on Zenodo
+#   snakemake --cores 4 sources_analysis        # the analyses of the sources (not in the KG)
+#
+# Parts of the build:
+#   snakemake --cores 4 mapping                 # all the mappings to the KG
+#   snakemake --cores 4 consolidate             # the KG loaded, consolidated, described and exported (kg/)
+#   snakemake --cores 4 validate                # the consolidated KG validated with its SHACL shapes (shapes/)
+#   snakemake --cores 4 metadata                # the metadata of the KG (VoID, DCAT, PROV), loaded in it
+#   snakemake --cores 4 <source>                # the mapping of one source: ontologies, gwls,
+#                                               # cf_standard_names, cmor_tables, cmip5_cvs, cmip5,
+#                                               # cordex_domains, cordex_cmip5_cvs, cordex_cmip5, ukcp18,
+#                                               # climdex, mohc_cvs
+#   snakemake --cores 4 cmor_tables_analysis    # analysis of all the CMOR tables editions
 
 import csv
 import glob
@@ -89,9 +85,19 @@ include: "rules/climdex.smk"
 include: "rules/mohc_cvs.smk"
 
 
+# The whole KG: mapped, consolidated, validated (rule validate fails on
+# violations), described (with its key figures) and exported
+rule build:
+    default_target: True
+    input:
+        "kg/export/kg.nq.gz",
+        "kg/export/void.ttl",
+        "kg/validation/passed",
+        "kg/metadata/figures.json",
+
+
 # Mappings of the sources to the KG
 rule mapping:
-    default_target: True
     input:
         rules.ontologies.input,
         rules.gwls.input,
@@ -126,3 +132,7 @@ include: "rules/validate.smk"
 
 # Metadata of the KG (statistics, provenance, results of the validation)
 include: "rules/metadata.smk"
+
+
+# Release of a version of the KG (Zenodo, GitHub)
+include: "rules/release.smk"

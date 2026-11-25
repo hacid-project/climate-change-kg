@@ -9,12 +9,21 @@
 #   $config  the configuration of the workflow
 #   $commit  the commit of the workflow
 #   $date    the date and time of the build (xsd:dateTime)
+#   $release (optional, --argjson) the release being made (rule release,
+#            kg/release/<version>/commit.json): {version, doi, url, date,
+#            concept_doi, files_url, previous: {version, doi} or null}. The KG
+#            then has the version of the release (otherwise the short commit),
+#            and the release is described as a version of it (DCAT 3)
 
 # A value of the configuration that is given (not missing nor empty)
 def present: select(. != null and . != "");
 
 # The page of a git repository (its URL without .git)
 def repository: sub("\\.git$"; "");
+
+# The release, if any
+($ARGS.named.release // null) as $release
+|
 
 # A source in a git repository at a ref
 def git_source($id; $repo; $ref):
@@ -41,7 +50,7 @@ def git_source($id; $repo; $ref):
     {
       "@id": "kg",
       "dcterms:modified": {"@type": "xsd:dateTime", "@value": $date},
-      "dcat:version": $commit[:7],
+      "dcat:version": (if $release then $release.version else $commit[:7] end),
       "prov:wasGeneratedBy": {
         "@id": "kg/builds/\($commit[:7])",
         "@type": "prov:Activity",
@@ -83,6 +92,40 @@ def git_source($id; $repo; $ref):
       "dcat:accessURL": {"@id": .},
       "dcterms:identifier": (select(startswith("https://doi.org/")) | ltrimstr("https://doi.org/"))
     }),
+    # The release: a version of the KG, with its DOI and its files on Zenodo
+    ($release | values | (
+      {"@id": "kg", "dcat:hasVersion": {"@id": "kg/releases/\(.version)"}},
+      {
+        "@id": "kg/releases/\(.version)",
+        "@type": "dcat:Dataset",
+        "dcterms:title": {"@language": "en", "@value": "Climate Change Knowledge Graph \(.version)"},
+        "dcat:version": .version,
+        "dcterms:identifier": .doi,
+        "dcterms:issued": {"@type": "xsd:date", "@value": .date},
+        "dcterms:isVersionOf": {"@id": "kg"},
+        "foaf:page": {"@id": "https://doi.org/\(.doi)"},
+        "dcat:distribution": {"@id": "kg/releases/\(.version)/distributions/nquads"}
+      } + (.previous | values | {"dcat:previousVersion": {"@id": "kg/releases/\(.version)"}} // {}),
+      {
+        "@id": "kg/releases/\(.version)/distributions/nquads",
+        "@type": "dcat:Distribution",
+        "dcterms:title": {"@language": "en", "@value": "N-Quads dump of the Climate Change Knowledge Graph \(.version)"},
+        "dcterms:format": {"@id": "http://www.w3.org/ns/formats/N-Quads"},
+        "dcat:mediaType": {"@id": "https://www.iana.org/assignments/media-types/application/n-quads"},
+        "dcat:compressFormat": {"@id": "https://www.iana.org/assignments/media-types/application/gzip"},
+        "dcterms:license": {"@id": "https://creativecommons.org/licenses/by/4.0/"},
+        "dcat:accessURL": {"@id": "https://doi.org/\(.doi)"},
+        "dcat:downloadURL": {"@id": "\(.files_url)/kg.nq.gz?download=1"}
+      },
+      (.previous | values | {
+        "@id": "kg/releases/\(.version)",
+        "@type": "dcat:Dataset",
+        "dcat:version": .version,
+        "dcterms:identifier": .doi,
+        "dcterms:isVersionOf": {"@id": "kg"},
+        "foaf:page": {"@id": "https://doi.org/\(.doi)"}
+      })
+    )),
     git_source("sources/ontologies"; $config.ontologies.repo; $config.ontologies.version),
     git_source("sources/esgf-config"; $config.cmip5_cvs.esgf_config_repo; $config.cmip5_cvs.esgf_config_version),
     git_source("sources/cordex-domains"; $config.cordex_domains.repo; $config.cordex_domains.version),

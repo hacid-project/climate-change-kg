@@ -11,15 +11,18 @@ It brings together the descriptions of climate projections produced by internati
 
 ## At a glance
 
+{% assign release = site.data.releases.current %}
+In release {{ release.version }} ({{ release.date }}, [{{ release.doi }}](https://doi.org/{{ release.doi }})):
+
 | Content | Amount |
 |:--|:--|
-| Climate models | 93 (global, regional and convection-permitting) |
-| Simulations | about 2,800 (global simulations and dynamical downscalings) |
-| Datasets | about 613,000 |
-| Climate variables | about 6,900 (standard, MIP and project-specific variables) |
-| Climate indices | 153, from 5 catalogues |
-| Hazard types | 42 |
-| Climate service operations and methods | 81 operations, 60 methods |
+| Climate models | {{ release.formatted.models }} (global, regional and convection-permitting) |
+| Simulations | {{ release.formatted.simulations }} ({{ release.formatted.global_simulations }} global simulations and {{ release.formatted.downscalings }} dynamical downscalings) |
+| Datasets | {{ release.formatted.datasets }} |
+| Climate variables | {{ release.formatted.variables }} (standard, MIP and project-specific variables) |
+| Climate indices | {{ release.formatted.indices }}, from {{ release.formatted.index_catalogues }} catalogues |
+| Hazard types | {{ release.formatted.hazard_types }} |
+| Climate service operations and methods | {{ release.formatted.operations }} operations, {{ release.formatted.methods }} methods |
 
 ## Climate variables and indices
 

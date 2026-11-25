@@ -1,329 +1,333 @@
-# Climate Change Knowledge Graph (CCKG): ingestion workflow
+# Climate Change Knowledge Graph (CCKG): workflow
 
-Code and data used to build the [Climate Change Knowledge Graph](https://w3id.org/climate-change-kg) (CCKG), a knowledge graph of
-climate variables, indices, hazards, models, simulations and projection datasets (CMIP5, CORDEX-CMIP5, UKCP18). It was
-first developed, as the climate services knowledge graph, in the European project
+The [Climate Change Knowledge Graph](https://w3id.org/climate-change-kg) describes, as linked data, the climate
+information used by climate services: climate variables and indices, hazards, emissions scenarios, climate models,
+simulations and projection datasets (CMIP5, CORDEX-CMIP5, UKCP18). This repository is the workflow that builds it from
+its sources, validates it and releases it. The releases are archived on Zenodo
+([10.5281/zenodo.24305088](https://doi.org/10.5281/zenodo.24305088)) and served at
+<https://w3id.org/climate-change-kg/sparql>. It was first developed in the European project
 [HACID](https://www.hacid-project.eu/).
 
-The resources of the KG are in the namespace `https://w3id.org/climate-change-kg/data/` (until November 2026
-`https://w3id.org/hacid/data/cs/`, whose IRIs are to redirect to the new ones: see [`publication/w3id/`](publication/w3id/)).
-The ontologies keep their HACID namespaces (`https://w3id.org/hacid/onto/`).
+## How the pipeline is organised
 
-## Snakemake workflow
+```
+sources ──▶ mapping ──▶ consolidation ──▶ validation ──▶ metadata ──▶ export ──▶ release
+(pinned)    (jq, per    (Jena TDB2 +      (SHACL         (DCAT, VoID,  (kg.nq.gz,  (git tag, GitHub,
+            source)     SPARQL updates)   shapes)        PROV, DQV)    void.ttl)   Zenodo, website)
+```
 
-The ingestion is a [Snakemake](https://snakemake.github.io/) workflow (`workflow/Snakefile`, configured in
-`config/config.yaml`): every graph of the KG listed in `graph_names.csv` is either produced by the `mapping` target
-or a file written by hand (`data-sources/*.ttl`, `data-sources/climdex/*.ttl`).
-It requires `git`, `curl`, `jq` (1.8, as the UKCP18 mapping uses its syntax) and the Python packages in
-`workflow/requirements.txt`:
+- **Sources.** Every source is taken at a fixed version given in `config/config.yaml`: git commits of public
+  repositories, versions of tables, Zenodo snapshots of the dataset metadata. Some content is curated in this
+  repository (`data-sources/*/data`, `data-sources/*.ttl`).
+- **Mapping.** Each source has a folder, `data-sources/<source>/`, with its mapping to RDF (`mapping/`, jq programs),
+  its downloaded data (`data/`), its output (`rdf/`, JSON-LD) and the decisions taken on its issues (`DECISIONS.md`).
+- **Consolidation.** The outputs and the hand-written files, listed with their named graphs in `graph_names.csv`, are
+  loaded into an Apache Jena TDB2 dataset (`kg/`), and the SPARQL updates of `consolidation/` are applied to it.
+- **Validation.** The KG is checked with the SHACL shapes of `shapes/`.
+- **Metadata.** The KG is described as a dataset (`metadata/`): creators, statistics, provenance (the build and the
+  version of every source), results of the validation, key figures.
+- **Export.** The KG is dumped as `kg/export/kg.nq.gz` with its description `kg/export/void.ttl`.
+- **Release.** A version of the KG is published on Zenodo, and the repository, its tag, the GitHub release, the
+  record of the workflow on Zenodo and the website are made coherent with it.
+
+All the steps are rules of one [Snakemake](https://snakemake.github.io/) workflow (`workflow/Snakefile`,
+`workflow/rules/`). How each step works is described in [`doc/pipeline.md`](doc/pipeline.md).
+
+| Path | Content |
+|:--|:--|
+| `config/config.yaml` | versions of the sources, options of the steps, release settings |
+| `data-sources/` | one folder per source: mapping, decisions, (downloaded) data, (generated) RDF |
+| `graph_names.csv` | the files of each named graph of the KG |
+| `consolidation/`, `consolidation_updates.csv` | the SPARQL updates applied after the load, in order |
+| `shapes/` | the SHACL shapes of the KG ([`shapes/README.md`](shapes/README.md)) |
+| `metadata/` | the description of the KG: hand-written parts (`kg.ttl`, `record.yaml`) and the queries and mappings completing it |
+| `publication/` | release notes, templates of the releases, w3id redirects |
+| `website/` | the documentation website (GitHub Pages), with the facts of the releases in `website/_data/releases.json` |
+| `example-queries/`, `checkup-queries/` | SPARQL queries: examples, and checks of the KG |
+| `kg/`, `logs/` | outputs of the workflow (not tracked) |
+
+## Requirements
+
+To **build** the KG:
+
+| Requirement | Version | Check | Notes |
+|:--|:--|:--|:--|
+| git | any recent | `git --version` | also used to fetch the pinned sources |
+| Python | 3.11 or later | `python3 --version` | Snakemake 9 needs 3.11 |
+| The Python packages of `workflow/requirements.txt` | as listed | `snakemake --version` | Snakemake and its git and Zenodo storage plugins, `yq` (gives `xq` and `yq`), `csvkit` (gives `csvjson`), `xlrd`, and, for the releases, `requests`, `pyyaml`, `rdflib`, `markdown` |
+| jq | 1.8 or later | `jq --version` | the UKCP18 mapping uses syntax of jq 1.8 |
+| curl, gzip, tar | any | | |
+| Java | 21 or later | `java -version` | required by Apache Jena 6 |
+| Apache Jena command-line tools | 6.2.0 | `riot --version` | `riot`, `arq`, `shacl`, `tdb2.tdbloader`, `tdb2.tdbupdate`, `tdb2.tdbquery`, `tdb2.tdbdump` on the `PATH` (the `bin/` folder of the [binary distribution](https://jena.apache.org/download/)) |
+| Memory | 16 GB for the JVM | | `consolidate.jvm_args` (`-Xmx16G`): the JSON-LD parser of Jena reads a whole document in memory |
+| Disk | several GB | | the two TDB2 datasets (as loaded, and consolidated) take about 2.2 GB each; the sources and their RDF take more |
+| Network | | | GitHub (pinned repositories), Zenodo (snapshots of the dataset metadata), cfconventions.org (CF standard names) |
+
+Optional, to inspect the KG locally: Apache Jena Fuseki (`fuseki-server` on the `PATH`).
+
+To **release** a version, also:
+
+| Requirement | How to get it | Check |
+|:--|:--|:--|
+| A Zenodo personal access token with the scopes `deposit:write` and `deposit:actions`, of an account that can edit the record of the KG ([10.5281/zenodo.24305088](https://doi.org/10.5281/zenodo.24305088)) | zenodo.org > Account > Applications > Personal access tokens | `export ZENODO_TOKEN=...` (the release checks it) |
+| The GitHub CLI, authenticated with the right to push to `hacid-project/climate-change-kg` | [cli.github.com](https://cli.github.com/), then `gh auth login` | `gh auth status` |
+| The Zenodo GitHub integration turned on for `hacid-project/climate-change-kg` | zenodo.org > Account > GitHub (needs admin rights on the repository) | the workflow record [10.5281/zenodo.24304389](https://doi.org/10.5281/zenodo.24304389) gets a version for each GitHub release |
+| A git identity | `git config user.name` / `user.email` | the release makes a commit and a tag |
+
+## Setup (once)
+
+```bash
+git clone https://github.com/hacid-project/climate-change-kg.git
+```
+
+```bash
+cd climate-change-kg
+```
+
+```bash
+python3 -m venv .venv
+```
+
+Activate the environment (in every new terminal):
+
+```bash
+source .venv/bin/activate
+```
 
 ```bash
 pip install -r workflow/requirements.txt
-snakemake --cores 4 mapping            # all the mappings to the KG (default target)
-snakemake --cores 4 sources_analysis   # all the analyses of the sources
-snakemake --cores 4 cmor_tables        # just the variables of the CMOR tables
-snakemake --cores 4 consolidate        # the KG loaded, consolidated, described and exported (kg/)
-snakemake --cores 4 validate           # the consolidated KG validated with its SHACL shapes (shapes/)
 ```
 
-The decisions taken for each data source on its issues, inconsistencies and conflicting versions (and the cases left
-for further analysis) are documented in its `DECISIONS.md` (`data-sources/cf-standard-names`, `cmor-tables`, `cmip5`,
-`cordex-domains`, `cordex-cmip5`, `ukcp18`, `mohc-cvs`, `climdex`, `cmip5-cvs`, `cordex-cmip5-cvs`).
+Then install jq, Java and Jena with your package manager or from their sites, put the Jena `bin/` folder on the
+`PATH`, and check each command of the table above.
 
-### Consolidation
+All the commands below are run from the root of the repository, with the virtual environment active. `--cores 4` is
+the number of jobs run in parallel; the steps that open the TDB2 dataset run alone anyway.
 
-The rule `consolidate` (`workflow/rules/consolidate.smk`), run on the outputs of `mapping`, builds the KG with the
-[Apache Jena](https://jena.apache.org/) command-line tools (which must be on the `PATH`), in four steps:
+## Analyze the sources
 
-1. `consolidate_load`: the files of each graph listed in `graph_names.csv` (path or glob pattern, graph name, skip)
-   are loaded into a new TDB2 dataset, `kg/tdb2-loaded` (`config/config.yaml`, `consolidate.loaded_location`; `kg/`
-   is not tracked), with `tdb2.tdbloader` (`workflow/scripts/consolidate_load.py`, which writes the graphs and their files
-   in `kg/load.json`);
-2. `consolidate_updates`: the loaded dataset is copied to `kg/tdb2` (`consolidate.location`), and the SPARQL updates
-   listed in `consolidation_updates.csv` (in `consolidation/`) are applied to the copy in their order with
-   `tdb2.tdbupdate`, seeing the union of the named graphs as the default graph. The loaded dataset is left as it is, so
-   that a change in the updates reruns them from it, without loading the RDF files again;
-3. `metadata`: the description of the KG as a dataset is built (`kg/export/void.ttl`), with the results of its
-   validation, and loaded as a named graph (see [Metadata](#metadata) and [Validation](#validation));
-4. `consolidate_export`: the dataset is exported as N-Quads, `kg/export/kg.nq.gz`, with `tdb2.tdbdump`.
+```bash
+snakemake --cores 4 sources_analysis
+```
 
-The JVM options of the tools are in `config/config.yaml` (`consolidate.jvm_args`, `-Xmx16G`: the JSON-LD parser of
-Jena reads a whole document in memory, and the UKCP18 datasets are about 1.8 GB). To inspect it, `./serve_kg.sh`
-serves the dataset read-only with Fuseki (`fuseki-server` must be on the `PATH`) at `http://localhost:3030/kg`
-(SPARQL endpoint `/kg/sparql`), with the union of the named graphs as the default graph (other location as first
-argument, further options for `fuseki-server` after it, e.g. `./serve_kg.sh kg/tdb2 --port=3031`; not while the
-workflow is writing the dataset). The dataset can also be served by a Fuseki installation pointing its configuration
-(`fuseki-conf.ttl`, installed by `setup_kg.sh`) to its location.
+It analyses the sources without changing the KG, to review the mappings and the decisions of the `DECISIONS.md` files:
 
-### Labels
+| Output | What it tells |
+|:--|:--|
+| `data-sources/cmor-tables/analysis/` | how the variable definitions evolve across all the editions of the CMOR tables of `config/config.yaml` (`cmor_tables.editions`): additions, deletions, changes, names reused (see its README) |
+| `data-sources/ukcp18/analysis/unmapped-variables.json.gz` | the UKCP18 datasets whose variable is not a variable of the KG |
+| `data-sources/ukcp18/analysis/variables-check.json` | the local UKCP18 variables checked against the datasets |
+| `data-sources/cordex-cmip5/analysis/variables-check.json`, `.csv` | the variables of the CORDEX-CMIP5 datasets against the CORDEX standard output and the variables of the KG |
 
-The labels (`rdfs:label`) follow one convention in all the mappings: a label that is an identifier or a standard name
-(the id of a dataset, of a simulation or of their outputs, the name of a model, a CF standard name, the symbol of a
-unit, an acronym as `CMIP5`) is a string without language; a label that is text (the long name of a variable or of an
-index, the name of an organization, of a hazard, of an operation, the description of a region or of a grid) is in
-English (`@en`). No other language is used, and the labels of a class are of the same kind, but where the class has
-resources of both kinds (e.g. the CF variables, labelled by their standard name, and the MIP variables, by their long
-name). The same holds for the acronyms (`top:acronym`), always identifiers, for the comments (`rdfs:comment`) and the
-definitions (`top:definition`), always text, and for the alternative labels (`top:altLabel`), of either kind. The shapes check it (`shape:Resource-label`, `shape:Resource-acronym`, `shape:Resource-comment`,
-`shape:LabelLanguage`). The values of these properties for each kind of resource, the schemes of the IRIs and the
-variations left for review are documented in [`doc/conventions.md`](doc/conventions.md).
+To look at a built KG, serve it read-only with Fuseki at `http://localhost:3030/kg` (SPARQL endpoint `/kg/sparql`,
+union of the named graphs as default graph, no inference), not while the workflow is writing it:
 
-### Validation
+```bash
+./serve_kg.sh
+```
 
-The consolidated KG is validated with the [SHACL](https://www.w3.org/TR/shacl/) shapes of `shapes/`
-(`snakemake --cores 4 validate`, `workflow/rules/validate.smk`), with the `shacl` tool of Jena: the shapes are checked
-on the union of the named graphs (`kg/validation/report.ttl`), and the results are summarised by severity, shape and
-message in `kg/validation/summary.tsv`. The rule fails if there are results of the severities of `config/config.yaml`
-(`validate.fail_on`, by default the violations), while warnings and informative results are only reported. The
-consolidation does not depend on the outcome (only on the summary, for the metadata): to export the KG only if it is
-valid, build `validate` with it (`snakemake --cores 4 validate consolidate`). The shapes, their severities and how to
-read the report are documented in [`shapes/README.md`](shapes/README.md).
+The queries of `checkup-queries/` (dangling IRIs, missing types, ...) and of `example-queries/` can be run there.
 
-### Metadata
+## Build and validate the KG
 
-The KG is described as a dataset (`snakemake --cores 4 metadata`, `workflow/rules/metadata.smk`) with
-[DCAT](https://www.w3.org/TR/vocab-dcat-3/), [VoID](https://www.w3.org/TR/void/), the
-[SPARQL service description](https://www.w3.org/TR/sparql11-service-description/),
-[PROV-O](https://www.w3.org/TR/prov-o/), Dublin Core terms and the
-[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The description, `https://w3id.org/climate-change-kg/data/kg`, is
-assembled in `kg/export/void.ttl` from:
+One command builds the whole KG from scratch, or rebuilds what a change affects:
 
-1. `metadata/kg.ttl`, written by hand: title, description, creators, publisher, license, keywords, themes and
-   distribution of the KG (`dcat:Dataset`, `void:Dataset`), and for each named graph `<g>` a `void:Dataset` `<g#graph>`
-   with its title, description and the sources it is derived from (`prov:wasDerivedFrom`);
-2. `metadata/statistics.rq`, a query on the KG: its named graphs (`sd:namedGraph`, `void:subset`) and, for the KG and
-   each of them, the numbers of triples, entities, distinct subjects and objects, classes and properties, with the
-   partitions by class and by property;
-3. `metadata/provenance.jq`: the build (`prov:wasGeneratedBy`, with its date and the commit of this repository, also
-   `dcterms:modified` and `dcat:version`), the versions of the sources given by the configuration of the workflow
-   (git commits, version of the CF standard name table) and, if set in `config/config.yaml` (`metadata`), the public
-   SPARQL endpoint (`void:sparqlEndpoint`, and a `dcat:DataService`), the website documenting the KG
-   (`dcat:landingPage`) and the DOI of the record of its dumps (`dcat:accessURL` of the distribution);
-4. `metadata/quality.jq`: the numbers of violations, warnings and informative results of the validation
-   (`dqv:QualityMeasurement`).
+```bash
+snakemake --cores 4
+```
 
-It is checked with its own shapes (`metadata/shapes.ttl`: e.g. every named graph of the KG has a title and a
-description, so a graph added to `graph_names.csv` is to be described in `metadata/kg.ttl`, and every graph described
-is in the KG) and loaded in the KG as the named graph `https://w3id.org/climate-change-kg/data/kg` (`config/config.yaml`,
-`metadata.graph`), replacing that of a previous build. The graph of the metadata is left out of the statistics and of
-the validation of the KG.
+(The default target is `build`.) It fetches the sources at their pinned versions, maps them, consolidates them,
+validates the KG with its shapes, describes it and exports it. Snakemake reruns only the steps whose inputs changed: a
+change in a mapping reruns that mapping and the steps after it. The first build takes a while (the UKCP18 and CORDEX
+mappings are the longest); the sources stay cached in `.snakemake/storage/` and `data-sources/*/data`.
 
-### Ontologies
+It **fails** if the KG does not conform to its shapes (results of the severities of `validate.fail_on`, by default
+violations), listing them; warnings and informative results are only reported. It also fails if the metadata does not
+conform to `metadata/shapes.ttl` (e.g. a named graph without a description in `metadata/kg.ttl`).
 
-The HACID ontologies used by the KG (`top-level`, `data`, `ccso`) are taken from their repository
-([hacid-project/knowledge-graph](https://github.com/hacid-project/knowledge-graph), `ontologies/{name}/{name}.owl`),
-at the commit of `config/config.yaml` (`ontologies`), through the git storage plugin, to
-`data-sources/ontologies/{name}.owl` (`snakemake --cores 4 ontologies`).
+The outputs:
 
-### Global warming levels
+| File | Content |
+|:--|:--|
+| `kg/export/kg.nq.gz` | the KG, all its named graphs, as gzipped N-Quads (also loaded in `kg/tdb2`) |
+| `kg/export/void.ttl` | its description: creators, statistics, provenance, validation results |
+| `kg/validation/summary.tsv` | the results of the validation by severity, shape and message (`report.ttl` has them all; how to read it: [`shapes/README.md`](shapes/README.md)) |
+| `kg/metadata/figures.json` | the key figures: models, simulations, datasets, variables, indices, ... |
+| `logs/` | the log of every step |
 
-The global warming levels (1.5 to 6 °C, by 0.5 °C) are generated with jq (`data-sources/gwls/mapping/gwls.jq`,
-without input) to `data-sources/gwls/rdf/gwls.jsonld` (`snakemake --cores 4 gwls`).
+Parts of the build can be run on their own: `mapping` (all the mappings), a single source (`ontologies`, `gwls`,
+`cf_standard_names`, `cmor_tables`, `cmip5_cvs`, `cmip5`, `cordex_domains`, `cordex_cmip5_cvs`, `cordex_cmip5`,
+`ukcp18`, `climdex`, `mohc_cvs`), `consolidate` (load, updates, metadata, export), `validate`, `metadata`. For example:
 
-### CF standard names
+```bash
+snakemake --cores 4 cmor_tables
+```
 
-The [CF standard name table](https://cfconventions.org/Data/cf-standard-names/), in the version of
-`config/config.yaml` (`cf_standard_names`), is downloaded as XML
-(`data-sources/cf-standard-names/data/cf-standard-name-table.xml`), converted to JSON by `xq` (of the Python
-package `yq`, with the conventions of [xmltodict](https://github.com/martinblech/xmltodict)) and mapped with jq (`mapping/standard-names.jq`,
-`snakemake --cores 4 cf_standard_names`) to `data-sources/cf-standard-names/rdf/standard-names.jsonld`: a
-variable for each entry, member of the CF variables, with its units of measure, and the aliases, the same as
-(`owl:sameAs`) their entries, with the alias as alternative label. The names of the table (entries and aliases) are also listed in
-`data-sources/cf-standard-names/data/standard-names.json`: the variables of the CMOR tables and the indices of the MOHC
-controlled vocabularies are linked to CF variables only by names of the table (the standard names of the CMOR tables
-that are not, are corrected when obvious, `data-sources/cmor-tables/mapping/cf-standard-name-fixes.json`, or not
-linked).
+To force a step to run again (e.g. a source pinned to a branch that moved), add `--forcerun <rule>`; to see what
+would run, add `-n`.
 
-The XML is also read by the analysis of the CMOR tables (to resolve the aliases).
+What to edit for common changes:
 
-### CMOR tables
+| Change | Edit | Then |
+|:--|:--|:--|
+| A mapping, or the curated data of a source | `data-sources/<source>/mapping/`, `data/` (and its `DECISIONS.md`) | build |
+| A newer version of a source | `config/config.yaml` | build; update the hand-written figures of the source in `website/sources.md` |
+| The ontologies | their commit in `config/config.yaml` (`ontologies.version`) | build |
+| A consolidation update | `consolidation/`, listed in `consolidation_updates.csv` | build |
+| The shapes | `shapes/*.ttl` | build |
+| A new named graph | `graph_names.csv`, and its description in `metadata/kg.ttl` | build |
+| The creators, title or keywords | `metadata/record.yaml` (shared with Zenodo) | build |
+| Anything worth a release | a line in the section *Unreleased* of `CHANGELOG.md` | |
 
-Variable definitions are ingested from editions (git tags) of the CMOR tables
-of each era, configured with the repository of its tables in `config/cmor-tables-eras.json`:
-`cmip5` ([cmip5-cmor-tables](https://github.com/PCMDI/cmip5-cmor-tables)),
-`cmip6` ([cmip6-cmor-tables](https://github.com/PCMDI/cmip6-cmor-tables)) and
-`cmip6plus` ([mip-cmor-tables](https://github.com/PCMDI/mip-cmor-tables)),
-each edition `{era}/{version}` checked out through the git storage plugin (in `.snakemake/storage/git/`)
-and its tables collected in `data-sources/cmor-tables/data/{era}/{version}.json` (legacy CMOR 2
-plain-text tables of CMIP5 being converted to JSON by `mapping/cmor2-tables.jq`).
+## Release a new version
 
-The KG has the MIP variables, i.e. the variables of the current edition, and the previous
-variables kept separate from them (see `data-sources/cmor-tables/mapping/mip-mapping.md`), so only
-the current edition and the editions with previous variables are retrieved
-(`snakemake --cores 4 cmor_tables`):
+A release makes everything coherent with a new version of the KG:
 
-1. `data-sources/cmor-tables/rdf/current/{era}/{version}.jsonld`: all the variables of the
-   current edition (`mapping/variables.jq`);
-2. `data-sources/cmor-tables/rdf/previous/{era}/{version}.jsonld`: only the variables of the
-   `keep`, `sign_change` and `unit_change` entries of each previous edition
-   (`mapping/mip-previous-variables.jq`).
+- **the repository:** a release commit, tagged `vX.Y.Z`, with `CHANGELOG.md` (the changes moved to their version),
+  `CITATION.cff` (version and date), the release notes `publication/releases/vX.Y.Z.md`, and the data of the website
+  `website/_data/releases.json` (versions, DOIs, figures, versions of the sources), from which the website shows the
+  releases and the current figures;
+- **GitHub:** the release commit and the tag pushed, and a GitHub release with the notes;
+- **the record of the workflow on Zenodo:** a new version, archived from the GitHub release by the Zenodo GitHub
+  integration;
+- **the record of the KG on Zenodo:** a new version with the dump and its description, and the metadata of
+  `metadata/record.yaml` (creators, keywords, licence, funding), the version, a description generated from the release
+  (`publication/templates/zenodo-description.md`), and the related identifiers: the workflow version
+  (`isCompiledBy`), the snapshots of the sources (`isDerivedFrom`), the ontologies (`requires`), the website
+  (`isDocumentedBy`);
+- **the KG itself:** its description (`void.ttl`, also in the dump) says that it is this release, with its DOI, its
+  previous release and the commit of the tag that built it.
 
-Changing a mapping reruns only the affected steps.
+### Choose the version
 
-The evolution of the variable definitions across all the editions listed in `config/config.yaml` (additions, deletions,
-modifications, names used for different quantities) is analysed in
-`data-sources/cmor-tables/analysis/` (`snakemake --cores 4 cmor_tables_analysis`, see its README).
+Versions follow semantic versioning on what queries rely on: the IRIs, the named graphs and the SHACL shapes.
 
-### CMIP5 experiments and institutions
+- **Major** (`2.0.0`): a change that breaks queries: IRIs removed or renamed (without a deprecated equivalent),
+  named graphs changed, shapes changed so that queries break (a property removed, a range changed), an incompatible
+  version of the ontologies.
+- **Minor** (`1.1.0`): new content or structure: new sources, new kinds of entities or properties, a newer snapshot of a
+  source.
+- **Patch** (`1.0.1`): corrections of values or labels, fixes of the metadata, no change of structure.
 
-The CMIP5 experiments and institutions are taken from the configuration of the ESGF publisher
-([ESGF/config](https://github.com/ESGF/config), through the git storage plugin), parsed in jq
-(`data-sources/cmip5-cvs/mapping/esgf-config.jq`): the experiments from the map of their descriptions in
-`esg.cmip5.ini`, the institutions joining its institute map with the models table, with some fixes
-(`mapping/institution-fixes.json`). They are mapped to `data-sources/cmip5-cvs/rdf/experiments.jsonld` and
-`institutions.jsonld` (`snakemake --cores 4 cmip5_cvs`). See `DECISIONS.md`.
+### Step by step
 
-### CMIP5 datasets
+1. **Describe the changes.** Make sure the section *Unreleased* of `CHANGELOG.md` lists what changed since the last
+   release (the release refuses to start if it is empty). If a source changed, update its hand-written figures in
+   `website/sources.md` (the versions and the numbers of datasets there are filled in by the release).
+2. **Get the repository ready.** Merge everything into `main`, then `git checkout main && git pull`. The working tree
+   must be clean and `main` equal to `origin/main`.
+3. **Set the credentials** (see [Requirements](#requirements)):
 
-The metadata of the CMIP5 datasets found on ESGF (see `query.txt`) is downloaded from Zenodo
-([10.5281/zenodo.23363413](https://doi.org/10.5281/zenodo.23363413)) through the Zenodo storage plugin
-to `data-sources/cmip5/data/cmip5.json` and mapped by `data-sources/cmip5/mapping/datasets.jq` to `data-sources/cmip5/rdf/datasets.jsonld`
-(`snakemake --cores 4 cmip5`): datasets, simulation, ensemble and experiment outputs, simulations,
-models and their spatial and temporal grids. The variables of the datasets are the MIP variables
-resolved through `data-sources/cmor-tables/mapping/mip-mapping.json` from their definitions in the
-CMIP5 CMOR tables (e.g. a CMIP5 `tos`, in K, is `.../variables/mip/cmip6/6.0.19/tos`): the IRIs of the variables of
-the CMIP5 tables are indexed once from the configuration alone (`cmip5_variable_index` in `mapping/esgf.jq`, with
-the index of the mapping of the MIP variables, `data-sources/cmor-tables/data/mip-mapping-index.json`, rule
-`cmor_tables_mip_mapping_index`), and each dataset looks up its own. The variables not in the CMOR tables are skipped (`gridspec`),
-renamed (the INM-CM4 `rluscs`, a misnamed `rsuscs`) or defined locally for their model (e.g. the CanESM2 `orograw`, as
-`.../variables/cmip5/CanESM2/orograw`, in `data-sources/cmip5/rdf/variables.jsonld`), as given by
-`data-sources/cmip5/mapping/variables.json` (see `data-sources/cmip5/DECISIONS.md`).
+   ```bash
+   export ZENODO_TOKEN=<your Zenodo token>
+   ```
 
-### CORDEX-CMIP5 domains and grids
+4. **Preview (recommended).** Everything except what is public:
 
-The tables of the CORDEX-CMIP5 grids, rotated and regular, are read from the
-[domain tables](https://github.com/WCRP-CORDEX/domain-tables) of WCRP-CORDEX, at the commit of
-`config/config.yaml` (`cordex_domains`), through the git storage plugin. Each is converted to JSON by `csvjson`
-(of the Python package `csvkit`), the two are merged in `data-sources/cordex-domains/data/CORDEX-CMIP5.json` and
-mapped with jq (`mapping/domains.jq`, `snakemake --cores 4 cordex_domains`) to
-`data-sources/cordex-domains/rdf/domains.jsonld`: the domains, the grids (dimensional spaces) with their resolution,
-bounding regions and specializations, and the rotated dimensional spaces with their poles.
+   ```bash
+   snakemake --cores 4 release_preview --config version=X.Y.Z
+   ```
 
-### CORDEX RCMs
+   It builds and validates the KG, checks the preconditions, creates the draft of the new version on Zenodo (with its
+   DOI reserved), makes the release commit and the tag **locally**, rebuilds the description of the KG with the
+   release, and uploads the files and the metadata to the draft. Review the draft at the URL printed at the end
+   (`[release] The draft is ready to review: ...`), the release commit (`git show`) and the notes
+   (`publication/releases/vX.Y.Z.md`). To give up, see [If something goes wrong](#if-something-goes-wrong).
+5. **Release:**
 
-The CORDEX regional climate models, with their institutes, are taken from the list of IS-ENES Data
-(`CORDEX_RCMs_info.txt` of [IS-ENES-Data.github.io](https://github.com/IS-ENES-Data/IS-ENES-Data.github.io), through
-the git storage plugin), parsed in jq (`data-sources/cordex-cmip5-cvs/mapping/rcms-info.jq`) with some fixes
-(`mapping/rcm-fixes.json`), and mapped to `data-sources/cordex-cmip5-cvs/rdf/models.jsonld`
-(`snakemake --cores 4 cordex_cmip5_cvs`). See `DECISIONS.md`.
+   ```bash
+   snakemake --cores 4 release --config version=X.Y.Z
+   ```
 
-### CORDEX-CMIP5 datasets
+   It does what the preview does (or reuses it), then pushes the release commit and the tag, makes the GitHub release,
+   waits for the Zenodo GitHub integration to archive it (up to `release.workflow_doi_timeout` minutes), and publishes
+   the version of the KG on Zenodo with the DOI of that workflow version. It ends with
+   `[release] Published the Climate Change Knowledge Graph X.Y.Z: https://doi.org/...`.
+6. **After the release.** The website is redeployed automatically by GitHub Actions (the release commit changes
+   `website/`). The SPARQL endpoint and the linked data front end are updated separately, from the dump on Zenodo
+   (repository `hacid-project/climate-change-kg-docker`). Your local KG still describes itself as the release; the next
+   `snakemake --cores 4` describes it again as a build of its commit.
 
-The metadata of the CORDEX-CMIP5 datasets found on ESGF (see `download-data.sh`), in pages of the search results, is
-downloaded from Zenodo ([10.5281/zenodo.23477951](https://doi.org/10.5281/zenodo.23477951)) through the Zenodo
-storage plugin to `data-sources/cordex-cmip5/data/cordex-<n>.json` and mapped by
-`data-sources/cordex-cmip5/mapping/datasets.jq`, each page on its own, to `data-sources/cordex-cmip5/rdf/datasets/cordex-<n>.jsonld`
-(`snakemake --cores 4 cordex_cmip5`; small documents, to load them with less memory): datasets, the outputs of their simulations, driving ensembles, ensembles,
-experiments and domains, the simulations (downscalings of the CMIP5 simulations of the driving models), the regional
-models and the spatial (CORDEX domain) and temporal grids. The driving models are normalised to the CMIP5 model names
-(`mapping/cmip5-model-synonyms.json`), also in the dataset ids. The variables of the datasets are the MIP variables
-resolved, as for CMIP5, from their definitions in the CMIP5 CMOR tables of their time frequency (e.g. a CORDEX `sic`
-is `.../variables/mip/siconc`), looked up by each dataset in an index built once from the configuration
-(`cordex_variable_index` in `mapping/cordex-variables.jq`). The variables requested by CORDEX (see below) that are not variables of the KG (`ta200`,
-`ua500`, `va500`, `zg200`, `sund`, `clh`, `cll`, `clm`, `wsgsmax`) are defined locally from the CORDEX standard output,
-with the mapping of the CMOR tables (`variables_jsonld`), as `.../variables/cordex/<variable>` in
-`data-sources/cordex-cmip5/rdf/variables.jsonld` (collection `.../variables/cordex`), with the long names of those at a
-single pressure level derived from the analogous MIP variables (e.g. `ta200` is "Air Temperature at 200hPa", as `ta500`
-on `p500`). The other variables at a single pressure or height level that are not variables of the KG (e.g. `hus200`,
-`ua50m`) are defined in the same way from a compact specification (`mapping/level-variables.json`: for each base its
-long name, standard name, units and levels; `u` and `v` are aliases of `ua` and `va`); the other variables not in the
-CMOR tables are skipped (coordinates, e.g. `crs`), renamed to MIP variables (e.g. `sst` to `tos`) or defined locally
-(e.g. the bias-corrected `pr-bc`, derived from `pr`), as given by `mapping/local-variables.json` (see
-`data-sources/cordex-cmip5/DECISIONS.md`, which also records the doubtful cases).
+The steps of the release, in order (`workflow/rules/release.smk`, `workflow/scripts/release.py`):
 
-The variables requested for the CORDEX archive (`data-sources/cordex-cmip5/CORDEX_standard_output.xls`, the CORDEX
-standard output) are converted to JSON tables in the format of the CMOR tables, one per frequency
-(`CORDEX_standard_output.json`, rule `cordex_cmip5_standard_output`), and the variables of the datasets are checked
-against them and against the variables of the KG in `data-sources/cordex-cmip5/analysis/variables-check.json` (summary
-and variables) and `.csv` (`snakemake --cores 4 cordex_cmip5_variables_check`, part of `sources_analysis`): for each
-variable and time frequency, the number of datasets, whether it is requested at that frequency, the units and standard
-names of the standard output and those found in the datasets, and the resolved variable. The standard names found
-are compared with those of the standard output and of the CMIP5 CMOR tables: other names in a minority of the datasets
-are ignored, while other names in a majority of them (`standard_name_majority_other`) and different definitions
-(`standard_name_definitions_differ`) are left for further analysis; the units are compared in a canonical form, so that
-the same units written differently (e.g. `W/m2` for `W m-2`) are ignored, while different units (e.g. `K` for `m`,
-`units_inconsistent`) are left for further analysis. The known issues of the datasets are in
-`data-sources/cordex-cmip5/mapping/data-issues.json`: the datasets excluded from the mapping (`emiss` of the NARCliM
-models, the surface emissivity, not the CMIP5 `emiss`) and the names known to be used in place of the CF standard names
-(the clear-sky radiation fluxes of ALADIN63, `known_alias` in the check), the units known to be wrong (the
-geopotential heights in K of RegCM4-3, the placeholder units of `ts` of CCAM-1704 and `prc` of RegCM4-7) and the
-variables of a model with their own units (e.g. `pr` in mm and mm/month of BOM-SDM, the fractions in 1 instead of %,
-`.../variables/cordex/<model>/<variable>/<units>`); see `data-sources/cordex-cmip5/DECISIONS.md`.
+| Rule | What it does | Public? |
+|:--|:--|:--|
+| `build` | the KG built and validated | no |
+| `release_check` | version newer than the latest release on Zenodo and than the tags; clean working tree, on `main`, equal to `origin/main`; changes in `CHANGELOG.md`; Zenodo token and GitHub CLI working | no |
+| `release_draft` | a draft of the new version of the KG record on Zenodo, with its DOI reserved | no (a draft is private) |
+| `release_commit` | the release commit and the tag `vX.Y.Z`, local | no |
+| `metadata_*`, `consolidate_export` | the description of the KG rebuilt at the release commit, with the version and the DOI, and the KG exported | no |
+| `release_upload` | the files and the metadata uploaded to the draft | no |
+| `release_github` | the commit and the tag pushed; the GitHub release; the DOI of the workflow version | **yes** |
+| `release_publish` | the version of the KG published on Zenodo (cannot be undone) | **yes** |
 
-### UKCP18 datasets
+Each step records its state in `kg/release/X.Y.Z/`.
 
-The metadata of the UKCP18 datasets (from CEDA) is downloaded from Zenodo
-([10.5281/zenodo.23515656](https://doi.org/10.5281/zenodo.23515656)) through the Zenodo storage plugin, in JSON Lines
-(a dataset per line, `data/ceda_ukcp18_metadata.jsonl`), and mapped by the jq programs in
-`data-sources/ukcp18/mapping` (`snakemake --cores 4 ukcp18`), reading and mapping one dataset at a time:
+### If something goes wrong
 
-1. `rdf/spatial-grids.jsonld` and `data/spatial-grid-map.json`: the spatial grids of the UKCP18 resolutions;
-2. `data/model-variants.json`: the variants of the models of the land-gcm datasets;
-3. `rdf/variables.jsonld`: the local variables of the datasets (`https://w3id.org/climate-change-kg/data/variables/ukcp/...`),
-   with their units and baseline periods, generated from the specification `mapping/ukcp-variables.json` (see below);
-4. `rdf/models.jsonld`: the models of the Met Office Hadley Centre;
-5. `rdf/datasets/datasets-NNNN.jsonld`: the datasets, with their simulations and grids
-   (the datasets whose id does not match their metadata are listed in `logs/ukcp18/map_datasets.log`). Each dataset
-   is mapped on its own (`mapping/datasets.jq`, its nodes one per line, with the index of the MIP variables
-   `data-sources/cmor-tables/data/mip-mapping-index.json`), and the nodes are framed as JSON-LD documents of
-   `ukcp18.block_size` nodes (`config/config.yaml`, 10,000) by `mapping/frame.jq`, in a single jq process with the
-   modules `workflow/scripts/paginate.jq` and `workflow/scripts/best_effort_unique.jq`: neither the mapping nor the
-   loading needs the whole data in memory. The nodes of the CMIP5 and CORDEX-CMIP5 simulations, outputs and models,
-   given again by each dataset referring to them, are written once (among the last `ukcp18.unique_cache_size`
-   distinct ones).
-   The variable of a dataset is its local variable according to `mapping/ukcp-variables.json`
-   (`mapping/ukcp18-variables.jq`), otherwise the MIP variable resolved through
-   `data-sources/cmor-tables/mapping/mip-mapping.json` from the variable name (CMIP5 era), units and, for the
-   land-gcm datasets, CMIP5 table.
+- **A step failed** (network error, Zenodo unavailable, timeout of the GitHub integration): fix the cause and **run the
+  same command again**. The release resumes from the step that failed, reusing what exists (the draft, the commit,
+  the uploaded files).
+- **To give up before anything is public** (after a preview, or after a failure before `release_github`):
 
-`mapping/ukcp-variables.json` is a compact specification of the local variables, maintained by hand: the UKCP18
-variables, the MIP variables in other units, the anomaly variables with the baseline periods, the variables with return
-levels with the return periods, and the distribution representations (see `data-sources/ukcp18/DECISIONS.md`). The
-local variables are:
-   - each `<variable>Anom` with respect to a baseline period is an anomaly (`data:isAnomalyOf`) of the MIP variable
-     `<variable>`, `.../ukcp/<variable>Anom/<start year>-<end year>` (e.g. `.../ukcp/tasAnom/1981-2000`), with its
-     baseline period (`data:hasBaselineRegion`, a `data:TemporalRegion`, without representing the baseline variable);
-     it is a `data:RelativeAnomaly` for a percentage change (`prAnom`, `cltAnom`, `hussAnom`), otherwise a
-     `data:AbsoluteAnomaly`;
-   - the indices (`jetlat`, `jetstr`, `naodjf`, `wtype8`, `wtype30`) and `pr1day`, `pr5day` are derived
-     (`data:derivedFromVariable`) from the MIP variables `ua`, `psl` and `pr`;
-   - the variables whose units differ from those of the MIP variable (e.g. `tas` in degC, `pr` in mm/day) have a local
-     version, `.../ukcp/<variable>/<units>`, with its units, which is a linear transformation
-     (`data:isLinearTransformationOf`) of the MIP variable if the units are convertible;
-   - the return levels of the probabilistic datasets (land-prob) are variables,
-     `.../ukcp/<variable>/<return period>` (e.g. `.../ukcp/tasmax/rp20`), derived from the base variable
-     (`data:derivedFromVariable`). A return level is a form of aggregation and, like the others (min, max,
-     mean, ...), is not represented in more detail for now (no specific class or return period property);
-   - the variable of a probabilistic dataset is a distribution representation of its anomaly or return level
-     (`data:isProbabilisticRepresentationOf`, without modelling the random version), `.../<variable>/pdf`, `cdf` or
-     `sample`, a `data:ProbabilityDensityFunction`, `data:QuantileFunction` (the UKCP18 "cdf" datasets give the values
-     at percentiles) or `data:Sample` with its units (e.g. degC-1 for a pdf); the datasets have the same type.
+  ```bash
+  snakemake --cores 1 release_discard --config version=X.Y.Z
+  ```
 
-The datasets whose variable is not a variable of the KG (neither a MIP nor a previous variable, nor a UKCP18
-variable linked to MIP variables of the KG) are
-extracted, to review their mapping, in `data-sources/ukcp18/analysis/unmapped-variables.json.gz`, and the local
-variables are checked against the datasets in `data-sources/ukcp18/analysis/variables-check.json` (the datasets of
-each local variable, the local variables of no dataset, the datasets without a local variable whose units differ from
-those of their MIP variable) (both part of `snakemake --cores 4 sources_analysis`).
+  It deletes the draft on Zenodo, the local tag and the release commit, and the state of the release. Then run
+  `snakemake --cores 4` so that the KG describes itself as a build again.
+- **`main` is protected** and the push of the release commit is refused: merge the release commit into `main` through
+  a pull request (with a merge commit, so that the tagged commit stays as it is), then run the release command again.
+- **The Zenodo GitHub integration is off**, so no workflow version appears: turn it on (zenodo.org > Account >
+  GitHub), then delete and recreate the GitHub release for the tag (the integration archives releases made while it is
+  on), and run the release command again.
+- **Rehearse a whole release** on [sandbox.zenodo.org](https://sandbox.zenodo.org), a separate test site (its own
+  account and token), without pushing anything, with a pre-release version:
 
-The Zenodo plugin requires an access token, which is not needed for published records: a placeholder is
-used unless `SNAKEMAKE_STORAGE_ZENODO_ACCESS_TOKEN` is set.
+  ```bash
+  export ZENODO_TOKEN=<your token of sandbox.zenodo.org>
+  ```
 
-### Climdex/Climpact indices
+  ```bash
+  snakemake --cores 4 release --configfile config/release-sandbox.yaml --config version=X.Y.Z-rc1
+  ```
 
-The climate indices of [Climdex](https://www.climdex.org/learn/indices/) are taken from the table of the indices of
-the [Climpact user guide](https://github.com/ARCCSS-extremes/climpact/blob/master/www/user_guide/Climpact_user_guide.md#appendix-a-tables-of-climpact-indices)
-(`data-sources/climdex/data/table.md`), and their classification by sector from the
-[Climdex page of the indices by sector](https://www.climdex.org/learn/indices/sector/), curated in
-`data-sources/climdex/data/by-sector.json`. Both are kept in the repository as source (see `DECISIONS.md`) and mapped
-with jq (`mapping/climdex.jq`, `mapping/by_sector.jq`, `snakemake --cores 4 climdex`) to
-`data-sources/climdex/rdf/climdex.jsonld` and `climdex-sectors.jsonld`. The units and time grids they use that are
-defined nowhere else are in `added-units.ttl` and `added-grids.ttl`.
+  Then undo the local commit and tag:
 
-### Met Office Hadley Centre controlled vocabularies
+  ```bash
+  snakemake --cores 1 release_discard --configfile config/release-sandbox.yaml --config version=X.Y.Z-rc1
+  ```
 
-The controlled vocabularies of climate indices, hazards, methods and operations (tasks), with the schemes of
-their values, are kept in the repository as source (`data-sources/mohc-cvs/data/*.json`) and mapped with jq
-(`mapping/{name}.jq`, `snakemake --cores 4 mohc_cvs`) to `data-sources/mohc-cvs/rdf/{name}.jsonld`
-(`indices`, `hazards`, `methods`, `operations`, `cvs`). The operations are also the input of
-`for-hacid-dss/add-metadata.sh`.
+### What the release reads
+
+| File | Role |
+|:--|:--|
+| `CHANGELOG.md` | the changes (section *Unreleased*) |
+| `metadata/record.yaml` | title, creators, keywords, licence, funding, communities, extra related identifiers of the Zenodo record; the creators also go in the KG |
+| `publication/templates/release-notes.md` | the template of the release notes (and of the GitHub release) |
+| `publication/templates/zenodo-description.md` | the template of the description on Zenodo |
+| `config/config.yaml`, section `release` | Zenodo site and records, GitHub repository, branch and remote, what to push |
+| `kg/metadata/statistics.ttl`, `figures.json`, `kg/validation/summary.json`, `shapes.ttl` | the facts quoted (size, named graphs, figures, validation) |
+
+## Configuration
+
+`config/config.yaml` holds, by section: the editions of the CMOR tables to analyse (`cmor_tables`), the versions of
+the sources (`cmip5`, `cordex_cmip5`, `cf_standard_names`, `cordex_domains`, `cmip5_cvs`, `cordex_cmip5_cvs`,
+`ontologies`, `ukcp18`; `config/cmor-tables-eras.json` gives the repositories of the CMOR tables), the locations and the
+memory of the TDB2 datasets (`consolidate`), the severities that fail the validation (`validate`), the named graph and
+the public locations of the KG written in its metadata (`metadata`), and the release settings (`release`). Each option
+is commented in the file.
+
+## Further documentation
+
+- [`doc/pipeline.md`](doc/pipeline.md): how each step and each source mapping works.
+- [`doc/conventions.md`](doc/conventions.md): the conventions of labels, comments and IRIs.
+- [`shapes/README.md`](shapes/README.md): the shapes, their severities and how to read the validation report.
+- `data-sources/<source>/DECISIONS.md`: the decisions taken on each source.
+- [`CHANGELOG.md`](CHANGELOG.md) and [`publication/releases/`](publication/releases/): the releases.
+- The website, <https://w3id.org/climate-change-kg>: the content, the data model, the competency questions and the
+  example queries.
+
+## Licence
+
+The code is released under the MIT licence (`LICENSE`), the KG under CC BY 4.0.

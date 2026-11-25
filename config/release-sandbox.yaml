@@ -1,0 +1,17 @@
+# Rehearsal of a release on sandbox.zenodo.org (a separate site, with its own
+# accounts and tokens): a new record each time, nothing pushed to GitHub. Use it
+# on top of config.yaml, with a pre-release version, then undo the local
+# commit and tag:
+#
+#   export ZENODO_TOKEN=<token of sandbox.zenodo.org>
+#   snakemake --cores 4 release --configfile config/release-sandbox.yaml --config version=X.Y.Z-rc1
+#   snakemake --cores 1 release_discard --configfile config/release-sandbox.yaml --config version=X.Y.Z-rc1
+#   snakemake --cores 4 build    # the KG described as a build again, not as the rehearsed release
+
+release:
+  zenodo_url: https://sandbox.zenodo.org
+  kg_record: ""
+  workflow_record: ""
+  push: false
+  github: false
+  sandbox: true

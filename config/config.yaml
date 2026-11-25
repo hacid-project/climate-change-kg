@@ -45,6 +45,15 @@ cmip5:
   # (as in cmor_tables.editions), used to resolve their MIP variables (also of
   # the CORDEX-CMIP5 datasets)
   cmor_tables: cmip5/5.0
+  # Zenodo record of the snapshot of the metadata of the CMIP5 datasets found
+  # on ESGF (data-sources/cmip5/query.txt), file cmip5.json.gz
+  snapshot: 23363413
+
+cordex_cmip5:
+  # Zenodo record of the snapshot of the metadata of the CORDEX-CMIP5 datasets
+  # found on ESGF (data-sources/cordex-cmip5/download-data.sh), file
+  # cordex-cmip5.tar.gz
+  snapshot: 23477951
 
 cf_standard_names:
   # Version of the CF standard name table, downloaded from
@@ -122,6 +131,9 @@ metadata:
   website_url: "https://w3id.org/climate-change-kg"
 
 ukcp18:
+  # Zenodo record of the snapshot of the metadata of the UKCP18 datasets (from
+  # CEDA), file ukcp18_metadata.jsonl.gz
+  snapshot: 23515656
   # Number of nodes of each JSON-LD document of the UKCP18 datasets
   # (rdf/datasets/datasets-NNNN.jsonld), framed from the output of the mapping,
   # a node per line: it bounds the memory needed to load them
@@ -132,3 +144,32 @@ ukcp18:
   # datasets cycle through all of them (26,781), so that a smaller cache
   # writes again most of their repetitions (about 78,000 nodes more)
   unique_cache_size: 50000
+
+release:
+  # Releases (snakemake --cores 4 release --config version=X.Y.Z, see the README
+  # and workflow/rules/release.smk).
+  # Zenodo: the site, the concept record of the releases of the KG (whose
+  # concept DOI is metadata.dumps_record; empty: the first release makes a new
+  # record), the concept record of the workflow made by the Zenodo GitHub
+  # integration from the GitHub releases of this repository (empty: not waited
+  # for), and its concept DOI (cited by the description of the releases)
+  zenodo_url: https://zenodo.org
+  kg_record: "24305088"
+  workflow_record: "24304389"
+  workflow_concept_doi: 10.5281/zenodo.24304389
+  # Environment variable holding the Zenodo personal access token (scopes
+  # deposit:write and deposit:actions)
+  zenodo_token_env: ZENODO_TOKEN
+  # Minutes to wait for the Zenodo GitHub integration to archive the release
+  workflow_doi_timeout: 30
+  # GitHub: the repository, the branch of the releases and the git remote
+  # pointing to it; whether to push the release commit and its tag, and to
+  # make the GitHub release (with the GitHub CLI, gh)
+  github_repo: hacid-project/climate-change-kg
+  branch: main
+  remote: origin
+  push: true
+  github: true
+  # A rehearsal on sandbox.zenodo.org (config/release-sandbox.yaml): no grants
+  # nor communities in the metadata
+  sandbox: false

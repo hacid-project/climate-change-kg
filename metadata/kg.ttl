@@ -8,8 +8,11 @@
 #
 # - statistics.rq: the named graphs (SPARQL service description) and the VoID
 #   statistics of the KG and of each of them;
-# - provenance.jq: the build (date, commit of the workflow) and the versions of
-#   the sources given by the configuration of the workflow;
+# - creators.jq: the creators of the KG (dcterms:creator), from record.yaml,
+#   which the record of the releases on Zenodo also reads;
+# - provenance.jq: the build (date, commit of the workflow), the versions of
+#   the sources given by the configuration of the workflow and, for a release,
+#   its version, DOI and previous release;
 # - quality.jq: the results of the validation with the SHACL shapes (DQV).
 #
 # The description of the named graph <g> is the void:Dataset <g#graph>, a
@@ -43,7 +46,6 @@ their datasets, the UKCP18 datasets, the emission scenarios and global warming l
 of hazards, methods and operations of climate services, described with the HACID ontologies (top-level, data and
 CCSO). It was first developed in the European project HACID (Hybrid Human Artificial Collective Intelligence in
 Open-Ended Decision Making)."""@en ;
-    dcterms:creator <person/miguel-ceriani> , <person/andrea-giovanni-nuzzolese> ;
     dcterms:publisher <organizations/CNR-ISTC> ;
     dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
     dcterms:language <http://id.loc.gov/vocabulary/iso639-1/en> ;
@@ -74,12 +76,6 @@ Open-Ended Decision Making)."""@en ;
 
 <organizations/CNR-ISTC> a foaf:Agent , foaf:Organization ;
     foaf:name "Institute of Cognitive Sciences and Technologies, National Research Council of Italy (CNR-ISTC)" .
-
-<person/miguel-ceriani> a foaf:Agent , foaf:Person ;
-    foaf:name "Miguel Ceriani" .
-
-<person/andrea-giovanni-nuzzolese> a foaf:Agent , foaf:Person ;
-    foaf:name "Andrea Giovanni Nuzzolese" .
 
 
 # --- The named graphs
