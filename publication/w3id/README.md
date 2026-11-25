@@ -62,10 +62,9 @@ RewriteCond %{HTTP_ACCEPT} application/n-triples
 RewriteRule ^$ https://keng.istc.cnr.it/climate-change-kg/sparql?query=CONSTRUCT+\%7B+\%3Fs+\%3Fp+\%3Fo+\%7D+WHERE+\%7B+GRAPH+\%3Chttps\%3A\%2F\%2Fw3id.org\%2Fclimate-change-kg\%2Fdata\%2Fkg\%3E+\%7B+\%3Fs+\%3Fp+\%3Fo+\%7D+\%7D [R=303,NE,L]
 ```
 
-The rule is in the branch `climate-change-kg-shapes-redirects` (commit `7d267e2`), with the README of the
-identifier. It passes the checker of w3id.org (`tools/check`; the only warning is the merge of `master` already in the
-branch, `git/no-merge-commits`), and was checked (2026-11-25) on Apache 2.4 (`tools/server`, with the Apache of the
-system):
+The rule is in the branch `climate-change-kg-shapes-redirects` (commit `7fdf43e`, on `master` of perma-id/w3id.org
+at `e64ed35`), with the README of the identifier. It passes the checker of w3id.org (`tools/check`, no problems), and
+was checked (2026-11-25) on Apache 2.4 (`tools/server`, with the Apache of the system):
 with `Accept: text/turtle` (or `application/ld+json`), `https://w3id.org/climate-change-kg` (after the redirect to
 `.../climate-change-kg/`) answers 303 to the query, decoded as
 `CONSTRUCT { ?s ?p ?o } WHERE { GRAPH <https://w3id.org/climate-change-kg/data/kg> { ?s ?p ?o } }`; with the `Accept`
