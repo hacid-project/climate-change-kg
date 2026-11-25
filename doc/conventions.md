@@ -123,9 +123,9 @@ Open cases:
   | `top:componentIdentifier`, `ccso:productId` | ids of experiments, ensemble members, products | none | |
   | `dcterms:title` | the titles of the shared socioeconomic pathways (text) | `en` | |
 
-  The top-level ontology gives `top:altLabel` the range `xsd:string`, so its values in English are reported by
-  `shape:PropertyDatatype` (a warning): either the range is widened in the ontology (e.g. to `rdfs:Literal`, as for
-  `top:name`), or the alternative names of the methods lose their language.
+  Since release 1.1.0 (ontologies at `bfb0310`), the top-level ontology gives `top:altLabel` the range
+  `rdfs:Literal`, so both kinds of values are allowed. With the former range, `xsd:string`, the values in English were
+  reported by `shape:PropertyDatatype` (a warning).
 
 ## IRIs
 
