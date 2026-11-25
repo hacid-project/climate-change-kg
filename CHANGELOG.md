@@ -14,7 +14,7 @@ section of the new version, and quotes them in the release notes, in the GitHub 
   website, instead of 193. The 79 Climdex indices are the 63 of Climdex, the 15 specialisations of its heatwave indices
   by computation method (which Climdex does not count) and ETR; the 90 curated ones are those of ETCCDI, Climate-ADAPT,
   C3S and UK-CRI. The website shows 169 for releases 1.0.0 and 1.1.0
-  (`website/_data/releases.json`); the notes and the Zenodo record of release 1.1.0 say 193.
+  (`website/_data/releases.json`); the notes of release 1.1.0 (and its GitHub release) say 193.
 - `doc/conventions.md` no longer reports the warning on the English alternative labels, gone since `top:altLabel` has
   the range `rdfs:Literal` (release 1.1.0).
 
