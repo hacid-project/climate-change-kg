@@ -1,0 +1,289 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-15",
+      "doi": "10.5281/zenodo.24305089",
+      "tag": "v1.0.0",
+      "triples": 5656474,
+      "triples_about": "about 5.7 million",
+      "graphs": [
+        {
+          "name": "https://w3id.org/climate-change-kg/data",
+          "title": "Common entities",
+          "triples": 209
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cf",
+          "title": "CF variables",
+          "triples": 31578
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/climdex",
+          "title": "Climdex indices",
+          "triples": 1571
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cmip5/cvs",
+          "title": "CMIP5 controlled vocabularies",
+          "triples": 884
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cmip5/datasets",
+          "title": "CMIP5 datasets",
+          "triples": 282822
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cmor-tables",
+          "title": "MIP variables",
+          "triples": 16757
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets",
+          "title": "CORDEX-CMIP5 datasets",
+          "triples": 1557129
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/cordex/cvs",
+          "title": "CORDEX controlled vocabularies",
+          "triples": 1576
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/indices",
+          "title": "Collection of the standard indices",
+          "triples": 201
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/mohc-cvs",
+          "title": "Met Office Hadley Centre controlled vocabularies",
+          "triples": 2815
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/ukcp18",
+          "title": "UKCP18 datasets",
+          "triples": 3777065
+        },
+        {
+          "name": "https://w3id.org/climate-change-kg/data/variables",
+          "title": "Collection of the standard variables",
+          "triples": 6569
+        },
+        {
+          "name": "https://w3id.org/hacid/onto/ccso",
+          "title": "CCSO - Core Climate Services Ontology",
+          "triples": 530
+        },
+        {
+          "name": "https://w3id.org/hacid/onto/data",
+          "title": "HACID data ontology",
+          "triples": 1000
+        },
+        {
+          "name": "https://w3id.org/hacid/onto/top-level",
+          "title": "HACID top-level ontology",
+          "triples": 1667
+        }
+      ],
+      "figures": {
+        "models": 93,
+        "simulations": 2775,
+        "global_simulations": 696,
+        "downscalings": 2079,
+        "datasets": 613551,
+        "cmip5_datasets": 6365,
+        "cordex_cmip5_datasets": 145232,
+        "ukcp18_datasets": 461954,
+        "variables": 6854,
+        "index_catalogues": 5,
+        "indices": 193,
+        "hazard_types": 42,
+        "operations": 81,
+        "methods": 60
+      },
+      "sources": {
+        "ontologies_repo": "https://github.com/hacid-project/knowledge-graph",
+        "ontologies_commit": "61e336e1623fd12b493cc29a2fad09674d072f18",
+        "ontologies_commit_short": "61e336e",
+        "cf_standard_names_version": "95",
+        "cmor_tables_current": "CMIP6Plus v6.5.0.4",
+        "cmor_tables_previous_editions": 12,
+        "esgf_config_repo": "https://github.com/ESGF/config",
+        "esgf_config_commit": "dc19f5b",
+        "cordex_domains_repo": "https://github.com/WCRP-CORDEX/domain-tables",
+        "cordex_domains_commit": "26696d7",
+        "cordex_rcms_repo": "https://github.com/IS-ENES-Data/IS-ENES-Data.github.io",
+        "cordex_rcms_commit": "d9c78ec",
+        "cmip5_snapshot_doi": "10.5281/zenodo.23363413",
+        "cordex_cmip5_snapshot_doi": "10.5281/zenodo.23477951",
+        "ukcp18_snapshot_doi": "10.5281/zenodo.23515656"
+      },
+      "validation": {
+        "violations": 0,
+        "warnings": 44,
+        "infos": 10,
+        "node_shapes": 51,
+        "property_shapes": 106
+      },
+      "formatted": {
+        "models": "93",
+        "simulations": "2,775",
+        "global_simulations": "696",
+        "downscalings": "2,079",
+        "datasets": "613,551",
+        "cmip5_datasets": "6,365",
+        "cordex_cmip5_datasets": "145,232",
+        "ukcp18_datasets": "461,954",
+        "variables": "6,854",
+        "index_catalogues": "5",
+        "indices": "193",
+        "hazard_types": "42",
+        "operations": "81",
+        "methods": "60",
+        "triples": "5,656,474"
+      }
+    }
+  ],
+  "concept_doi": "10.5281/zenodo.24305088",
+  "current": {
+    "version": "1.0.0",
+    "date": "2026-11-15",
+    "doi": "10.5281/zenodo.24305089",
+    "tag": "v1.0.0",
+    "triples": 5656474,
+    "triples_about": "about 5.7 million",
+    "graphs": [
+      {
+        "name": "https://w3id.org/climate-change-kg/data",
+        "title": "Common entities",
+        "triples": 209
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cf",
+        "title": "CF variables",
+        "triples": 31578
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/climdex",
+        "title": "Climdex indices",
+        "triples": 1571
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cmip5/cvs",
+        "title": "CMIP5 controlled vocabularies",
+        "triples": 884
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cmip5/datasets",
+        "title": "CMIP5 datasets",
+        "triples": 282822
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cmor-tables",
+        "title": "MIP variables",
+        "triples": 16757
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cordex-cmip5/datasets",
+        "title": "CORDEX-CMIP5 datasets",
+        "triples": 1557129
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/cordex/cvs",
+        "title": "CORDEX controlled vocabularies",
+        "triples": 1576
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/indices",
+        "title": "Collection of the standard indices",
+        "triples": 201
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/mohc-cvs",
+        "title": "Met Office Hadley Centre controlled vocabularies",
+        "triples": 2815
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/ukcp18",
+        "title": "UKCP18 datasets",
+        "triples": 3777065
+      },
+      {
+        "name": "https://w3id.org/climate-change-kg/data/variables",
+        "title": "Collection of the standard variables",
+        "triples": 6569
+      },
+      {
+        "name": "https://w3id.org/hacid/onto/ccso",
+        "title": "CCSO - Core Climate Services Ontology",
+        "triples": 530
+      },
+      {
+        "name": "https://w3id.org/hacid/onto/data",
+        "title": "HACID data ontology",
+        "triples": 1000
+      },
+      {
+        "name": "https://w3id.org/hacid/onto/top-level",
+        "title": "HACID top-level ontology",
+        "triples": 1667
+      }
+    ],
+    "figures": {
+      "models": 93,
+      "simulations": 2775,
+      "global_simulations": 696,
+      "downscalings": 2079,
+      "datasets": 613551,
+      "cmip5_datasets": 6365,
+      "cordex_cmip5_datasets": 145232,
+      "ukcp18_datasets": 461954,
+      "variables": 6854,
+      "index_catalogues": 5,
+      "indices": 193,
+      "hazard_types": 42,
+      "operations": 81,
+      "methods": 60
+    },
+    "sources": {
+      "ontologies_repo": "https://github.com/hacid-project/knowledge-graph",
+      "ontologies_commit": "61e336e1623fd12b493cc29a2fad09674d072f18",
+      "ontologies_commit_short": "61e336e",
+      "cf_standard_names_version": "95",
+      "cmor_tables_current": "CMIP6Plus v6.5.0.4",
+      "cmor_tables_previous_editions": 12,
+      "esgf_config_repo": "https://github.com/ESGF/config",
+      "esgf_config_commit": "dc19f5b",
+      "cordex_domains_repo": "https://github.com/WCRP-CORDEX/domain-tables",
+      "cordex_domains_commit": "26696d7",
+      "cordex_rcms_repo": "https://github.com/IS-ENES-Data/IS-ENES-Data.github.io",
+      "cordex_rcms_commit": "d9c78ec",
+      "cmip5_snapshot_doi": "10.5281/zenodo.23363413",
+      "cordex_cmip5_snapshot_doi": "10.5281/zenodo.23477951",
+      "ukcp18_snapshot_doi": "10.5281/zenodo.23515656"
+    },
+    "validation": {
+      "violations": 0,
+      "warnings": 44,
+      "infos": 10,
+      "node_shapes": 51,
+      "property_shapes": 106
+    },
+    "formatted": {
+      "models": "93",
+      "simulations": "2,775",
+      "global_simulations": "696",
+      "downscalings": "2,079",
+      "datasets": "613,551",
+      "cmip5_datasets": "6,365",
+      "cordex_cmip5_datasets": "145,232",
+      "ukcp18_datasets": "461,954",
+      "variables": "6,854",
+      "index_catalogues": "5",
+      "indices": "193",
+      "hazard_types": "42",
+      "operations": "81",
+      "methods": "60",
+      "triples": "5,656,474"
+    }
+  }
+}

@@ -36,11 +36,13 @@ Example resource URIs:
 
 ## Download the Dumps
 
-The releases of the knowledge graph are archived on Zenodo, at the DOI [10.5281/zenodo.24305088](https://doi.org/10.5281/zenodo.24305088), which always resolves to the latest release. Each release has its own DOI, to cite for reproducible results, and two files: the whole knowledge graph as gzipped N-Quads (`kg.nq.gz`) and its description (`void.ttl`). The releases follow semantic versioning: a major version for changes that break queries (IRIs, named graphs, shapes), a minor version for new content, a patch version for corrections.
+The releases of the knowledge graph are archived on Zenodo, at the DOI [{{ site.data.releases.concept_doi }}](https://doi.org/{{ site.data.releases.concept_doi }}), which always resolves to the latest release. Each release has its own DOI, to cite for reproducible results, and two files: the whole knowledge graph as gzipped N-Quads (`kg.nq.gz`) and its description (`void.ttl`). The releases follow semantic versioning: a major version for changes that break queries (IRIs, named graphs, shapes), a minor version for new content, a patch version for corrections.
 
 | Release | DOI | Date |
 |:--|:--|:--|
-| 1.0.0 | [10.5281/zenodo.24305089](https://doi.org/10.5281/zenodo.24305089) | 2026-11-15 |
+{% for release in site.data.releases.releases -%}
+| {{ release.version }} | [{{ release.doi }}](https://doi.org/{{ release.doi }}) | {{ release.date }} |
+{% endfor %}
 
 The SPARQL endpoint serves the latest release. Earlier snapshots, before the move to the current namespace, are on [Figshare](https://doi.org/10.6084/m9.figshare.29066711).
 

@@ -34,11 +34,11 @@ UKCP18_VARIABLES_MODULES = [
 ]
 
 
-# Metadata of the UKCP18 datasets (https://doi.org/10.5281/zenodo.23515656), in
-# JSON Lines: a dataset per line
+# Metadata of the UKCP18 datasets (Zenodo record of config.yaml, ukcp18.snapshot),
+# in JSON Lines: a dataset per line
 rule ukcp18_metadata:
     input:
-        storage.zenodo("zenodo://record/23515656/ukcp18_metadata.jsonl.gz"),
+        storage.zenodo(f"zenodo://record/{config['ukcp18']['snapshot']}/ukcp18_metadata.jsonl.gz"),
     output:
         "data-sources/ukcp18/data/ceda_ukcp18_metadata.jsonl",
     shell:

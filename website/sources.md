@@ -15,22 +15,26 @@ The figures below refer to the current build of the knowledge graph, made by the
 
 ## Overview
 
+{% assign release = site.data.releases.current %}
+{% assign sources = release.sources %}
+The versions and the numbers of datasets are those of release {{ release.version }} ({{ release.date }}).
+
 | Source | Version used | Content in the KG |
 |:-------|:-------------|:------------------|
-| [CF Standard Name Table](https://cfconventions.org/Data/cf-standard-names/) | version 95 | 5,095 standard variables (600 aliases as alternative names) |
-| CMOR tables ([CMIP5](https://github.com/PCMDI/cmip5-cmor-tables), [CMIP6](https://github.com/PCMDI/cmip6-cmor-tables), [CMIP6Plus](https://github.com/PCMDI/mip-cmor-tables)) | current edition CMIP6Plus v6.5.0.4; 12 earlier editions for the previous variables | 1,323 MIP variables, 146 previous variables |
+| [CF Standard Name Table](https://cfconventions.org/Data/cf-standard-names/) | version {{ sources.cf_standard_names_version }} | 5,095 standard variables (600 aliases as alternative names) |
+| CMOR tables ([CMIP5](https://github.com/PCMDI/cmip5-cmor-tables), [CMIP6](https://github.com/PCMDI/cmip6-cmor-tables), [CMIP6Plus](https://github.com/PCMDI/mip-cmor-tables)) | current edition {{ sources.cmor_tables_current }}; {{ sources.cmor_tables_previous_editions }} earlier editions for the previous variables | 1,323 MIP variables, 146 previous variables |
 | [Climdex/Climpact indices](https://www.climdex.org/learn/indices/) | table of the Climpact user guide (v3.2/v3.3), indices by sector of climdex.org | 63 indices, classified in 9 sectors |
 | Climate indices and hazards (curated in HACID) | — | 90 indices from ETCCDI (4), Climate-ADAPT (32, and 24 anomalies of them with respect to a baseline or as change), Copernicus C3S (6), UK-CRI (48); 42 hazard types, with 292 links to 109 indices |
 | Climate service process (curated in HACID) | — | 81 operations, 60 methods, 11 schemes of values |
 | Emissions scenarios and global warming levels | — | 8 RCPs and SRES A1B, 5 SSPs, 10 global warming levels (1.5 to 6 °C) |
-| CMIP5 experiments and institutions ([ESGF publisher configuration](https://github.com/ESGF/config)) | commit `dc19f5b` | 102 experiments, 27 institutions, 63 models |
-| CMIP5 datasets (ESGF search, [10.5281/zenodo.23363413](https://doi.org/10.5281/zenodo.23363413)) | snapshot | 6,365 datasets of 5 experiments, 641 simulations in 152 ensembles, 41 global models |
-| [CORDEX-CMIP5 domains and grids](https://github.com/WCRP-CORDEX/domain-tables) | commit `26696d7` | 14 domains, 53 grids (rotated and regular) |
-| CORDEX regional models ([IS-ENES Data](https://is-enes-data.github.io/CORDEX_RCMs_info.txt)) | commit `d9c78ec` | 101 regional models, 60 institutions |
-| CORDEX-CMIP5 datasets (ESGF search, [10.5281/zenodo.23477951](https://doi.org/10.5281/zenodo.23477951)) | snapshot | 145,232 datasets, 2,041 dynamical downscalings of 155 CMIP5 simulations, 45 regional models |
-| UKCP18 datasets (CEDA, [10.5281/zenodo.23515656](https://doi.org/10.5281/zenodo.23515656)) | snapshot | 461,954 datasets (56,453 probabilistic), 30 global, 16 regional and 16 convection-permitting simulations, linked to 47 CMIP5 and 128 CORDEX-CMIP5 simulations |
+| CMIP5 experiments and institutions ([ESGF publisher configuration](https://github.com/ESGF/config)) | commit `{{ sources.esgf_config_commit }}` | 102 experiments, 27 institutions, 63 models |
+| CMIP5 datasets (ESGF search, [{{ sources.cmip5_snapshot_doi }}](https://doi.org/{{ sources.cmip5_snapshot_doi }})) | snapshot | {{ release.formatted.cmip5_datasets }} datasets of 5 experiments, 641 simulations in 152 ensembles, 41 global models |
+| [CORDEX-CMIP5 domains and grids](https://github.com/WCRP-CORDEX/domain-tables) | commit `{{ sources.cordex_domains_commit }}` | 14 domains, 53 grids (rotated and regular) |
+| CORDEX regional models ([IS-ENES Data](https://is-enes-data.github.io/CORDEX_RCMs_info.txt)) | commit `{{ sources.cordex_rcms_commit }}` | 101 regional models, 60 institutions |
+| CORDEX-CMIP5 datasets (ESGF search, [{{ sources.cordex_cmip5_snapshot_doi }}](https://doi.org/{{ sources.cordex_cmip5_snapshot_doi }})) | snapshot | {{ release.formatted.cordex_cmip5_datasets }} datasets, 2,041 dynamical downscalings of 155 CMIP5 simulations, 45 regional models |
+| UKCP18 datasets (CEDA, [{{ sources.ukcp18_snapshot_doi }}](https://doi.org/{{ sources.ukcp18_snapshot_doi }})) | snapshot | {{ release.formatted.ukcp18_datasets }} datasets (56,453 probabilistic), 30 global, 16 regional and 16 convection-permitting simulations, linked to 47 CMIP5 and 128 CORDEX-CMIP5 simulations |
 
-Overall, the knowledge graph has about 5.7 million triples (without inferred ones), describing 2,775 simulations (696 global simulations and 2,079 dynamical downscalings) that use 93 climate models, and about 613,000 datasets.
+Overall, the knowledge graph has {{ release.triples_about }} triples ({{ release.formatted.triples }}, without inferred ones), describing {{ release.formatted.simulations }} simulations ({{ release.formatted.global_simulations }} global simulations and {{ release.formatted.downscalings }} dynamical downscalings) that use {{ release.formatted.models }} climate models, and {{ release.formatted.datasets }} datasets.
 
 ## Climate variables, indices and hazards
 

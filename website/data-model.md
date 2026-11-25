@@ -13,7 +13,7 @@ The following ontologies are used in the graph:
 - [Core Climate Services Ontology (CCSO)](https://w3id.org/hacid/onto/ccso), containing terms that are specific to the climate domain;
 - [HACID data ontology module](https://w3id.org/hacid/onto/data), containing a semantically rich representation of datasets, variables, dimensional spaces.
 
-The ontologies are developed in the [knowledge-graph](https://github.com/hacid-project/knowledge-graph) repository; each build of the knowledge graph uses them at a fixed commit (currently `61e336e`), loaded in the named graphs of their IRIs.
+The ontologies are developed in the [knowledge-graph](https://github.com/hacid-project/knowledge-graph) repository; each build of the knowledge graph uses them at a fixed commit (release {{ site.data.releases.current.version }}: [`{{ site.data.releases.current.sources.ontologies_commit_short }}`]({{ site.data.releases.current.sources.ontologies_repo }}/tree/{{ site.data.releases.current.sources.ontologies_commit }})), loaded in the named graphs of their IRIs.
 
 ## Namespaces
 
