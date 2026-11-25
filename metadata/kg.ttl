@@ -15,6 +15,17 @@
 #   its version, DOI and previous release;
 # - quality.jq: the results of the validation with the SHACL shapes (DQV).
 #
+# The KG as a dataset is <https://w3id.org/climate-change-kg>, the root of the
+# namespace of the project: w3id.org gives a browser the website and an RDF
+# client this description (publication/w3id/README.md), so the same IRI is its
+# landing page (dcat:landingPage, as for an ontology). The description is
+# <kg> (https://w3id.org/climate-change-kg/data/kg), a void:DatasetDescription
+# whose primary topic is the KG: the named graph holding it in the KG
+# (config.yaml, metadata.graph), served as linked data with the other resources.
+# The resources the description introduces (distribution, releases, build,
+# service, partitions, quality measurements) are named under it, so that they
+# are served as linked data too.
+#
 # The description of the named graph <g> is the void:Dataset <g#graph>, a
 # subset of the KG (void:subset, added by statistics.rq for the graphs found in
 # the KG): a new graph of graph_names.csv is to be described here (the shapes
@@ -37,7 +48,7 @@
 
 # --- The knowledge graph
 
-<kg> a dcat:Dataset , void:Dataset ;
+<https://w3id.org/climate-change-kg> a dcat:Dataset , void:Dataset ;
     dcterms:title "Climate Change Knowledge Graph"@en ;
     dcterms:alternative "CCKG" ;
     dcterms:description """The Climate Change Knowledge Graph (CCKG): the climate variables (CF standard names, MIP
@@ -61,6 +72,13 @@ Open-Ended Decision Making)."""@en ;
     void:vocabulary <https://w3id.org/hacid/onto/top-level/> , <https://w3id.org/hacid/onto/data/> , <https://w3id.org/hacid/onto/ccso/> ;
     void:exampleResource <variables/mip/tas> , <models/HadGEM2-ES> , <scenarios/RCP/RCP8.5> ,
         <simulations/cmip5.HadGEM2-ES.rcp85.r1i1p1> .
+
+<kg> a void:DatasetDescription ;
+    dcterms:title "Description of the Climate Change Knowledge Graph"@en ;
+    dcterms:description """The description of the Climate Change Knowledge Graph as a dataset (DCAT, VoID, SPARQL service
+description, PROV-O, DQV): its named graphs and their statistics, its build, releases, sources and validation. It is
+the named graph of the same name in the KG, and the file void.ttl of each release."""@en ;
+    foaf:primaryTopic <https://w3id.org/climate-change-kg> .
 
 <kg/distributions/nquads> a dcat:Distribution ;
     dcterms:title "N-Quads dump of the knowledge graph"@en ;

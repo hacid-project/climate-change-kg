@@ -7,6 +7,7 @@
 # SPARQL results of shapes/queries/summary.rq).
 
 [.results.bindings[] | {severity: (.severity.value | sub(".*#"; "")), results: (.results.value | tonumber)}] as $summary
+| "https://w3id.org/climate-change-kg" as $kg  # the KG as a dataset (see kg.ttl)
 | {
   "@context": {
     "@base": "https://w3id.org/climate-change-kg/data/",
@@ -20,7 +21,7 @@
     | {
       "@id": "kg/quality/measurements/\(.value)",
       "@type": "dqv:QualityMeasurement",
-      "dqv:computedOn": {"@id": "kg"},
+      "dqv:computedOn": {"@id": $kg},
       "dqv:isMeasurementOf": {"@id": "kg/quality/\(.value)"},
       "dqv:value": {
         "@type": "xsd:integer",

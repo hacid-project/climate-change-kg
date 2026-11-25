@@ -34,7 +34,10 @@ def git_source($id; $repo; $ref):
     "dcat:version": $ref
   };
 
-"https://github.com/hacid-project/climate-change-kg" as $workflow
+# The KG as a dataset (see kg.ttl); the resources of its description are named
+# under the description, kg (relative to @base)
+"https://w3id.org/climate-change-kg" as $kg
+| "https://github.com/hacid-project/climate-change-kg" as $workflow
 | {
   "@context": {
     "@base": "https://w3id.org/climate-change-kg/data/",
@@ -48,7 +51,7 @@ def git_source($id; $repo; $ref):
   },
   "@graph": [
     {
-      "@id": "kg",
+      "@id": $kg,
       "dcterms:modified": {"@type": "xsd:dateTime", "@value": $date},
       "dcat:version": (if $release then $release.version else $commit[:7] end),
       "prov:wasGeneratedBy": {
@@ -67,7 +70,7 @@ def git_source($id; $repo; $ref):
     # The public SPARQL endpoint: of the KG as a VoID dataset, and as a DCAT
     # data service serving it
     ($config.metadata.sparql_endpoint | present | (
-      {"@id": "kg", "void:sparqlEndpoint": {"@id": .}},
+      {"@id": $kg, "void:sparqlEndpoint": {"@id": .}},
       {
         "@id": "kg/services/sparql",
         "@type": ["dcat:DataService", "sd:Service"],
@@ -75,14 +78,16 @@ def git_source($id; $repo; $ref):
         "dcat:endpointURL": {"@id": .},
         "sd:endpoint": {"@id": .},
         "dcterms:conformsTo": {"@id": "https://www.w3.org/TR/sparql11-protocol/"},
-        "dcat:servesDataset": {"@id": "kg"}
+        "dcat:servesDataset": {"@id": $kg}
       }
     )),
-    # The website documenting the KG: its landing page
+    # The website documenting the KG: its landing page (the IRI of the KG
+    # itself, if the website is at its root: w3id.org gives a browser the
+    # website). Not foaf:homepage, an inverse functional property that would
+    # then make the KG the homepage of itself
     ($config.metadata.website_url | present | {
-      "@id": "kg",
-      "dcat:landingPage": {"@id": .},
-      "foaf:homepage": {"@id": .}
+      "@id": $kg,
+      "dcat:landingPage": {"@id": .}
     }),
     # The record of the releases of the KG (its concept DOI): where the distribution is
     # accessed from, not the URL of a file (so neither dcat:downloadURL nor
@@ -92,9 +97,14 @@ def git_source($id; $repo; $ref):
       "dcat:accessURL": {"@id": .},
       "dcterms:identifier": (select(startswith("https://doi.org/")) | ltrimstr("https://doi.org/"))
     }),
-    # The release: a version of the KG, with its DOI and its files on Zenodo
+    # The release: a version of the KG, with its DOI and its files on Zenodo,
+    # and its current version (DCAT 3)
     ($release | values | (
-      {"@id": "kg", "dcat:hasVersion": {"@id": "kg/releases/\(.version)"}},
+      {
+        "@id": $kg,
+        "dcat:hasVersion": {"@id": "kg/releases/\(.version)"},
+        "dcat:hasCurrentVersion": {"@id": "kg/releases/\(.version)"}
+      },
       {
         "@id": "kg/releases/\(.version)",
         "@type": "dcat:Dataset",
@@ -102,7 +112,7 @@ def git_source($id; $repo; $ref):
         "dcat:version": .version,
         "dcterms:identifier": .doi,
         "dcterms:issued": {"@type": "xsd:date", "@value": .date},
-        "dcterms:isVersionOf": {"@id": "kg"},
+        "dcterms:isVersionOf": {"@id": $kg},
         "foaf:page": {"@id": "https://doi.org/\(.doi)"},
         "dcat:distribution": {"@id": "kg/releases/\(.version)/distributions/nquads"}
       } + (.previous | values | {"dcat:previousVersion": {"@id": "kg/releases/\(.version)"}} // {}),
@@ -122,7 +132,7 @@ def git_source($id; $repo; $ref):
         "@type": "dcat:Dataset",
         "dcat:version": .version,
         "dcterms:identifier": .doi,
-        "dcterms:isVersionOf": {"@id": "kg"},
+        "dcterms:isVersionOf": {"@id": $kg},
         "foaf:page": {"@id": "https://doi.org/\(.doi)"}
       })
     )),

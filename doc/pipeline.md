@@ -60,8 +60,12 @@ The KG is described as a dataset (`snakemake --cores 4 metadata`, `workflow/rule
 [DCAT](https://www.w3.org/TR/vocab-dcat-3/), [VoID](https://www.w3.org/TR/void/), the
 [SPARQL service description](https://www.w3.org/TR/sparql11-service-description/),
 [PROV-O](https://www.w3.org/TR/prov-o/), Dublin Core terms and the
-[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The description, `https://w3id.org/climate-change-kg/data/kg`, is
-assembled in `kg/export/void.ttl` from:
+[Data Quality Vocabulary](https://www.w3.org/TR/vocab-dqv/). The KG, as a dataset, is `https://w3id.org/climate-change-kg`,
+the root of the namespace of the project (as for an ontology: w3id.org gives a browser the website, its landing page,
+and an RDF client its description, see [`publication/w3id/README.md`](../publication/w3id/README.md)). Its description,
+`https://w3id.org/climate-change-kg/data/kg` (a `void:DatasetDescription` whose `foaf:primaryTopic` is the KG), names
+the resources it introduces under its own IRI (distributions, releases, builds, partitions, quality measurements), so
+that the linked data front end serves them. It is assembled in `kg/export/void.ttl` from:
 
 1. `metadata/kg.ttl`, written by hand: title, description, publisher, license, keywords, themes and
    distribution of the KG (`dcat:Dataset`, `void:Dataset`), and for each named graph `<g>` a `void:Dataset` `<g#graph>`
@@ -77,15 +81,15 @@ assembled in `kg/export/void.ttl` from:
    SPARQL endpoint (`void:sparqlEndpoint`, and a `dcat:DataService`), the website documenting the KG
    (`dcat:landingPage`) and the DOI of the record of its dumps (`dcat:accessURL` of the distribution). The version of
    the KG (`dcat:version`) is the short commit, except in a release (`--config version=X.Y.Z`): it is then the version
-   of the release, described as a version of the KG (`dcat:hasVersion`, `<kg/releases/X.Y.Z>`, with its DOI, date,
-   previous release and download URL on Zenodo);
+   of the release, described as a version of the KG (`dcat:hasVersion` and `dcat:hasCurrentVersion`,
+   `<kg/releases/X.Y.Z>`, with `dcterms:isVersionOf`, its DOI, date, previous release and download URL on Zenodo);
 5. `metadata/quality.jq`: the numbers of violations, warnings and informative results of the validation
    (`dqv:QualityMeasurement`).
 
 It is checked with its own shapes (`metadata/shapes.ttl`: e.g. every named graph of the KG has a title and a
 description, so a graph added to `graph_names.csv` is to be described in `metadata/kg.ttl`, and every graph described
-is in the KG) and loaded in the KG as the named graph `https://w3id.org/climate-change-kg/data/kg` (`config/config.yaml`,
-`metadata.graph`), replacing that of a previous build. The graph of the metadata is left out of the statistics and of
+is in the KG) and loaded in the KG as the named graph `https://w3id.org/climate-change-kg/data/kg`, the IRI of the
+description (`config/config.yaml`, `metadata.graph`), replacing that of a previous build. The graph of the metadata is left out of the statistics and of
 the validation of the KG.
 
 The key figures of the KG (models used, simulations, datasets of the sources, variables, indices, hazard types,

@@ -115,9 +115,12 @@ validate:
     - Violation
 
 metadata:
-  # Named graph of the metadata of the KG: also the IRI of the KG as a dataset
-  # in metadata/kg.ttl and in the queries leaving its graph out
-  # (metadata/statistics.rq, shapes/queries/data.rq)
+  # Named graph of the metadata of the KG: the description of the KG
+  # (void:DatasetDescription, in metadata/kg.ttl), also in the queries leaving
+  # its graph out (metadata/statistics.rq, shapes/queries/data.rq). The KG
+  # itself, as a dataset, is the root of the namespace of the project,
+  # https://w3id.org/climate-change-kg (metadata/kg.ttl, metadata/*.jq,
+  # metadata/statistics.rq, metadata/shapes.ttl, workflow/scripts/release.py)
   graph: https://w3id.org/climate-change-kg/data/kg
   # Where the KG is published, if anywhere (each may be left empty):
   # - the URL of its public SPARQL endpoint (void:sparqlEndpoint, and a

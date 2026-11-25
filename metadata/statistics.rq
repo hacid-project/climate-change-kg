@@ -3,9 +3,11 @@
 # distinct subjects and objects, classes and properties, with the partitions by
 # class and by property, of the whole KG and of each named graph.
 #
-# The description of the named graph <g> is the void:Dataset <g#graph>. The
-# graph of the metadata itself (<https://w3id.org/climate-change-kg/data/kg>) is left
-# out, so that the statistics do not depend on a previous build.
+# The KG is <https://w3id.org/climate-change-kg> (kg:), and the description of
+# the named graph <g> is the void:Dataset <g#graph>. The graph of the metadata
+# itself, the description of the KG (meta:), is left out, so that the
+# statistics do not depend on a previous build; the partitions of the KG are
+# named in it (meta:#class-..., meta:#property-...), to be served as linked data.
 #
 # Run on the TDB2 dataset (rule metadata_statistics).
 
@@ -13,7 +15,8 @@ PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 PREFIX void: <http://rdfs.org/ns/void#>
 PREFIX sd:   <http://www.w3.org/ns/sparql-service-description#>
-PREFIX kg:   <https://w3id.org/climate-change-kg/data/kg>
+PREFIX kg:   <https://w3id.org/climate-change-kg>
+PREFIX meta: <https://w3id.org/climate-change-kg/data/kg>
 
 CONSTRUCT {
     kg: a sd:Dataset ;
@@ -43,28 +46,28 @@ WHERE {
             {
                 SELECT (COUNT(*) AS ?triples) (COUNT(DISTINCT ?s) AS ?subjects) (COUNT(DISTINCT ?o) AS ?objects)
                     (COUNT(DISTINCT ?p) AS ?properties)
-                WHERE { SELECT DISTINCT ?s ?p ?o WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (?graph != kg:) } }
+                WHERE { SELECT DISTINCT ?s ?p ?o WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (?graph != meta:) } }
             }
             {
                 SELECT (COUNT(DISTINCT ?s) AS ?entities)
-                WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (isIRI(?s) && ?graph != kg:) }
+                WHERE { GRAPH ?graph { ?s ?p ?o } FILTER (isIRI(?s) && ?graph != meta:) }
             }
             {
                 SELECT (COUNT(DISTINCT ?class) AS ?classes)
-                WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != kg:) }
+                WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != meta:) }
             }
         }
     }
     UNION {
         SELECT (kg: AS ?dataset) ?class (COUNT(DISTINCT ?s) AS ?classEntities)
-            (IRI(CONCAT(STR(kg:), "#class-", ENCODE_FOR_URI(STR(?class)))) AS ?classPartition)
-        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != kg:) }
+            (IRI(CONCAT(STR(meta:), "#class-", ENCODE_FOR_URI(STR(?class)))) AS ?classPartition)
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != meta:) }
         GROUP BY ?class
     }
     UNION {
         SELECT (kg: AS ?dataset) ?property (COUNT(*) AS ?propertyTriples)
-            (IRI(CONCAT(STR(kg:), "#property-", ENCODE_FOR_URI(STR(?property)))) AS ?propertyPartition)
-        WHERE { SELECT DISTINCT ?s ?property ?o WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != kg:) } }
+            (IRI(CONCAT(STR(meta:), "#property-", ENCODE_FOR_URI(STR(?property)))) AS ?propertyPartition)
+        WHERE { SELECT DISTINCT ?s ?property ?o WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != meta:) } }
         GROUP BY ?property
     }
     UNION {
@@ -81,7 +84,7 @@ WHERE {
                 WHERE { GRAPH ?graph { ?s ?p ?o } FILTER isIRI(?s) }
                 GROUP BY ?graph
             }
-            FILTER (?graph != kg:)
+            FILTER (?graph != meta:)
             BIND (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset)
             BIND (?dataset AS ?subset)
             BIND (IRI(CONCAT(STR(?graph), "#named-graph")) AS ?namedGraph)
@@ -89,19 +92,19 @@ WHERE {
     }
     UNION {
         SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) (COUNT(DISTINCT ?class) AS ?classes)
-        WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != kg:) }
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (?graph != meta:) }
         GROUP BY ?graph
     }
     UNION {
         SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) ?class (COUNT(DISTINCT ?s) AS ?classEntities)
             (IRI(CONCAT(STR(?graph), "#class-", ENCODE_FOR_URI(STR(?class)))) AS ?classPartition)
-        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != kg:) }
+        WHERE { GRAPH ?graph { ?s a ?class } FILTER (isIRI(?class) && ?graph != meta:) }
         GROUP BY ?graph ?class
     }
     UNION {
         SELECT (IRI(CONCAT(STR(?graph), "#graph")) AS ?dataset) ?property (COUNT(*) AS ?propertyTriples)
             (IRI(CONCAT(STR(?graph), "#property-", ENCODE_FOR_URI(STR(?property)))) AS ?propertyPartition)
-        WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != kg:) }
+        WHERE { GRAPH ?graph { ?s ?property ?o } FILTER (?graph != meta:) }
         GROUP BY ?graph ?property
     }
 }

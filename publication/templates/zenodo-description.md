@@ -42,7 +42,8 @@ $changes
   - the build, the version of the workflow and the version of each source (PROV-O);
   - the results of the validation (DQV).
 
-  It is also in the dump, as the named graph `https://w3id.org/climate-change-kg/data/kg`.
+  The KG is described as `https://w3id.org/climate-change-kg`; the description is also in the dump, as the named graph
+  `https://w3id.org/climate-change-kg/data/kg`.
 
 $graphs_table
 

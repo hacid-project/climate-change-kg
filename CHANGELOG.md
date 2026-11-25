@@ -7,6 +7,19 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Knowledge graph
+
+- The KG, as a dataset, is `https://w3id.org/climate-change-kg`, the root of the namespace of the project (as for an
+  ontology), no longer `https://w3id.org/climate-change-kg/data/kg`, which named both the KG and the graph of its
+  metadata. That graph keeps its name, now the IRI of the description of the KG (`void:DatasetDescription`, with
+  `foaf:primaryTopic` the KG), under which the resources of the description keep their IRIs (distribution, releases,
+  builds, partitions, quality measurements). The statistics, the creators, the provenance and the quality measurements
+  are those of the root, and a release is also its current version (`dcat:hasCurrentVersion`). The KG no longer has
+  its website as `foaf:homepage`, an inverse functional property (the website stays its `dcat:landingPage`). Queries
+  on the metadata that use `<https://w3id.org/climate-change-kg/data/kg>` as the dataset are to use the root; the
+  named graphs are unchanged. The redirect of the root to the description for RDF clients is still to be submitted to
+  w3id.org (`publication/w3id/README.md`).
+
 ### Workflow
 
 - The number of climate indices of the key figures (`metadata/figures.rq`) no longer counts the anomalies of an index

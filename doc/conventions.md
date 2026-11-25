@@ -131,7 +131,8 @@ Open cases:
 
 All the resources are in the namespace `https://w3id.org/climate-change-kg/data/` (below, IRIs are relative to it), with
 `/` as the only separator: there are no fragment identifiers but in the metadata of the KG (`<graph>#graph`, see
-`metadata/kg.ttl`). The local names are percent-encoded by the mappings (`@uri` in jq).
+`metadata/kg.ttl`). The KG itself, as a dataset, is not in it: it is the root, `https://w3id.org/climate-change-kg`,
+described by `<kg>`, the named graph of its metadata. The local names are percent-encoded by the mappings (`@uri` in jq).
 
 ### Schemes in use
 
