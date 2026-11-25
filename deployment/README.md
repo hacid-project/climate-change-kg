@@ -157,11 +157,8 @@ curl -s -H 'Accept: text/csv' --data-urlencode 'query=SELECT (COUNT(*) AS ?n) {?
 curl -s -H 'Accept: text/turtle' http://127.0.0.1:8081/id/models/HadCM3
 ```
 
-To browse it, open a tunnel from your computer, then open <http://localhost:8081/>:
-
-```bash
-ssh -N -L 8081:127.0.0.1:8081 keng.istc.cnr.it
-```
+To browse it from your computer, open a tunnel to port 8081 (see [SSH tunnels](#ssh-tunnels)), then open
+<http://localhost:8081/>.
 
 ### 4. Switch
 
@@ -239,11 +236,60 @@ files; `sudo` is needed unless your user is in the group `docker`.
 | Update knowledge-graph-serve | set `KGSERVE_REF` in `install.sh` to the new commit, commit, pull on the server, run `sudo deployment/install.sh kgserve` |
 | Change the nginx sites | edit `deployment/nginx/`, commit, pull on the server, run `sudo deployment/install.sh front` |
 | Check the certificate | `sudo certbot certificates`; `sudo certbot renew --dry-run` tests the renewal |
-| Use the GraphDB Workbench | `ssh -N -L 7201:127.0.0.1:7201 keng.istc.cnr.it` from your computer, then <http://localhost:7201/> (repository `kg`) |
+| Use the GraphDB Workbench | open a tunnel to port 7201 from your computer ([SSH tunnels](#ssh-tunnels)), then <http://localhost:7201/> (repository `kg`) |
 | Give GraphDB more memory | add `environment: {GDB_JAVA_OPTS: -Xmx6g}` to `store` in `kgserve/compose.keng.yaml`, then run `install.sh kgserve` |
 | Logs of the web server | `/var/log/nginx/` (rotated by logrotate); the container logs are rotated by Docker (`compose.keng.yaml`) |
 
 After a reboot, nginx, certbot.timer and Docker start by themselves, and Docker restarts the containers.
+
+## SSH tunnels
+
+Two ports answer on the server only, not on the internet:
+
+| Port | What |
+|:--|:--|
+| `127.0.0.1:7201` | the GraphDB Workbench (administration of the store) |
+| `127.0.0.1:8081` | knowledge-graph-serve itself, before nginx (useful before the switch, or to tell nginx and the service apart) |
+
+To reach them from your computer, forward them through SSH. On your computer, with your login on keng in place of
+`<user>`:
+
+```bash
+ssh -N -L 7201:127.0.0.1:7201 <user>@keng.istc.cnr.it
+```
+
+Then open <http://localhost:7201/> in your browser. The tunnel stays open until Ctrl+C in that terminal.
+
+`-L 7201:127.0.0.1:7201` listens on port 7201 of your computer and sends what arrives there, through SSH, to
+`127.0.0.1:7201` as seen from keng; `-N` opens the tunnel without a shell on keng. If the port is already taken on
+your computer, choose another local port (the first number): with `-L 17201:127.0.0.1:7201`, open
+<http://localhost:17201/>.
+
+One connection can carry both ports:
+
+```bash
+ssh -N -L 7201:127.0.0.1:7201 -L 8081:127.0.0.1:8081 <user>@keng.istc.cnr.it
+```
+
+To avoid typing it each time, add to `~/.ssh/config` on your computer:
+
+```
+Host keng-tunnel
+    HostName keng.istc.cnr.it
+    User <user>
+    LocalForward 7201 127.0.0.1:7201
+    LocalForward 8081 127.0.0.1:8081
+```
+
+and open the tunnels with:
+
+```bash
+ssh -N keng-tunnel
+```
+
+On Windows 10 and 11, the same commands work in PowerShell, with the OpenSSH client that comes with Windows.
+
+The ports answer only once knowledge-graph-serve runs on keng (`install.sh kgserve`).
 
 ## The cases endpoint
 
