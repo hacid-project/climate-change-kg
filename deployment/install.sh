@@ -100,6 +100,19 @@ $others"
     systemctl enable --quiet nginx
     systemctl reload-or-restart nginx
 
+    # A certificate obtained before this script (e.g. with certbot --standalone, which needs
+    # port 80 free) renews with its own settings, and fails now that nginx holds port 80:
+    # switch it to the webroot of nginx and the reload hook. certbot saves the new settings
+    # only after a successful dry run.
+    local renewal="/etc/letsencrypt/renewal/$DOMAIN.conf"
+    if ! grep -Eq '^authenticator *= *webroot *$' "$renewal" ||
+       ! grep -Eq "^webroot_path *= *$WEBROOT,? *\$" "$renewal" ||
+       ! grep -Eq '^renew_hook *= *systemctl reload nginx *$' "$renewal"; then
+        step "Switching the renewal of $DOMAIN to the webroot of nginx"
+        certbot reconfigure --non-interactive --cert-name "$DOMAIN" \
+            --webroot -w "$WEBROOT" --deploy-hook "systemctl reload nginx"
+    fi
+
     if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
         step "Opening ports 80 and 443 in ufw"
         ufw allow "Nginx Full" >/dev/null
