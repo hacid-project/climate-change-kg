@@ -7,6 +7,8 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+## 1.1.1 - 2026-11-25
+
 ### Knowledge graph
 
 - The KG, as a dataset, is `https://w3id.org/climate-change-kg`, the root of the namespace of the project (as for an
