@@ -21,7 +21,7 @@ shape:KnowledgeGraph a sh:NodeShape ;
     rdfs:comment """The KG has what DCAT recommends for a dataset in a catalogue (title, description, creators,
 publisher, license, keywords, themes, landing page, a distribution), the date and version of its build, and its named
 graphs as VoID subsets."""@en ;
-    sh:targetNode <https://w3id.org/climate-change-kg/data/kg> ;
+    sh:targetNode <https://w3id.org/climate-change-kg> ;
     sh:class dcat:Dataset , void:Dataset , sd:Dataset ;
     sh:property
         [ sh:path dcterms:creator ; sh:minCount 1 ; sh:class foaf:Agent ] ,
@@ -38,6 +38,16 @@ graphs as VoID subsets."""@en ;
         [ sh:path void:subset ; sh:minCount 1 ; sh:class void:Dataset ] ,
         [ sh:path sd:namedGraph ; sh:minCount 1 ; sh:class sd:NamedGraph ] ,
         [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:maxCount 1 ; sh:class prov:Activity ] .
+
+shape:Description a sh:NodeShape ;
+    rdfs:label "The description of the knowledge graph"@en ;
+    rdfs:comment """The description of the KG, the named graph holding it (config.yaml, metadata.graph), is a VoID
+dataset description with a title, whose primary topic is the KG."""@en ;
+    sh:targetNode <https://w3id.org/climate-change-kg/data/kg> ;
+    sh:class void:DatasetDescription ;
+    sh:property
+        [ sh:path dcterms:title ; sh:minCount 1 ] ,
+        [ sh:path foaf:primaryTopic ; sh:hasValue <https://w3id.org/climate-change-kg> ; sh:maxCount 1 ] .
 
 shape:Agent a sh:NodeShape ;
     rdfs:label "Agent"@en ;

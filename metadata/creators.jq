@@ -12,6 +12,7 @@ def slug: ascii_downcase | gsub("[^a-z0-9]+"; "-") | ltrimstr("-") | rtrimstr("-
   "@type": ["foaf:Agent", "foaf:Person"],
   "foaf:name": "\(.name | given) \(.name | family)"
 } + (if .orcid then {"rdfs:seeAlso": {"@id": "https://orcid.org/\(.orcid)"}} else {} end)] as $creators
+| "https://w3id.org/climate-change-kg" as $kg  # the KG as a dataset (see kg.ttl)
 | {
   "@context": {
     "@base": "https://w3id.org/climate-change-kg/data/",
@@ -20,7 +21,7 @@ def slug: ascii_downcase | gsub("[^a-z0-9]+"; "-") | ltrimstr("-") | rtrimstr("-
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
   },
   "@graph": [
-    {"@id": "kg", "dcterms:creator": [$creators[] | {"@id": ."@id"}]},
+    {"@id": $kg, "dcterms:creator": [$creators[] | {"@id": ."@id"}]},
     $creators[]
   ]
 }

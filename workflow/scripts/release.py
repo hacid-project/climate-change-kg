@@ -52,7 +52,8 @@ VOID = rdflib.Namespace("http://rdfs.org/ns/void#")
 SD = rdflib.Namespace("http://www.w3.org/ns/sparql-service-description#")
 SH = rdflib.Namespace("http://www.w3.org/ns/shacl#")
 DCTERMS = rdflib.Namespace("http://purl.org/dc/terms/")
-KG = rdflib.URIRef("https://w3id.org/climate-change-kg/data/kg")
+# The KG as a dataset in its description (metadata/kg.ttl)
+KG = rdflib.URIRef("https://w3id.org/climate-change-kg")
 
 SEMVER = re.compile(r"^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$")
 
