@@ -1,0 +1,27 @@
+# Settings of keng.istc.cnr.it, on top of compose.yaml and compose.graphdb.yaml of
+# knowledge-graph-serve (COMPOSE_FILE in .env lists the three files).
+
+x-logging: &logging
+  # Container logs rotated, so that they do not fill the disk.
+  logging:
+    driver: local
+    options:
+      max-size: 20m
+      max-file: "5"
+
+services:
+  store:
+    <<: *logging
+    # The GraphDB Workbench, reachable from the server only (through an SSH tunnel), on 7201 so
+    # that it does not clash with the GraphDB of climate-change-kg-docker (7200).
+    ports: !override
+      - "127.0.0.1:7201:7200"
+
+  sync:
+    <<: *logging
+
+  linked-data:
+    <<: *logging
+
+  web:
+    <<: *logging

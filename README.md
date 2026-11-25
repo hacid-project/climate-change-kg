@@ -43,6 +43,7 @@ All the steps are rules of one [Snakemake](https://snakemake.github.io/) workflo
 | `metadata/` | the description of the KG: hand-written parts (`kg.ttl`, `record.yaml`) and the queries and mappings completing it |
 | `publication/` | release notes, templates of the releases, w3id redirects |
 | `website/` | the documentation website (GitHub Pages), with the facts of the releases in `website/_data/releases.json` |
+| `deployment/` | the setup of the server of the SPARQL endpoint and of the linked data, keng.istc.cnr.it ([`deployment/README.md`](deployment/README.md)) |
 | `example-queries/`, `checkup-queries/` | SPARQL queries: examples, and checks of the KG |
 | `kg/`, `logs/` | outputs of the workflow (not tracked) |
 
@@ -244,8 +245,8 @@ Versions follow semantic versioning on what queries rely on: the IRIs, the named
    the version of the KG on Zenodo with the DOI of that workflow version. It ends with
    `[release] Published the Climate Change Knowledge Graph X.Y.Z: https://doi.org/...`.
 6. **After the release.** The website is redeployed automatically by GitHub Actions (the release commit changes
-   `website/`). The SPARQL endpoint and the linked data front end are updated separately, from the dump on Zenodo
-   (repository `hacid-project/climate-change-kg-docker`). Your local KG still describes itself as the release; the next
+   `website/`). The SPARQL endpoint and the linked data front end load the new version from Zenodo by themselves,
+   within an hour ([`deployment/`](deployment/README.md)). Your local KG still describes itself as the release; the next
    `snakemake --cores 4` describes it again as a build of its commit.
 
 The steps of the release, in order (`workflow/rules/release.smk`, `workflow/scripts/release.py`):
@@ -323,6 +324,8 @@ is commented in the file.
 - [`doc/pipeline.md`](doc/pipeline.md): how each step and each source mapping works.
 - [`doc/conventions.md`](doc/conventions.md): the conventions of labels, comments and IRIs.
 - [`shapes/README.md`](shapes/README.md): the shapes, their severities and how to read the validation report.
+- [`deployment/README.md`](deployment/README.md): how the KG is served at keng.istc.cnr.it (SPARQL endpoint, linked
+  data), and how to set up that server.
 - `data-sources/<source>/DECISIONS.md`: the decisions taken on each source.
 - [`CHANGELOG.md`](CHANGELOG.md) and [`publication/releases/`](publication/releases/): the releases.
 - The website, <https://w3id.org/climate-change-kg>: the content, the data model, the competency questions and the
