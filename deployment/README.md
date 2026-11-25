@@ -176,7 +176,10 @@ sudo deployment/install.sh front
 
 It refuses to start if something else still listens on port 80 or 443. It installs the two nginx sites (and removes
 the default site of Ubuntu), serves port 80 alone until it has the certificate, gets it from Let's Encrypt, then
-turns on port 443, and ends with a dry run of the renewal. Running it means accepting the
+turns on port 443, and ends with a dry run of the renewal. If a certificate of keng.istc.cnr.it is already in
+`/etc/letsencrypt` (obtained on the server before, e.g. with `certbot --standalone`), it is kept, and its renewal is
+switched to the webroot of nginx and the reload hook (`certbot reconfigure`): otherwise its renewals would fail, as
+port 80 is taken by nginx. Running it means accepting the
 [terms of Let's Encrypt](https://letsencrypt.org/repository/). The account is registered without an email address
 (Let's Encrypt no longer sends expiry reminders); to give one, run it as
 `sudo CERTBOT_EMAIL=<address> deployment/install.sh front`.
