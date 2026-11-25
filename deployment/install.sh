@@ -14,7 +14,7 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 DOMAIN=keng.istc.cnr.it
 # knowledge-graph-serve, at a reviewed commit (update it to deploy a newer version).
 KGSERVE_REPO=https://github.com/miguel76/knowledge-graph-serve.git
-KGSERVE_REF="${KGSERVE_REF:-f5ce14bd5876154e9a67b4dcf3107efc2c390463}"
+KGSERVE_REF="${KGSERVE_REF:-a120c466b9959b2db76ac9017616d87097517d89}"
 KGSERVE_DIR="${KGSERVE_DIR:-/srv/kgserve/climate-change-kg}"
 # Where nginx answers the HTTP challenges of Let's Encrypt.
 WEBROOT=/var/www/letsencrypt
