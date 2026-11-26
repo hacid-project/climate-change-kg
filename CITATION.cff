@@ -36,7 +36,7 @@ authors:
       Institute of Cognitive Sciences and Technologies, National Research
       Council of Italy (CNR-ISTC)
     orcid: https://orcid.org/0000-0003-2928-9496
-version: 1.1.1
+version: 1.2.0
 doi: 10.5281/zenodo.24304389
 license: MIT
 repository-code: https://github.com/hacid-project/climate-change-kg
@@ -55,4 +55,4 @@ keywords:
   - CMIP5
   - CORDEX
   - UKCP18
-date-released: '2026-11-25'
+date-released: '2026-11-26'

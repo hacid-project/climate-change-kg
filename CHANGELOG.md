@@ -7,6 +7,8 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+## 1.2.0 - 2026-11-26
+
 ### Knowledge graph
 
 - The CORDEX-CMIP5 runs of the two statistical downscaling models, `BOM-SDM` (Bureau of Meteorology, domain `AUS`,
