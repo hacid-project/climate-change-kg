@@ -23,9 +23,11 @@ section of the new version, and quotes them in the release notes, in the GitHub 
   1,959 dynamical and 82 statistical downscaling runs (2,041 dynamical before). Queries for the climate simulations or
   for `ccso:usesModel` no longer return them; queries for `ccso:Downscaling` or `ccso:isDownscalingOf` still do. See
   `data-sources/cordex-cmip5/DECISIONS.md`.
-- The runs of the statistical downscalings with a CORDEX grid (`DeepESD-EE`) are described (`rdfs:comment`) as
-  statistical downscalings by their statistical model, and their outputs get the temporal coverage of their datasets,
-  as those of the simulations (`consolidation/CORDEX-comment-generation.ru`, `simTimeCoverage-local.ru`).
+- The runs of `DeepESD-EE` (the statistical downscalings with a CORDEX grid) are described (`rdfs:comment`) as
+  statistical downscalings by their statistical model, no longer as RCM simulations
+  (`consolidation/CORDEX-comment-generation.ru`). The outputs of the statistical downscalings keep the temporal
+  coverage of their datasets, as those of the simulations (`consolidation/simTimeCoverage-local.ru`; for `BOM-SDM`,
+  whose datasets have time intervals).
 
 ### Shapes
 

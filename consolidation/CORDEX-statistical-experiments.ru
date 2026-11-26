@@ -32,10 +32,10 @@ WHERE {
         ?experiment rdf:type ccso:Downscaling ;
             top:hasComponent ?ensemble .
         ?ensemble rdf:type ccso:StatisticalDownscaling .
-    }
-    FILTER NOT EXISTS {
-        ?experiment top:hasComponent ?other .
-        ?other rdf:type ccso:DynamicalDownscaling .
+        FILTER NOT EXISTS {
+            ?experiment top:hasComponent ?other .
+            ?other rdf:type ccso:DynamicalDownscaling .
+        }
     }
 } ;
 
