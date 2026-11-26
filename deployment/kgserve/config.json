@@ -1,1 +1,1 @@
-{"zenodo": "10.5281/zenodo.24305088", "inference": "rdfsplus-optimized", "describeInferred": false}
+{"zenodo": "10.5281/zenodo.24305088", "inference": "rdfsplus-optimized", "describeInferred": false, "excludeFiles": ["void.ttl"]}
