@@ -7,6 +7,13 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Deployment
+
+- The endpoint loads only the dump `kg.nq.gz` of a release, not `void.ttl` too (`excludeFiles` in
+  `deployment/kgserve/config.json`): the description of the KG was in the endpoint twice, also as the graph
+  `https://doi.org/10.5281/zenodo.24305088#void.ttl` (2,371 triples for release 1.2.0), a copy of the graph
+  `https://w3id.org/climate-change-kg/data/kg` of the dump.
+
 ## 1.2.0 - 2026-11-26
 
 ### Knowledge graph
