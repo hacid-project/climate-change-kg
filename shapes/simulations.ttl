@@ -212,16 +212,19 @@ shape:DynamicalDownscaling-driving a sh:PropertyShape ;
 
 
 shape:DownscalingRun a sh:NodeShape ;
-    rdfs:label "Run of a dynamical downscaling"@en ;
-    rdfs:comment """A single simulation that is a dynamical downscaling downscales a simulation (its driving
-simulation). The runs of the evaluation experiment are not checked: they are driven by a reanalysis (ERA-Interim),
-which is not a simulation of the KG."""@en ;
+    rdfs:label "Run of a downscaling"@en ;
+    rdfs:comment """A run of a downscaling, a single simulation that is a dynamical downscaling or a single
+projection production that is a statistical downscaling, downscales a simulation (its driving simulation). The runs of
+the evaluation experiment are not checked: they are driven by a reanalysis (ERA-Interim), which is not a simulation of
+the KG."""@en ;
     sh:target [
         a sh:SPARQLTarget ;
         sh:prefixes shape:prefixes ;
         sh:select """
             SELECT ?this WHERE {
-                ?this rdf:type ccso:SingleSimulation , ccso:DynamicalDownscaling .
+                { ?this rdf:type ccso:SingleSimulation , ccso:DynamicalDownscaling }
+                UNION
+                { ?this rdf:type ccso:SingleProjectionProduction , ccso:StatisticalDownscaling }
                 # (the id of the simulation has its experiment)
                 FILTER (!CONTAINS(STR(?this), ".evaluation."))
             }""" ;
@@ -235,11 +238,25 @@ shape:DownscalingRun-driving a sh:PropertyShape ;
     sh:message "The downscaling run has no driving simulation."@en .
 
 
+shape:StatisticalDownscaling a sh:NodeShape ;
+    rdfs:label "Statistical downscaling"@en ;
+    rdfs:comment """A statistical downscaling (e.g. the CORDEX-CMIP5 runs of BOM-SDM and DeepESD-EE) is not a climate
+simulation and uses no climate model: its statistical model is one of its participants (top:hasParticipant)."""@en ;
+    sh:targetClass ccso:StatisticalDownscaling ;
+    sh:property shape:StatisticalDownscaling-noClimateModel .
+
+shape:StatisticalDownscaling-noClimateModel a sh:PropertyShape ;
+    sh:path ccso:usesModel ;
+    sh:maxCount 0 ;
+    sh:message "A statistical downscaling uses no climate model (ccso:usesModel); its model is a participant."@en .
+
+
 shape:ProjectionTransformation a sh:NodeShape ;
     rdfs:label "Projection transformation"@en ;
     rdfs:comment """A transformation of projections (rescaling, aggregation, statistical transformation) has inputs
-and exactly one output. The climate simulations that are transformations too (the dynamical downscalings, linked to
-what they downscale by ccso:isDownscalingOf) are left out."""@en ;
+and exactly one output. The downscalings, dynamical (climate simulations) or statistical, are left out: their runs are
+linked to the simulation they downscale by ccso:isDownscalingOf (the output of a driving CMIP5 simulation, which
+depends on its product, is not known)."""@en ;
     sh:target [
         a sh:SPARQLTarget ;
         sh:prefixes shape:prefixes ;
@@ -247,6 +264,7 @@ what they downscale by ccso:isDownscalingOf) are left out."""@en ;
             SELECT DISTINCT ?this WHERE {
                 ?this rdf:type/rdfs:subClassOf* ccso:ProjectionTransformation .
                 FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* ccso:ClimateSimulation }
+                FILTER NOT EXISTS { ?this rdf:type/rdfs:subClassOf* ccso:Downscaling }
             }""" ;
     ] ;
     sh:property shape:ProjectionTransformation-input , shape:ProjectionTransformation-output .

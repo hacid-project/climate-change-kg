@@ -7,6 +7,33 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Knowledge graph
+
+- The CORDEX-CMIP5 runs of the two statistical downscaling models, `BOM-SDM` (Bureau of Meteorology, domain `AUS`,
+  66 runs, 199 datasets) and `DeepESD-EE` (University of Cantabria, domain `EUR-44i`, 16 runs, 32 datasets), are
+  statistical downscalings (`ccso:StatisticalDownscaling`; a run is a `ccso:SingleProjectionProduction`, its
+  ensembles `ccso:EnsembleProjectionProduction`s), no longer dynamical downscalings, which are climate simulations
+  (`ccso:DynamicalDownscaling`, `ccso:SingleSimulation`, `ccso:EnsembleSimulation`). A run is still linked to the CMIP5
+  simulation it downscales (`ccso:isDownscalingOf`). Its model is a participant (`top:hasParticipant`) instead of
+  `ccso:usesModel`, which is for climate models, and the two models are a `top:Description` with a comment and a
+  reference (`rdfs:seeAlso`), no longer a `ccso:RegionalClimateModel`. The experiments of the domain `AUS` are
+  statistical downscalings too; those of `EUR-44i` (historical and rcp85), with runs of both kinds, are a
+  `ccso:Downscaling` and a `ccso:EnsembleProjectionProduction`, no longer a `ccso:ClimateModelIntercomparisonExperiment`
+  and a `ccso:DynamicalDownscaling` (`consolidation/CORDEX-statistical-experiments.ru`). The CORDEX-CMIP5 graph has
+  1,959 dynamical and 82 statistical downscaling runs (2,041 dynamical before). Queries for the climate simulations or
+  for `ccso:usesModel` no longer return them; queries for `ccso:Downscaling` or `ccso:isDownscalingOf` still do. See
+  `data-sources/cordex-cmip5/DECISIONS.md`.
+- The runs of the statistical downscalings with a CORDEX grid (`DeepESD-EE`) are described (`rdfs:comment`) as
+  statistical downscalings by their statistical model, and their outputs get the temporal coverage of their datasets,
+  as those of the simulations (`consolidation/CORDEX-comment-generation.ru`, `simTimeCoverage-local.ru`).
+
+### Shapes
+
+- `shape:StatisticalDownscaling`: a statistical downscaling uses no climate model (`ccso:usesModel`).
+  `shape:DownscalingRun` also checks the runs of the statistical downscalings (they downscale a simulation), and
+  `shape:ProjectionTransformation` leaves out all the downscalings, whose runs are linked to what they downscale by
+  `ccso:isDownscalingOf`.
+
 ## 1.1.1 - 2026-11-25
 
 ### Knowledge graph

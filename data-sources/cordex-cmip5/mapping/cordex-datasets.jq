@@ -33,20 +33,29 @@ def _nodes: with_entries(select(.value != null and .value != []));
 # IRI of a regional model (input: its name, as the ESGF facet rcm_name)
 def cordex_model_iri: ns + "models/\(quote)";
 
-# Nodes of a regional climate model and of the institutes maintaining it.
+# Nodes of a regional climate model, or of a statistical downscaling model,
+# and of the institutes maintaining it.
 #
 # Input:
 # - name: the name of the model (as the ESGF facet rcm_name, e.g. RACMO22E);
 # - institutes (optional): the acronyms of the institutes maintaining it (as
-#   the ESGF facet institute, e.g. KNMI).
+#   the ESGF facet institute, e.g. KNMI);
+# - statistical (optional): for a statistical downscaling model, its rule of
+#   statistical_downscaling_models (mapping/data-issues.json), {comment,
+#   reference}: the model is then a top:Description (the ontologies have no
+#   class for a statistical model), with the comment and the reference, not a
+#   ccso:RegionalClimateModel.
 def cordex_model_jsonld:
     .name as $name |
+    .statistical as $statistical |
     [.institutes[]? | cmip5_institute_iri] as $institutes |
     (
         {
             "@id": ($name | cordex_model_iri),
-            "@type": "ccso:RegionalClimateModel",
+            "@type": (if $statistical then "top:Description" else "ccso:RegionalClimateModel" end),
             "rdfs:label": $name,
+            "rdfs:comment": (if $statistical then $statistical.comment | en else null end),
+            "rdfs:seeAlso": (if $statistical then $statistical.reference | id(.) else null end),
             "ccso:isMaintainedBy": ($institutes | map(id(.)))
         },
         (
@@ -186,11 +195,25 @@ def cordex_dataset_part_jsonld:
 # driving model (cmip5_model_jsonld, with its name, cmip5_model_name, without
 # its institutes), if any.
 #
+# The run, the driving ensemble and the ensemble of a regional climate model
+# are dynamical downscalings (climate simulations, using the model); those of
+# a statistical downscaling model (input statistical) are statistical
+# downscalings (projection productions, not simulations), whose model is a
+# participant (top:hasParticipant, as ccso:usesModel is for climate models).
+# The experiment is a ccso:ClimateModelIntercomparisonExperiment and a
+# ccso:DynamicalDownscaling for a regional climate model, a
+# ccso:EnsembleProjectionProduction and a ccso:Downscaling for a statistical
+# model: an experiment with both is typed once all the records are loaded
+# (consolidation/CORDEX-statistical-experiments.ru).
+#
 # Input:
 # - domain, driving_model, experiment, ensemble, rcm_name, rcm_version,
 #   product, grids: as for cordex_simulation_iris, with the product;
 # - models (optional): the names of the regional models used (as the ESGF
 #   facet rcm_name, see cordex_model_jsonld for their nodes);
+# - statistical (optional): true (or the rule of
+#   statistical_downscaling_models) if the model is a statistical downscaling
+#   model;
 # - variables (optional): the IRIs of the variables of which the outputs hold
 #   specializations;
 # - datasets (optional): the IRIs of the datasets that are components of the
@@ -202,6 +225,24 @@ def cordex_simulation_jsonld:
     (if $iris.grid != null then id("\($iris.grid)/ds") else null end) as $geodetic_variable |
     (if $iris.grid != null then id("\($iris.grid)/specialization") else null end) as $geodetic_specialization |
     ([.models[]? | cordex_model_iri] | map(id(.))) as $uses_model |
+    (if .statistical then true else false end) as $statistical |
+    # the types of the run, of the ensembles and of the experiment, and the
+    # link to the model
+    (if $statistical then
+        {
+            run: ["ccso:SingleProjectionProduction", "ccso:StatisticalDownscaling"],
+            ensemble: ["ccso:EnsembleProjectionProduction", "ccso:StatisticalDownscaling"],
+            experiment: ["ccso:EnsembleProjectionProduction", "ccso:Downscaling"],
+            model: "top:hasParticipant"
+        }
+    else
+        {
+            run: ["ccso:SingleSimulation", "ccso:DynamicalDownscaling"],
+            ensemble: ["ccso:EnsembleSimulation", "ccso:DynamicalDownscaling"],
+            experiment: ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"],
+            model: "ccso:usesModel"
+        }
+    end) as $kind |
     (
         (
             # Output of the simulation
@@ -218,21 +259,21 @@ def cordex_simulation_jsonld:
             # Simulation
             {
                 "@id": $iris.simulation,
-                "@type": ["ccso:SingleSimulation", "ccso:DynamicalDownscaling"],
+                "@type": $kind.run,
                 "rdfs:label": $iris.simulation_id,
                 "ccso:isDownscalingOf": _id_or_null($iris.driving_simulation),
                 "data:hasOutput": id($iris.output),
-                "ccso:usesModel": $uses_model,
+                ($kind.model): $uses_model,
                 "ccso:refersToScenario": $refers_to_scenario
             },
             # Driving ensemble
             {
                 "@id": $iris.driving_ensemble,
-                "@type": ["ccso:EnsembleSimulation", "ccso:DynamicalDownscaling"],
+                "@type": $kind.ensemble,
                 "rdfs:label": $iris.driving_ensemble_id,
                 "top:hasComponent": id($iris.simulation),
                 "data:hasOutput": id($iris.driving_ensemble_output),
-                "ccso:usesModel": $uses_model,
+                ($kind.model): $uses_model,
                 "ccso:refersToScenario": $refers_to_scenario
             },
             # Output of the driving ensemble
@@ -249,11 +290,11 @@ def cordex_simulation_jsonld:
             # Ensemble
             {
                 "@id": $iris.ensemble,
-                "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"],
+                "@type": (if $statistical then $kind.ensemble else ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"] end),
                 "rdfs:label": $iris.ensemble_id,
                 "top:hasComponent": id($iris.driving_ensemble),
                 "data:hasOutput": id($iris.ensemble_output),
-                "ccso:usesModel": $uses_model,
+                ($kind.model): $uses_model,
                 "ccso:refersToScenario": $refers_to_scenario
             },
             # Output of the ensemble
@@ -270,7 +311,7 @@ def cordex_simulation_jsonld:
             # Experiment
             {
                 "@id": $iris.experiment,
-                "@type": ["ccso:ClimateModelIntercomparisonExperiment", "ccso:DynamicalDownscaling"],
+                "@type": $kind.experiment,
                 "rdfs:label": $iris.experiment_id,
                 "top:hasComponent": id($iris.ensemble),
                 "data:hasOutput": id($iris.experiment_output),
@@ -338,6 +379,9 @@ def cordex_simulation_jsonld:
 # - master_id: the id of the dataset (for its IRI and label);
 # - product, domain, experiment, ensemble, rcm_name (the regional models),
 #   rcm_version, time_frequency;
+# - statistical_model (optional): the rule of statistical_downscaling_models
+#   (mapping/data-issues.json) if the model is a statistical downscaling model
+#   (see datasets.jq);
 # - driving_model: the CMIP5 model id of the driving model (in the search
 #   results prefixed by its institution, e.g. MOHC-HadGEM2-ES, normalised by
 #   datasets.jq);
@@ -383,14 +427,15 @@ def cordex_dataset_jsonld($variables; $grids):
                 rcm_version: .rcm_version[0],
                 product: .product[0],
                 models: .rcm_name,
+                statistical: .statistical_model,
                 variables: $variables,
                 datasets: [$dataset],
                 grids: $grids
             } |
             cordex_simulation_jsonld
         ),
-        # Regional models
-        (.institute as $institutes | .rcm_name[] | {name: ., $institutes} | cordex_model_jsonld),
+        # Regional models (or statistical downscaling models)
+        (.institute as $institutes | .statistical_model as $statistical | .rcm_name[] | {name: ., $institutes, $statistical} | cordex_model_jsonld),
         # Temporal grid
         (
             $time | values |
