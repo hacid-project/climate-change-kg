@@ -22,7 +22,8 @@ section of the new version, and quotes them in the release notes, in the GitHub 
   and a `ccso:DynamicalDownscaling` (`consolidation/CORDEX-statistical-experiments.ru`). The CORDEX-CMIP5 graph has
   1,959 dynamical and 82 statistical downscaling runs (2,041 dynamical before). Queries for the climate simulations or
   for `ccso:usesModel` no longer return them; queries for `ccso:Downscaling` or `ccso:isDownscalingOf` still do. See
-  `data-sources/cordex-cmip5/DECISIONS.md`.
+  `data-sources/cordex-cmip5/DECISIONS.md`. The key figures count 82 simulations fewer, and the two models no longer
+  among the climate models; the Sources page of the website gives the downscalings of each kind.
 - The runs of `DeepESD-EE` (the statistical downscalings with a CORDEX grid) are described (`rdfs:comment`) as
   statistical downscalings by their statistical model, no longer as RCM simulations
   (`consolidation/CORDEX-comment-generation.ru`). The outputs of the statistical downscalings keep the temporal
