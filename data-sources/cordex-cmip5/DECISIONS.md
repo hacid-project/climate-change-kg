@@ -45,6 +45,40 @@ variables (`analysis/variables-check.json`, see the end of this document).
   `.../simulations/cordex.AUS-44i.ECMWF-ERAINT.evaluation.CCAM-2008.v1.r1i1p1`),
   without a driving CMIP5 simulation: the ontologies have no class for a
   reanalysis, and `ccso:isDownscalingOf` is for projection productions.
+- **Statistical downscalings** (`mapping/data-issues.json`,
+  `statistical_downscaling_models`; decided on 2026-11-26). Two of the
+  models of the facet `rcm_name` are not regional climate models but
+  statistical downscaling models: `BOM-SDM`, the analogue-based statistical
+  downscaling model of the Australian Bureau of Meteorology (Timbal,
+  Fernandez and Li 2009, doi:10.1016/j.envsoft.2008.07.007; domain `AUS`,
+  66 runs of 22 CMIP5 driving models, 199 datasets), and `DeepESD-EE`, the
+  deep-learning empirical statistical downscaling of the University of
+  Cantabria (Baño-Medina et al. 2022, doi:10.5194/gmd-15-6747-2022; domain
+  `EUR-44i`, 16 runs of 8 driving models, 32 datasets). The other 43 models
+  are regional climate models. The runs of the two statistical models were
+  typed as dynamical downscalings, i.e. climate simulations of a
+  `ccso:RegionalClimateModel`, up to release 1.1.1. They are kept, as
+  statistical downscalings: a run is a `ccso:SingleProjectionProduction` and a
+  `ccso:StatisticalDownscaling`, its driving ensemble and its ensemble are a
+  `ccso:EnsembleProjectionProduction` and a `ccso:StatisticalDownscaling`
+  (none of them a `ccso:Simulation`), and a run is still linked to the CMIP5
+  simulation it downscales (`ccso:isDownscalingOf`). Their model is a
+  participant (`top:hasParticipant`), not linked by `ccso:usesModel`, whose
+  domain is `ccso:ClimateSimulation` and range `ccso:ClimateModel`; the model
+  is a `top:Description` with a comment and a reference (`rdfs:seeAlso`), as
+  the ontologies have no class for a statistical model. The node of an
+  experiment (a domain and an experiment) given by the records of a
+  statistical model is a `ccso:EnsembleProjectionProduction` and a
+  `ccso:Downscaling`; as each page of the search results is mapped on its
+  own, an experiment with both kinds (`EUR-44i`, historical and rcp85) gets
+  its types once the KG is loaded
+  (`consolidation/CORDEX-statistical-experiments.ru`): the types of the
+  dynamical downscalings are removed, and an experiment with statistical
+  downscalings only (`AUS`) is a `ccso:StatisticalDownscaling`. Excluding the
+  runs, as for the datasets that do not fit, was the alternative: rejected, as
+  they are genuine CORDEX-CMIP5 data and the ontologies have the class. The
+  check by domain (`AUS` has no resolution) found only `BOM-SDM`; `DeepESD-EE`
+  was found by reviewing the names of all the models.
 - **Driving CMIP5 simulations.** Each simulation also gives the nodes of its
   driving CMIP5 simulation (with its ensemble and experiment, without outputs,
   whose product is not known) and of the driving model (named by

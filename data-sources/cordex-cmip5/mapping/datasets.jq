@@ -103,12 +103,15 @@ def _clean:
 # --- Mapping
 
 # (with the variables of the ids for the datasets of variables_from_id, the
-# experiment evaluation for those of evaluation_runs, without the datasets
-# excluded, see mapping/data-issues.json)
+# experiment evaluation for those of evaluation_runs, the rule of
+# statistical_downscaling_models for the datasets of a statistical model,
+# without the datasets excluded, see mapping/data-issues.json)
 [
     inputs | .response.docs[] |
     fix_variables($data_issues[0]) | fix_experiment($data_issues[0]) |
     select(excluded($data_issues[0]) | not) |
+    # (the rule of the statistical downscaling model, if any)
+    .statistical_model = statistical_model($data_issues[0]) |
     _clean
 ] as $datasets |
 # the grids of the KG (cordex_grids)
