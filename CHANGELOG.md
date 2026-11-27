@@ -7,6 +7,8 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+## 1.2.1 - 2026-11-27
+
 ### Knowledge graph
 
 - The ontologies are taken at the commit `48d5aaf` of `hacid-project/knowledge-graph` (was `bfb0310`), which changes
