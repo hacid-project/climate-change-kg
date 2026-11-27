@@ -13,16 +13,15 @@ The KG moved from `https://w3id.org/hacid/data/cs/` to its own namespace, `https
 
 The ontologies stay at `https://w3id.org/hacid/onto/{top-level,data,ccso}`.
 
-The new identifier, `ids/climate-change-kg/` (resources to the linked data front end, the endpoint, anything else to
-the website), is merged in [perma-id/w3id.org](https://github.com/perma-id/w3id.org). The redirect rules still to
-submit are prepared in branches of the fork [miguel76/w3id.org](https://github.com/miguel76/w3id.org), one per pull
-request:
+All the rules are merged in [perma-id/w3id.org](https://github.com/perma-id/w3id.org) (`ids/climate-change-kg/`, and
+`ids/hacid/` for the old IRIs), from branches of the fork [miguel76/w3id.org](https://github.com/miguel76/w3id.org):
 
-1. `hacid-climate-services-to-climate-change-kg`: `/hacid/data/cs/...` redirects to `/climate-change-kg/data/...`; the
-   other HACID redirects, `/hacid/cs/sparql` included, are unchanged (this branch has to be rebased on the updated
-   `master` of the fork);
-2. `climate-change-kg-shapes-redirects`: the redirects of the shapes and the content negotiation on the root, for
-   the KG as a dataset, both below (one pull request).
+1. the new identifier (resources to the linked data front end, the endpoint, anything else to the website):
+   [perma-id/w3id.org#7170](https://github.com/perma-id/w3id.org/pull/7170), merged 2026-11-13;
+2. `/hacid/data/cs/...` redirecting to `/climate-change-kg/data/...` and `/hacid/cs/sparql` to the new endpoint:
+   [perma-id/w3id.org#7202](https://github.com/perma-id/w3id.org/pull/7202), merged 2026-11-17;
+3. the redirects of the shapes and the content negotiation on the root, for the KG as a dataset, both below:
+   [perma-id/w3id.org#7320](https://github.com/perma-id/w3id.org/pull/7320), merged 2026-11-26.
 
 The linked data front end and the SPARQL endpoint have to serve a build of the KG with the new IRIs for the new IRIs
 to be described.
@@ -33,7 +32,7 @@ The SHACL shapes of the KG (`shapes/`) are published at `https://w3id.org/climat
 the namespace `https://w3id.org/climate-change-kg/shapes/`). The website workflow (`website/collect-shapes.sh`) copies
 them, with the combined `shapes.ttl`, to the `shapes/` folder of the GitHub Pages site, next to the landing page
 (`website/shapes.md`). The redirect rules, content negotiation between the Turtle file and the landing page, are in
-the branch `climate-change-kg-shapes-redirects` of the fork (`ids/climate-change-kg/.htaccess`).
+`ids/climate-change-kg/.htaccess` of w3id.org (perma-id/w3id.org#7320).
 
 ## The KG as a dataset
 
@@ -62,15 +61,17 @@ RewriteCond %{HTTP_ACCEPT} application/n-triples
 RewriteRule ^$ https://keng.istc.cnr.it/climate-change-kg/sparql?query=CONSTRUCT+\%7B+\%3Fs+\%3Fp+\%3Fo+\%7D+WHERE+\%7B+GRAPH+\%3Chttps\%3A\%2F\%2Fw3id.org\%2Fclimate-change-kg\%2Fdata\%2Fkg\%3E+\%7B+\%3Fs+\%3Fp+\%3Fo+\%7D+\%7D [R=303,NE,L]
 ```
 
-The rule is in the branch `climate-change-kg-shapes-redirects` (commit `6d63e3f`, with the shapes redirects squashed
-in it, on `master` of perma-id/w3id.org at `f203688`), with the README of the identifier. It passes the checker of w3id.org (`tools/check`, no problems), and
-was checked (2026-11-25) on Apache 2.4 (`tools/server`, with the Apache of the system):
-with `Accept: text/turtle` (or `application/ld+json`), `https://w3id.org/climate-change-kg` (after the redirect to
-`.../climate-change-kg/`) answers 303 to the query, decoded as
-`CONSTRUCT { ?s ?p ?o } WHERE { GRAPH <https://w3id.org/climate-change-kg/data/kg> { ?s ?p ?o } }`; with the `Accept`
-of a browser, or `*/*`, 302 to the website, as now; `data/kg` and `shapes` are unchanged. The query, sent to
-`https://keng.istc.cnr.it/climate-change-kg/sparql` with `Accept: text/turtle`, returns the description in Turtle
-(the current one, still with the KG named `.../data/kg` until the next release).
+The rule is live since perma-id/w3id.org#7320 (merged 2026-11-26). Checked on w3id.org on 2026-11-27, with release
+1.2.0 served:
 
-Until a release with the new IRI is served and the rule is merged, the root gives the website to everyone, and
-`.../data/kg` is still described as the dataset by the release served.
+- `https://w3id.org/climate-change-kg` answers 301 to `.../climate-change-kg/` (Apache adds the slash). With
+  `Accept: text/turtle`, `application/ld+json`, `application/rdf+xml` or `application/n-triples`,
+  `.../climate-change-kg/` then answers 303 to the query, decoded as
+  `CONSTRUCT { ?s ?p ?o } WHERE { GRAPH <https://w3id.org/climate-change-kg/data/kg> { ?s ?p ?o } }`, which returns
+  200 in the format asked for: the description, with `<https://w3id.org/climate-change-kg>` as the dataset,
+  `foaf:primaryTopic` of `.../data/kg`, and `dcat:hasCurrentVersion` the release 1.2.0. With the `Accept` of a
+  browser, or `*/*`, it answers 302 to the website (200).
+- `shapes` (303 to `shapes.ttl` for RDF, to the shapes page otherwise), `shapes/<topic>.ttl` (302), `data` (302 to
+  the data access page), `data/...` (303 to the linked data front end), `sparql` (307, GET and POST answer) and any
+  other path (302 to the website) work as before.
+- The old IRIs (`/hacid/data/cs/...`, `/hacid/cs/sparql`) redirect to the new ones.
