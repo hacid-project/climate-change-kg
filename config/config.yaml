@@ -92,7 +92,7 @@ ontologies:
   # Git repository and ref (commit) of the HACID ontologies, and the
   # ontologies used by the KG (ontologies/{name}/{name}.owl in the repository)
   repo: https://github.com/hacid-project/knowledge-graph.git
-  version: bfb0310fe2100835ede3e1b77013681e2addd37b
+  version: 48d5aaf958a2148f5fe90e45626c2894b3de2a13
   names:
     - top-level
     - data
