@@ -52,7 +52,17 @@ The tag $tag_link is the commit that built this release: the KG can be rebuilt f
 ## Licences
 
 - The code: MIT.
-- The KG: CC BY 4.0. The licences of the sources are listed on the website and in the data descriptor.
+- The KG: CC BY 4.0. What the KG takes from its sources is metadata (names, descriptions and identifiers of variables,
+  indices, experiments, institutions, models, simulations and datasets), licensed by two rules:
+  - metadata that state no licence, and are already distributed and reused freely without licence information, are
+    taken as CC0 (e.g. the CMIP5 controlled vocabularies of the ESGF publisher configuration, the list of the CORDEX
+    regional models of IS-ENES Data, the definitions of the Climdex indices);
+  - a licence stated only for the data applies to their metadata as well, unless it would restrict them beyond the use
+    already made of them: the UKCP18 metadata are under the Open Government Licence v3.0, like the data; the
+    attribution asked by the CMIP5 and CORDEX terms of use applies to the ESGF metadata, while the non-commercial
+    restriction that some modelling groups chose for their model output does not.
+
+  The licences of the sources, and how the two rules apply to each, are given in the data descriptor of the KG.
 
 ## Funding
 
