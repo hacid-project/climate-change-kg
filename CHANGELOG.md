@@ -7,6 +7,15 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Knowledge graph
+
+- The expected types of the information roles whose values are ranges of literals (a period as two dates, a range of
+  numbers or durations; 7 roles, e.g. `ops:ChooseBaselinePeriod/associated-data`) are well-formed OWL class
+  expressions: the intersection of their two restrictions is typed `owl:Class`, as the other class expressions, and
+  `owl:cardinality` is an `xsd:nonNegativeInteger`, as the RDF mapping of OWL 2 requires (it was an `xsd:integer`).
+  Their meaning is unchanged: the class of the datatype restrictions on the datatype of the values, with one list of
+  facets (`data-sources/mohc-cvs/mapping/operations.jq`).
+
 ### Deployment
 
 - The endpoint loads only the dump `kg.nq.gz` of a release, not `void.ttl` too (`excludeFiles` in
