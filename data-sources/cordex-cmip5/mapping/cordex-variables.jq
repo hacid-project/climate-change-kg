@@ -206,6 +206,14 @@ def standard_name_alias($issues; $variable; $standard_name):
     . as $dataset |
     [$issues.standard_name_aliases[] | select(.standard_name == $standard_name) | select(.match as $m | $dataset | matches($m) and ($m.variable // [$variable] | index($variable)))][0].cf_standard_name;
 
+# The rule of statistical_downscaling_models matched by a dataset (input: its
+# ESGF metadata), {match, comment, reference}, or null: its model is a
+# statistical downscaling model, not a regional climate model
+# ($issues: data-issues.json)
+def statistical_model($issues):
+    . as $dataset |
+    [$issues.statistical_downscaling_models[]? | select(.match as $m | $dataset | matches($m))][0];
+
 # The rule of model_variables (variables of a model, with their own units)
 # for a variable of a dataset (input: its ESGF metadata), if any
 def model_variable($issues; $variable):

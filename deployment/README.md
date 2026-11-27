@@ -29,14 +29,17 @@ folder sets up the server: Ubuntu 24.04 LTS, 16 GB of RAM, 28.5 GB of disk.
   with this configuration (`kgserve/config.json`):
 
   ```json
-  {"zenodo": "10.5281/zenodo.24305088", "inference": "rdfsplus-optimized", "describeInferred": false}
+  {"zenodo": "10.5281/zenodo.24305088", "inference": "rdfsplus-optimized", "describeInferred": false, "excludeFiles": ["void.ttl"]}
   ```
 
   The concept DOI always resolves to the latest release: the sync checks the record every hour and loads a new release
   as soon as it is published. The store is GraphDB, as the regime `rdfsplus-optimized` is one of its rulesets: the
   SPARQL endpoint answers with the inferred statements (`?infer=false` for the explicit ones only); the resource pages
   show the explicit statements (`?infer=true` adds the inferred ones). GraphDB replaces the KG in one transaction, so
-  queries never see a partial release.
+  queries never see a partial release. Only the dump `kg.nq.gz` is loaded: `void.ttl` is excluded (`excludeFiles`), as
+  the dump already holds the same description as the graph `https://w3id.org/climate-change-kg/data/kg`. Loaded
+  too, it would be a second copy in a graph of its own (`https://doi.org/10.5281/zenodo.24305088#void.ttl`, the
+  default `triplesGraph` of knowledge-graph-serve), counted in the statistics of the endpoint.
 
 ## What changes from climate-change-kg-docker
 

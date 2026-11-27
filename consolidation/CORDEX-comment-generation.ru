@@ -20,7 +20,7 @@ WHERE {
         # The description, in English: the labels joined are with and without language
         (
             STRLANG(STR(CONCAT(
-                "RCM simulation from CORDEX, ",
+                ?run_descr, " from CORDEX, ",
                 "covering the ", ?cordex_domain_descr,
                 IF(BOUND(?geodetic_resolution),
                     CONCAT(
@@ -40,7 +40,7 @@ WHERE {
     WHERE {
         {
             SELECT
-                ?rcm_simulation ?rcm_descr
+                ?rcm_simulation ?rcm_descr ?run_descr
                 ?gcm_simulation
                 ?rcm_simulation_graph
                 (
@@ -56,20 +56,35 @@ WHERE {
                     SELECT
                         ?rcm_simulation
                         ?rcm_simulation_graph
+                        ?run_descr
                         (
                             CONCAT(
-                                "The RCM used is ", ?rcm_label,
+                                "The ", ?model_descr, " used is ", ?rcm_label,
                                 " (",
                                 GROUP_CONCAT(COALESCE(?rcm_inst_label, ?rcm_inst_code); SEPARATOR="; ") ,
                                 "). "
                             ) AS ?rcm_descr
                         )
                     WHERE {
+                        # The runs of the regional climate models, and those of
+                        # the statistical models (statistical downscalings,
+                        # whose model is a participant, see
+                        # data-sources/cordex-cmip5/DECISIONS.md)
                         GRAPH ?rcm_simulation_graph {
-                            ?rcm_simulation a ccso:DynamicalDownscaling, ccso:SingleSimulation
+                            {
+                                ?rcm_simulation a ccso:DynamicalDownscaling, ccso:SingleSimulation
+                                BIND("RCM simulation" AS ?run_descr)
+                                BIND("RCM" AS ?model_descr)
+                            }
+                            UNION
+                            {
+                                ?rcm_simulation a ccso:StatisticalDownscaling, ccso:SingleProjectionProduction
+                                BIND("Statistical downscaling" AS ?run_descr)
+                                BIND("statistical downscaling model" AS ?model_descr)
+                            }
                         }
                         ?rcm_simulation ^top:hasComponent+ mips:cordex-cmip5;
-                            ccso:usesModel ?rcm.
+                            ccso:usesModel|top:hasParticipant ?rcm.
                     
                         ?rcm rdfs:label ?rcm_label;
                             ccso:isMaintainedBy ?rcm_inst .
@@ -81,7 +96,7 @@ WHERE {
                         FILTER NOT EXISTS { ?rcm_simulation rdfs:comment ?_already }
 
                     }
-                    GROUP BY ?rcm_simulation_graph ?rcm_simulation ?rcm_label
+                    GROUP BY ?rcm_simulation_graph ?rcm_simulation ?rcm_label ?run_descr ?model_descr
                 }
 
                 ?rcm_simulation ccso:isDownscalingOf ?gcm_simulation.
@@ -96,7 +111,7 @@ WHERE {
                 }
 
             }
-            GROUP BY ?rcm_simulation_graph ?rcm_simulation ?rcm_descr ?gcm_simulation ?gcm_label
+            GROUP BY ?rcm_simulation_graph ?rcm_simulation ?rcm_descr ?run_descr ?gcm_simulation ?gcm_label
         }
 
         mips:cmip5 top:hasComponent ?experiment.

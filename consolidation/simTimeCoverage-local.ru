@@ -47,7 +47,12 @@ WHERE {
             (MIN(COALESCE(?resolutionKey, "none")) AS ?minResolutionKey)
 #            (MIN(?gridPeriod) AS ?minGridPeriod)
         WHERE {
-	        ?simulation rdf:type/rdfs:subClassOf ccso:Simulation.
+	        # (the simulations, and the statistical downscalings, which are not
+	        # simulations: their runs and ensembles, see
+	        # data-sources/cordex-cmip5/DECISIONS.md)
+	        { ?simulation rdf:type/rdfs:subClassOf ccso:Simulation }
+	        UNION
+	        { ?simulation rdf:type ccso:StatisticalDownscaling }
             GRAPH ?simulationGraph {
                 ?simulation data:hasOutput ?simulationOutput
             }

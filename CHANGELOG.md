@@ -7,6 +7,47 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ## Unreleased
 
+### Deployment
+
+- The endpoint loads only the dump `kg.nq.gz` of a release, not `void.ttl` too (`excludeFiles` in
+  `deployment/kgserve/config.json`): the description of the KG was in the endpoint twice, also as the graph
+  `https://doi.org/10.5281/zenodo.24305088#void.ttl` (2,371 triples for release 1.2.0), a copy of the graph
+  `https://w3id.org/climate-change-kg/data/kg` of the dump.
+
+## 1.2.0 - 2026-11-26
+
+### Knowledge graph
+
+- The CORDEX-CMIP5 runs of the two statistical downscaling models, `BOM-SDM` (Bureau of Meteorology, domain `AUS`,
+  66 runs, 199 datasets) and `DeepESD-EE` (University of Cantabria, domain `EUR-44i`, 16 runs, 32 datasets), are
+  statistical downscalings (`ccso:StatisticalDownscaling`; a run is a `ccso:SingleProjectionProduction`, its
+  ensembles `ccso:EnsembleProjectionProduction`s), no longer dynamical downscalings, which are climate simulations
+  (`ccso:DynamicalDownscaling`, `ccso:SingleSimulation`, `ccso:EnsembleSimulation`). A run is still linked to the CMIP5
+  simulation it downscales (`ccso:isDownscalingOf`). Its model is a participant (`top:hasParticipant`) instead of
+  `ccso:usesModel`, which is for climate models, and the two models are a `top:Description` with a comment and a
+  reference (`rdfs:seeAlso`), no longer a `ccso:RegionalClimateModel`. The experiments of the domain `AUS` are
+  statistical downscalings too; those of `EUR-44i` (historical and rcp85), with runs of both kinds, are a
+  `ccso:Downscaling` and a `ccso:EnsembleProjectionProduction`, no longer a `ccso:ClimateModelIntercomparisonExperiment`
+  and a `ccso:DynamicalDownscaling` (`consolidation/CORDEX-statistical-experiments.ru`). The CORDEX-CMIP5 graph has
+  1,959 dynamical and 82 statistical downscaling runs (2,041 dynamical before). Queries for the climate simulations or
+  for `ccso:usesModel` no longer return them; queries for `ccso:Downscaling` or `ccso:isDownscalingOf` still do. See
+  `data-sources/cordex-cmip5/DECISIONS.md`. The key figures count 82 simulations fewer, and the two models no longer
+  among the climate models; the Sources page of the website gives the downscalings of each kind.
+- The runs of `DeepESD-EE` (the statistical downscalings with a CORDEX grid) are described (`rdfs:comment`) as
+  statistical downscalings by their statistical model, no longer as RCM simulations
+  (`consolidation/CORDEX-comment-generation.ru`). The outputs of the statistical downscalings keep the temporal
+  coverage of their datasets, as those of the simulations (`consolidation/simTimeCoverage-local.ru`; for `BOM-SDM`,
+  whose datasets have time intervals).
+
+### Shapes
+
+- `shape:StatisticalDownscaling`: a statistical downscaling uses no climate model (`ccso:usesModel`).
+  `shape:DownscalingRun` also checks the runs of the statistical downscalings (they downscale a simulation), and
+  `shape:ProjectionTransformation` leaves out all the downscalings, whose runs are linked to what they downscale by
+  `ccso:isDownscalingOf`.
+
+## 1.1.1 - 2026-11-25
+
 ### Knowledge graph
 
 - The KG, as a dataset, is `https://w3id.org/climate-change-kg`, the root of the namespace of the project (as for an

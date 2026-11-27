@@ -461,5 +461,26 @@
             }
         }
     ],
-    "evaluation_runs_reason": "The CSIRO CCAM-2008 datasets (ANT-44i, AUS-44i, 34) driven by the ERA-Interim reanalysis (ECMWF-ERAINT) have the experiment historical: they are evaluation runs, driven by a reanalysis, not by a CMIP5 simulation. The datasets matching a rule get the experiment evaluation in place of the facet experiment (the dataset ids are kept), so that their simulations are evaluation runs, without a driving CMIP5 simulation."
+    "evaluation_runs_reason": "The CSIRO CCAM-2008 datasets (ANT-44i, AUS-44i, 34) driven by the ERA-Interim reanalysis (ECMWF-ERAINT) have the experiment historical: they are evaluation runs, driven by a reanalysis, not by a CMIP5 simulation. The datasets matching a rule get the experiment evaluation in place of the facet experiment (the dataset ids are kept), so that their simulations are evaluation runs, without a driving CMIP5 simulation.",
+    "statistical_downscaling_models": [
+        {
+            "match": {
+                "rcm_name": [
+                    "BOM-SDM"
+                ]
+            },
+            "comment": "Statistical downscaling model of the Australian Bureau of Meteorology, based on analogues; not a regional climate model.",
+            "reference": "https://doi.org/10.1016/j.envsoft.2008.07.007"
+        },
+        {
+            "match": {
+                "rcm_name": [
+                    "DeepESD-EE"
+                ]
+            },
+            "comment": "Empirical statistical downscaling model based on deep learning (DeepESD), of the University of Cantabria; not a regional climate model.",
+            "reference": "https://doi.org/10.5194/gmd-15-6747-2022"
+        }
+    ],
+    "statistical_downscaling_models_reason": "Two of the models of the facet rcm_name are statistical downscaling models, not regional climate models: BOM-SDM (BOM, domain AUS; Timbal, Fernandez and Li 2009, doi:10.1016/j.envsoft.2008.07.007) and DeepESD-EE (UCAN, domain EUR-44i; Bano-Medina et al. 2022, doi:10.5194/gmd-15-6747-2022). The runs of the datasets matching a rule are statistical downscalings (ccso:StatisticalDownscaling, with ccso:SingleProjectionProduction for a run and ccso:EnsembleProjectionProduction for its ensembles), not climate simulations, still linked to the CMIP5 simulation they downscale (ccso:isDownscalingOf); their model is a participant (top:hasParticipant), a top:Description with the comment and the reference of the rule, not a ccso:ClimateModel (ccso:usesModel has domain ccso:ClimateSimulation and range ccso:ClimateModel)."
 }
