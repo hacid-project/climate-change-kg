@@ -97,8 +97,15 @@ def type_to_owl:
                     }
                 ]
             }
-        else 
+        else
+            # A range of literals (e.g. a period, as two dates) is a datatype
+            # restriction: the expected type is the class of the datatype
+            # restrictions on the datatype of the items (owl:onDatatype) with
+            # one list of facets (owl:withRestrictions). As the other class
+            # expressions, typed owl:Class; the cardinality is an
+            # xsd:nonNegativeInteger, as the RDF mapping of OWL 2 requires
             {
+                "@type": "owl:Class",
                 intersectionOf:  [
                     {
                         "@type": "owl:Restriction",
@@ -108,7 +115,7 @@ def type_to_owl:
                     {
                         "@type": "owl:Restriction",
                         onProperty: "owl:withRestrictions",
-                        "owl:cardinality": 1
+                        "owl:cardinality": {"@value": "1", "@type": "xsd:nonNegativeInteger"}
                     }
                 ]
             }
