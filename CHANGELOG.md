@@ -9,6 +9,11 @@ section of the new version, and quotes them in the release notes, in the GitHub 
 
 ### Knowledge graph
 
+- The ontologies are taken at the commit `48d5aaf` of `hacid-project/knowledge-graph` (was `bfb0310`), which changes
+  only the metadata of their headers, not their axioms: creators by ORCID (top-level: A. G. Nuzzolese, A. Russo,
+  M. Ceriani; data and CCSO: M. Ceriani, A. G. Nuzzolese, in CCSO in place of the IRIs of the old namespace), licence
+  CC BY 4.0 in all, version 1.0 of top-level and data (`owl:versionIRI`, `owl:versionInfo`), `owl:versionInfo` 2.1 of
+  CCSO, `dcterms:created` and `dcterms:modified`, and the declarations of the Dublin Core terms they use.
 - The expected types of the information roles whose values are ranges of literals (a period as two dates, a range of
   numbers or durations; 7 roles, e.g. `ops:ChooseBaselinePeriod/associated-data`) are well-formed OWL class
   expressions: the intersection of their two restrictions is typed `owl:Class`, as the other class expressions, and
